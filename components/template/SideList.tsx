@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
-import { FaFileWord, FaFolder, FaHeart, FaHeartbeat, FaUserTie, FaUsers } from 'react-icons/fa';
+import { FaCommentsDollar, FaCreditCard, FaFileWord, FaFolder,FaHandHoldingUsd,FaHeartbeat, FaUsers } from 'react-icons/fa';
+import { headers } from 'next/headers';
 
 export type Route = {
     icon: any;
@@ -11,40 +12,54 @@ export type Route = {
 
 export const routes: Route[] = [
     {
-        icon: <FaHeartbeat className='me-2' />,
+        icon: <FaHeartbeat className='relative float-left text-center w-8.5 mr-4 text-xl' />,
         name: "Overview",
         title: 'Overview',
         link: "/",
     },
     {
-        icon: <FaFolder className='me-2' />,
+        icon: <FaFolder className='relative float-left text-center w-8.5 mr-4 text-xl' />,
         name: "Projects",
         title: "Cyber Threat Posture",
         link: "/projects",
     },
     {
-        icon: <FaFileWord className='me-2' />,
-        name: "Tasks",
-        title: "Tasks",
-        link: "/tasks",
+        icon: <FaUsers className='relative float-left text-center w-8.5 mr-4 text-xl' />,
+        name: "Writers",
+        title: "Writers",
+        link: "/writers",
     },
     {
-        icon: <FaUsers className='me-2' />,
-        name: "Risk Alert",
-        title: "Risk Alert",
-        link: "/riskalert",
+        icon: <FaCommentsDollar className='relative float-left text-center w-8.5 mr-4 text-xl' />,
+        name: "Messages",
+        title: "Messages",
+        link: "/messages",
+    },
+    {
+        icon: <FaHandHoldingUsd className='relative float-left text-center w-8.5 mr-4 text-xl' />,
+        name: "Invoices",
+        title: "Invoices",
+        link: "/invoices",
+    },
+    {
+        icon: <FaCreditCard className='relative float-left text-center w-8.5 mr-4 text-xl' />,
+        name: "Billings",
+        title: "Billings",
+        link: "/billings",
     }
 ]
 
 const SideList = () => {
-    return routes.map(route => 
-        <li className='[&.active]:sidebar-active hover:sidebar-active mt-1 ps-4 py-3'>
-            <Link className='hover:bg-transparent text-md font-semibold font-sans' href={route.link}>
+    const reqheaders = headers().get("x-forwarded-host")
+    return routes.map(route => {
+        const isActive = ( reqheaders?.includes(route.link) ) ? 'active' : ''
+        return <li className={isActive + ' flex [&.active]:sidebar-active hover:sidebar-active mt-1 py-4'}>
+            <Link className='relative flex items-center bg-transparent text-sm font-sans mx-4 px-2' href={route.link}>
                 {route.icon}
                 {route.name}
             </Link>
         </li>
-    )
+    })
 }
 
 export default SideList
