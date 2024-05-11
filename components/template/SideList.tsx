@@ -1,7 +1,8 @@
+'use client'
 import React from 'react'
 import Link from 'next/link';
-import { FaCommentsDollar, FaCreditCard, FaFileWord, FaFolder,FaHandHoldingUsd,FaHeartbeat, FaUsers } from 'react-icons/fa';
-import { headers } from 'next/headers';
+import { FaCommentsDollar, FaCreditCard, FaFolder,FaHandHoldingUsd,FaHeartbeat, FaUsers } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
 
 export type Route = {
     icon: any;
@@ -19,9 +20,9 @@ export const routes: Route[] = [
     },
     {
         icon: <FaFolder className='relative float-left text-center w-8.5 mr-4 text-xl' />,
-        name: "Projects",
-        title: "Cyber Threat Posture",
-        link: "/projects",
+        name: "Folders",
+        title: "Folders",
+        link: "/folders",
     },
     {
         icon: <FaUsers className='relative float-left text-center w-8.5 mr-4 text-xl' />,
@@ -50,11 +51,11 @@ export const routes: Route[] = [
 ]
 
 const SideList = () => {
-    const reqheaders = headers().get("x-forwarded-host")
+    const pathname = usePathname()
     return routes.map(route => {
-        const isActive = ( reqheaders?.includes(route.link) ) ? 'active' : ''
-        return <li className={isActive + ' flex [&.active]:sidebar-active hover:sidebar-active mt-1 py-4'}>
-            <Link className='relative flex items-center bg-transparent text-sm font-sans mx-4 px-2' href={route.link}>
+        const isActive = ( pathname === route.link ) ? 'active' : ''
+        return <li className={isActive + ' flex [&.active]:sidebar-active hover:sidebar-active mt-1'}>
+            <Link className='bg-transparent relative flex items-center w-full text-sm font-mono font-semibold mx-4 px-2 py-4' href={route.link}>
                 {route.icon}
                 {route.name}
             </Link>

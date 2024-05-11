@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Nunito } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
 
-const nunito = Nunito({ subsets: ['latin'] })
+const nunito = Nunito({ subsets: ['vietnamese'] })
 
 export const metadata: Metadata = {
 	title: "NextAuth.js Example",
