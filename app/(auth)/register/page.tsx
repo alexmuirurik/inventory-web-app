@@ -4,6 +4,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import Image from "next/image"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 const Register = () => {
 	return (
@@ -20,13 +21,13 @@ const Register = () => {
 
 				<div className="flex items-center justify-between w-full mb-6">
 					<SignInForm provider="google">
-						<button type="submit" className="flex btn btn-outline btn-accent px-8">
+						<button type="submit" className="flex items-center border px-8 py-2">
 							<FcGoogle className="me-1 text-lg" />
 							Google
 						</button>
 					</SignInForm>
 					<SignInForm provider="github" className="flex justify-end">
-						<button type="submit" className="flex btn btn-outline btn-accent px-8">
+						<button type="submit" className="flex items-center border px-8 py-2">
 							<FaGithub className="me-1 text-lg" />
 							Github
 						</button>
@@ -45,20 +46,20 @@ const Register = () => {
 							<label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 								First Name
 							</label>
-							<input id="firstname" name="firstname" required className="input input-sm input-primary placeholder:text-gray-800 bg-slate-200 w-full rounded-sm" />
+							<input id="firstname" name="firstname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 						</div>
 						<div className="form-item">
 							<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 								Last Name
 							</label>
-							<input id="lastname" name="lastname" required className="input input-sm input-primary placeholder:text-gray-800 bg-slate-200 w-full rounded-sm" />
+							<input id="lastname" name="lastname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 						</div>
 					</div>
 					<div className="form-group mb-4">
 						<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 							Email address
 						</label>
-						<input id="email" name="email" type="email" autoComplete="email" required className="input input-sm input-primary placeholder:text-gray-800 bg-slate-200 w-full rounded-sm" />
+						<input id="email" name="email" type="email" autoComplete="email" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 					</div>
 
 					<div className="form-group flex gap-2 mb-4">
@@ -66,13 +67,13 @@ const Register = () => {
 							<label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 								Password
 							</label>
-							<input id="firstname" name="firstname" required className="input input-sm input-primary placeholder:text-gray-800 bg-slate-200 w-full rounded-sm" />
+							<input id="firstname" name="firstname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 						</div>
 						<div className="form-item">
 							<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 								Confirm Password
 							</label>
-							<input id="lastname" name="lastname" required className="input input-sm input-primary placeholder:text-gray-800 bg-slate-200 w-full rounded-sm" />
+							<input id="lastname" name="lastname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 						</div>
 					</div>
 
@@ -87,9 +88,9 @@ const Register = () => {
 					</div>
 
 					<div className="form-group">
-						<button type="submit" className="btn btn-md btn-success w-full">
+						<Button type="submit" className="w-full">
 							Sign Up
-						</button>
+						</Button>
 					</div>
 				</SignInForm>
 

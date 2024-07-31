@@ -1,17 +1,12 @@
 import NextAuth from "next-auth"
 import "next-auth/jwt"
-
-import Cognito from "next-auth/providers/cognito"
 import Credentials from 'next-auth/providers/credentials'
-import Facebook from "next-auth/providers/facebook"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import LinkedIn from "next-auth/providers/linkedin"
 
 import type { NextAuthConfig } from "next-auth"
 
 export const config = {
-	theme: { logo: "https://authjs.dev/img/logo-sm.png" },
 	providers: [
 		GitHub,
 		Google,
@@ -32,14 +27,9 @@ export const config = {
 	callbacks: {
 		authorized({ request, auth }) {
 			const { pathname } = request.nextUrl
-			if (pathname === "/middleware-example") return !!auth
 			return true
 		},
 		jwt({ token, trigger, session, account }) {
-			if (trigger === "update") token.name = session.user.name
-			if (account?.provider === "keycloak") {
-				return { ...token, accessToken: account.access_token }
-			}
 			return token
 		},
 		async session({ session, token }) {

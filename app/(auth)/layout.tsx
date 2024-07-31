@@ -10,20 +10,15 @@ const AuthLayout = async ({ children, }: Readonly<{ children: React.ReactNode }>
         <div className="relative bg-gradient-to-bl from-blue-100 via-transparent dark:from-blue-950 dark:via-transparent">
             <header className="relative z-50 w-full flex-none text-sm font-semibold leading-6 text-slate-900">
                 <nav aria-label="Global" className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
-                    <div className="relative flex items-center">
-                        <Link className="flex-none text-slate-900 py-3" href="/">
-                            <span className="sr-only">RiskAct Netrascale</span>
+                    <div className="flex justify-between items-center">
+                        <Link className=" flex items-center py-3" href="/">
+                            <span className="text-3xl font-mono">SlackApp</span>
                         </Link>
-                        <div className="ml-auto hidden lg:flex lg:items-center">
-                            <Link className='text-gray-500' href="#">Components</Link>
-                            <Link className="text-gray-500 ml-8" href="#">Templates</Link>
-                            <Link className="text-gray-500 ml-8" href="#">Docs</Link>
-                        </div>
-                        <div className="hidden lg:ml-8 lg:mt-3 lg:flex lg:items-center lg:border-l lg:border-slate-900/15 lg:pl-8 gap-4">
-                            <Link className='btn btn-outline btn-success px-8' href='/login'>
+                        <div className="flex items-center border-l border-slate-900/15 pl-8 gap-4">
+                            <Link className='bg-teal-500 hover:bg-teal-700 border py-2 px-8' href='/login'>
                                 Log In
                             </Link>
-                            <Link className="btn btn-primary px-8" href="/register">
+                            <Link className="bg-blue-500 hover:bg-blue-700 border py-2 px-8" href="/register">
                                 Sign Up
                             </Link>
                         </div>

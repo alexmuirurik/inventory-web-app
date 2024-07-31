@@ -6,8 +6,8 @@ import { SignOut } from "../auth/SignOut"
 
 const NavBarMenu = () => {
     return (
-        <Menubar className="border-0">
-            <MenubarMenu>
+        <Menubar className="items-center border-0">
+            <MenubarMenu >
                 <MenubarTrigger className="cursor-pointer">
                     <FaBell className="text-base" />
                 </MenubarTrigger>

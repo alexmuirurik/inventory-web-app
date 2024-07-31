@@ -31,11 +31,9 @@ const Messages = () => {
 	return (
 		<div className="page-wrapper">
 			<PageHeader title='Messages' description='540+' >
-				<div className="flex gap-2">
-					<input type="text" className="input input-sm input-success form-control bg-transparent text-sm ps-11" placeholder="Search" />
-					<a href="/keen/demo2/apps/file-manager/folders.html" className="btn btn-info bg-teal-500 btn-sm fw-bolder">
-						Compose Message
-					</a>
+				<div className="flex items-center gap-2">
+					<input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
+					<Button className="bg-teal-500 hover:bg-teal-700">Compose a Message</Button>
 				</div>
 			</PageHeader>
 			<div className="page-body md:flex gap-2">

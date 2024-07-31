@@ -4,8 +4,9 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import Image from "next/image"
 import Link from "next/link"
+import { LoadingButton } from "@/components/ui/loadingbtn"
 
-const Login = () => {
+const LoginPage = () => {
 	return (
 		<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 border rounded-lg">
 
@@ -20,13 +21,13 @@ const Login = () => {
 
 				<div className="flex items-center justify-between w-full mb-6">
 					<SignInForm provider="google">
-						<button type="submit" className="flex btn btn-outline btn-accent px-8">
+						<button type="submit" className="flex items-center border px-8 py-2">
 							<FcGoogle className="me-1 text-lg" />
 							Google
 						</button>
 					</SignInForm>
 					<SignInForm provider="github" className="flex justify-end">
-						<button type="submit" className="flex btn btn-outline btn-accent px-8">
+						<button type="submit" className="flex items-center border px-8 py-2">
 							<FaGithub className="me-1 text-lg" />
 							Github
 						</button>
@@ -39,19 +40,19 @@ const Login = () => {
 					<span className="border w-3/12"></span>
 				</div>
 
-				<SignInForm className="space-y-6" provider="credentials">
+				<SignInForm className="space-y-6" provider="credentials" >
 					<div className="form-group mb-4">
 						<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 							Email address
 						</label>
-						<input id="email" name="email" type="email" autoComplete="email" required className="input input-sm input-primary bg-slate-200 w-full rounded-md" />
+						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="email" name="email" type="email" autoComplete="email" required  />
 					</div>
 
 					<div className="form-group mb-4">
 						<label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 							Password
 						</label>
-						<input id="password" name="password" type="password" autoComplete="current-password" required className="input input-sm input-primary bg-slate-200 w-full rounded-md" />
+						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="password" name="password" type="password" autoComplete="current-password" required />
 					</div>
 
 					<div className="form-group flex content-between mb-4">
@@ -65,9 +66,9 @@ const Login = () => {
 					</div>
 
 					<div className="form-group">
-						<button type="submit" className="btn btn-md btn-success w-full">
+						<LoadingButton className="w-full hover:bg-gray-950" type='submit' >
 							Sign in
-						</button>
+						</LoadingButton>
 					</div>
 				</SignInForm>
 
@@ -83,4 +84,4 @@ const Login = () => {
 }
 
 
-export default Login
+export default LoginPage

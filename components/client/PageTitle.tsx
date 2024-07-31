@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
-import { routes } from '../template/SideList'
 import { usePathname } from 'next/navigation'
+import { routes } from '../layouts/SideList'
 
 const PageTitle = () => {
     const pathname = usePathname()
