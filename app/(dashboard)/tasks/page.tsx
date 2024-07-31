@@ -1,14 +1,15 @@
 import { DataTableDemo } from '@/actions/getTasksData'
 import PageHeader from '@/components/card/PageHeader'
+import { Button } from '@/components/ui/button'
 import React from 'react'
 
 const Tasks = () => {
     return (
         <div className="page-wrapper">
             <PageHeader title='Tasks' description='540+' >
-                <div className="flex gap-2">
-                    <input type="text" className="input input-sm input-success form-control bg-transparent text-sm ps-11" placeholder="Search" />
-                    <a href="/keen/demo2/apps/file-manager/folders.html" className="btn btn-info bg-teal-500 btn-sm fw-bolder">Add New Task</a>
+                <div className="flex items-center gap-2">
+                    <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
+                    <Button className="bg-teal-500 hover:bg-teal-700">Add a Task</Button>
                 </div>
             </PageHeader>
             <div className="page-body">
