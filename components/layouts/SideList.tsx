@@ -52,8 +52,9 @@ export const routes: Route[] = [
 
 const SideList = () => {
     const pathname = usePathname()
+    const newpath = pathname.split('/')
     return routes.map(route => {
-        const isActive = ( pathname === route.link ) ? 'active' : ''
+        const isActive = ( newpath.at(1) === route.name.toLowerCase() ) ? 'active' : ''
         return <li className={isActive + ' flex [&.active]:sidebar-active hover:sidebar-active mt-1'}>
             <Link className='bg-transparent relative flex items-center w-full text-sm font-mono font-semibold mx-4 px-2 py-4' href={route.link}>
                 {route.icon}

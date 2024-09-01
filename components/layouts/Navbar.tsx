@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { auth } from '@/auth'
-import PageTitle from '../client/PageTitle'
+import PageTitle from './PageTitle'
 import NavBarMenu from './NavBarMenu'
 import { SignOut } from '../auth/auth-components'
 import { Avatar, AvatarImage } from '../ui/avatar'

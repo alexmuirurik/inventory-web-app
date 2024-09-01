@@ -18,16 +18,15 @@ const LoginPage = () => {
 			</div>
 
 			<div className="sm:mx-auto sm:w-full sm:max-w-sm">
-
-				<div className="flex items-center justify-between w-full mb-6">
-					<SignInForm provider="google">
-						<button type="submit" className="flex items-center border px-8 py-2">
+				<div className="flex items-center justify-between gap-4 w-full mb-6">
+					<SignInForm provider="google" className="flex border w-full">
+						<button type="submit" className="flex items-center px-8 py-2">
 							<FcGoogle className="me-1 text-lg" />
 							Google
 						</button>
 					</SignInForm>
-					<SignInForm provider="github" className="flex justify-end">
-						<button type="submit" className="flex items-center border px-8 py-2">
+					<SignInForm provider="github" className="flex justify-end border w-full">
+						<button type="submit" className="flex items-center px-8 py-2">
 							<FaGithub className="me-1 text-lg" />
 							Github
 						</button>
@@ -40,12 +39,12 @@ const LoginPage = () => {
 					<span className="border w-3/12"></span>
 				</div>
 
-				<SignInForm className="space-y-6" provider="credentials" >
+				<form className="space-y-6"  >
 					<div className="form-group mb-4">
 						<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
 							Email address
 						</label>
-						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="email" name="email" type="email" autoComplete="email" required  />
+						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="email" name="email" type="email" autoComplete="email" required />
 					</div>
 
 					<div className="form-group mb-4">
@@ -70,12 +69,12 @@ const LoginPage = () => {
 							Sign in
 						</LoadingButton>
 					</div>
-				</SignInForm>
+				</form>
 
 				<p className="mt-10 text-center text-sm text-gray-500">
 					Not a member?{' '}
 					<Link href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-						Start a 14 day free trial
+						Register For Free
 					</Link>
 				</p>
 			</div>

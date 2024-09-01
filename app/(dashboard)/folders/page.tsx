@@ -1,56 +1,32 @@
 import React from 'react'
-import PageHeader from '@/components/card/PageHeader'
+import PageHeader from '@/components/layouts/PageHeader'
 import { FaFolderOpen } from 'react-icons/fa'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import AddFolder from '@/components/forms/addfolder'
+import { auth } from '@/auth'
+import { getCompany } from '@/actions/companyController'
+import { redirect } from 'next/navigation'
+import FolderCard from '@/components/cards/foldercard'
+import { getFolders } from '@/actions/FolderController'
 
-const Folders = () => {
+const Folders = async () => {
+    const session = await auth()
+    const company = await getCompany(session?.user?.id as string)
+    if(!company) return redirect('/settings')
+    
+    const folders = await getFolders(company.id) ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Folders' description='540+' >
+            <PageHeader title='Folders' description={String(folders.length)} >
                 <div className="flex items-center gap-2">
                     <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                    <Button className="bg-teal-500 hover:bg-teal-700">Add a Folder</Button>
+                    <AddFolder company={company} />
                 </div>
             </PageHeader>
             <div className="page-body">
                 <div className="row text-gray-600">
-                    <Link href='/folders/items-1' className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </Link>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
-                    <div className="bg-transparent flex items-center gap-2 p-4 rounded-md border border-gray-300 shadow-sm font-bold">
-                        <FaFolderOpen className='' />
-                        <h4 className='text-xs'>Folder Title</h4>
-                    </div>
+                    <FolderCard folders={folders} />
                 </div>
             </div>
         </div>

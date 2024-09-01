@@ -1,5 +1,5 @@
 import React from 'react'
-import PageHeader from '@/components/card/PageHeader'
+import PageHeader from '@/components/layouts/PageHeader'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -7,6 +7,9 @@ import { FaEllipsisV } from 'react-icons/fa'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Cloud, Github, LifeBuoy, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { auth } from '@/auth'
+import { getCompany } from '@/actions/companyController'
+import { redirect } from 'next/navigation'
 
 const notifications = [
 	{
@@ -27,13 +30,16 @@ const notifications = [
 ]
 
 
-const Messages = () => {
+const Messages = async () => {
+	const session = await auth()
+    const company = await getCompany(session?.user?.id as string)
+    if(!company) return redirect('/settings')
 	return (
 		<div className="page-wrapper">
 			<PageHeader title='Messages' description='540+' >
 				<div className="flex items-center gap-2">
-					<input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-					<Button className="bg-teal-500 hover:bg-teal-700">Compose a Message</Button>
+					<input type="text" className="bg-transparent focus-within:!ring-0 border text-sm !w-full ps-5 py-2" placeholder="Search" />
+					<Button className="w-full bg-teal-500 hover:bg-teal-700">Compose a Message</Button>
 				</div>
 			</PageHeader>
 			<div className="page-body md:flex gap-2">
