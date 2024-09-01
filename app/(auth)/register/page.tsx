@@ -19,15 +19,15 @@ const Register = () => {
 
 			<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 
-				<div className="flex items-center justify-between w-full mb-6">
-					<SignInForm provider="google">
-						<button type="submit" className="flex items-center border px-8 py-2">
+				<div className="flex items-center justify-between gap-4 w-full mb-6">
+					<SignInForm provider="google" className="flex justify-end w-full border ">
+						<button type="submit" className="flex items-center px-8 py-2">
 							<FcGoogle className="me-1 text-lg" />
 							Google
 						</button>
 					</SignInForm>
-					<SignInForm provider="github" className="flex justify-end">
-						<button type="submit" className="flex items-center border px-8 py-2">
+					<SignInForm provider="github" className="flex justify-end w-full border">
+						<button type="submit" className="flex items-center px-8 py-2">
 							<FaGithub className="me-1 text-lg" />
 							Github
 						</button>

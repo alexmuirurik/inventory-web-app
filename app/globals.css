@@ -57,7 +57,7 @@
 		--chart-5: 27 87% 67%;
 	}
 
-	.dark {
+	[theme-mode="dark-content"] {
 		--chart-1: 220 70% 50%;
 		--chart-2: 160 60% 45%;
 		--chart-3: 30 80% 55%;
