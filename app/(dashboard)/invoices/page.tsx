@@ -3,13 +3,10 @@ import CardInvoices from '@/components/cards/CardInvoices'
 import PageHeader from '@/components/layouts/PageHeader'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/auth'
-import { getCompany } from '@/actions/companyController'
 import { redirect } from 'next/navigation'
 
 const Invoices = async () => {
     const session = await auth()
-    const company = await getCompany(session?.user?.id as string)
-    if(!company) return redirect('/settings')
     return (
         <div className="page-wrapper">
             <PageHeader title='Invoices' description='540+' >

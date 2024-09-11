@@ -61,22 +61,6 @@ const Register = () => {
 						</label>
 						<input id="email" name="email" type="email" autoComplete="email" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
 					</div>
-
-					<div className="form-group flex gap-2 mb-4">
-						<div className="form-item">
-							<label htmlFor="firstname" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-								Password
-							</label>
-							<input id="firstname" name="firstname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
-						</div>
-						<div className="form-item">
-							<label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-								Confirm Password
-							</label>
-							<input id="lastname" name="lastname" required className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" />
-						</div>
-					</div>
-
 					<div className="form-group flex content-between mb-4">
 						<div className="flex w-1/2">
 							<input id="remember-me" name="remember-me" type="checkbox" className="border rounded-sm bg-slate-200 me-4" />
@@ -86,7 +70,6 @@ const Register = () => {
 							<Link href="/forgot-password" className="text-sm font-bold text-blue-800">Forgot password?</Link>
 						</div>
 					</div>
-
 					<div className="form-group">
 						<Button type="submit" className="w-full">
 							Sign Up
