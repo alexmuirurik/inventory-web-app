@@ -46,14 +46,6 @@ const LoginPage = () => {
 						</label>
 						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="email" name="email" type="email" autoComplete="email" required />
 					</div>
-
-					<div className="form-group mb-4">
-						<label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900 mb-2">
-							Password
-						</label>
-						<input className="bg-transparent focus-within:!ring-0 border text-sm w-full ps-5 py-2" id="password" name="password" type="password" autoComplete="current-password" required />
-					</div>
-
 					<div className="form-group flex content-between mb-4">
 						<div className="flex w-1/2">
 							<input id="remember-me" name="remember-me" type="checkbox" className="border rounded-sm bg-slate-200 me-4" />
