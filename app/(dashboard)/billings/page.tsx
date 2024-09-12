@@ -1,35 +1,30 @@
 import React from 'react'
-import CardBillings from '@/components/cards/CardBillings'
 import PageHeader from '@/components/layouts/PageHeader'
-import PaymentsCard from '@/components/cards/paymentscard'
-import { Button } from '@/components/ui/button'
 import { auth } from '@/auth'
-import { getCompany } from '@/actions/companyController'
 import { redirect } from 'next/navigation'
+import AddProduct from '@/components/forms/addproduct'
+import ProductsCard from '@/components/cards/productscard'
+import { getManyProducts } from '@/actions/productController'
+import { getBusiness } from '@/actions/businessController'
 
-const Billings = async () => {
+const BillingsPage = async () => {
     const session = await auth()
-    const company = await getCompany(session?.user?.id as string)
-    if(!company) return redirect('/settings')
+    const business = await getBusiness(session?.user?.id as string)
+    if(!business) return redirect('/settings')
+    const products = await getManyProducts() ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Billings' description='540+' >
+            <PageHeader title='Inventory' description={String(products.length)} >
                 <div className="flex items-center gap-2">
                     <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                    <Button className="w-full bg-teal-500 hover:bg-teal-700">Add Funds</Button>
+                    <AddProduct />
                 </div>
             </PageHeader>
-            <div className="flex gap-4">
-                <div className="sm:order-2 w-full sm-5/12 md:w-4/12 lg:w-3/12">
-                    <PaymentsCard />
-                </div>
-                <div className="w-full sm-7/12 md:w-5/12 lg:w-9/12">
-                    <CardBillings />
-                </div>
-                
+            <div className="page-body">
+                <ProductsCard products={products} />
             </div>
         </div>
     )
 }
 
-export default Billings
+export default BillingsPage
