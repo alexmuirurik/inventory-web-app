@@ -1,7 +1,7 @@
 import { FaCreditCard, FaHandHoldingUsd, FaHeartbeat, FaUsers, FaUserTie } from "react-icons/fa";
 import { BiQrScan } from "react-icons/bi";
 import { GiBuyCard } from "react-icons/gi";
-import { FaChartPie } from "react-icons/fa6";
+import { FaChartPie, FaLocationPin } from "react-icons/fa6";
 import { MdBusAlert } from "react-icons/md";
 
 export const routes = [
@@ -18,16 +18,16 @@ export const routes = [
         link: "/inventory",
     },
     {
-        icon: GiBuyCard,
-        name: "Purchases",
-        title: "Purchases",
-        link: "/purchases",
-    },
-    {
         icon: FaChartPie,
         name: "Sales",
         title: "Sales",
         link: "/sales",
+    },
+    {
+        icon: GiBuyCard,
+        name: "Purchases",
+        title: "Purchases",
+        link: "/purchases",
     },
     {
         icon: FaHandHoldingUsd,
@@ -40,6 +40,12 @@ export const routes = [
         name: "Billings",
         title: "Billings",
         link: "/billings",
+    },
+    {
+        icon: FaLocationPin,
+        name: "Locations",
+        title: "Locations",
+        link: "/locations",
     }
 ]
 

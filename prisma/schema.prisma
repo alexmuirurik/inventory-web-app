@@ -15,6 +15,7 @@ model User {
     image         			String?
     accounts      			Account[]
     sessions      			Session[]  
+    businesses              Business[]
     Authenticator 			Authenticator[]
     cashiers                Cashier[]
     createdAt 				DateTime @default(now())
@@ -75,10 +76,10 @@ model Authenticator {
 }
 
 model Business {
-	id				String @id @map("_id") @db.ObjectId
+	id				String @id @default(auto()) @map("_id") @db.ObjectId
 	name			String 
-	location		String 
-	owner			String
+	ownerId			String @db.ObjectId
+    owner           User @relation(fields: [ownerId], references: [id])
     locations       BusinessLocation[]
     cashiers        Cashier[]
 	createdAt DateTime @default(now())
@@ -86,8 +87,8 @@ model Business {
 }
 
 model BusinessLocation {
-	id				String @id @map("_id") @db.ObjectId
-	name			String
+	id				String @id @default(auto()) @map("_id") @db.ObjectId
+    name            String
 	country			String
 	city			String
 	address			String
@@ -99,7 +100,7 @@ model BusinessLocation {
 }
 
 model Cashier {
-    id				    String @id @map("_id") @db.ObjectId
+    id				    String @id @default(auto()) @map("_id") @db.ObjectId
     email               String @unique
     userid              String? @db.ObjectId
     businessId          String @db.ObjectId
@@ -113,7 +114,7 @@ model Cashier {
 }
 
 model Supplier {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
     company             String
     amount              Float
@@ -125,7 +126,7 @@ model Supplier {
 }
 
 model Customer {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
     company             String
     amount              Float
@@ -137,7 +138,7 @@ model Customer {
 }
 
 model Product {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
     buyingPrice         Float
     sellingPrice        Float
@@ -152,7 +153,7 @@ model Product {
 }
 
 model Category {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
     parent              String @db.ObjectId
     productId           String? @db.ObjectId
@@ -162,7 +163,7 @@ model Category {
 }
 
 model Sale {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     customerId          String @db.ObjectId
     amount              Float
     paid                Float
@@ -176,7 +177,7 @@ model Sale {
 }
 
 model CheckoutItem {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     productId           String @db.ObjectId
     saleId              String @db.ObjectId
     status              String
@@ -187,7 +188,7 @@ model CheckoutItem {
 }
 
 model Purchase {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     amount              Float
     paid                Float
     arrears             Float
@@ -201,7 +202,7 @@ model Purchase {
 }
 
 model Mpesa {
-    id                  String @id @map("_id") @db.ObjectId
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
