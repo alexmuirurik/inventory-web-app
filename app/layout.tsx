@@ -15,7 +15,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
 	return (
 		<html lang="en" theme-mode="white-content" className="bg-zinc-100">
 			<body className={nunito.className}>
-				<NextTopLoader height={1} color="rgb(19 78 74 /1)" />
+				<NextTopLoader height={1} color="teal" />
 				{children}
 				<Toaster />
 			</body>

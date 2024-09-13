@@ -1,5 +1,6 @@
 import { FaCreditCard, FaHandHoldingUsd, FaHeartbeat, FaUsers, FaUserTie } from "react-icons/fa";
 import { BiQrScan } from "react-icons/bi";
+import { MdCategory } from "react-icons/md";
 import { GiBuyCard } from "react-icons/gi";
 import { FaChartPie, FaLocationPin } from "react-icons/fa6";
 import { MdBusAlert } from "react-icons/md";
@@ -9,13 +10,19 @@ export const routes = [
         icon: FaHeartbeat,
         name: "Overview",
         title: 'Overview',
-        link: "/",
+        link: '/',
     },
     {
         icon: BiQrScan,
         name: "Inventory",
         title: "Inventory",
         link: "/inventory",
+    },
+    {
+        icon: MdCategory,
+        name: "Categories",
+        title: "Categories",
+        link: "/categories",
     },
     {
         icon: FaChartPie,
