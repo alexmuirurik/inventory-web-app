@@ -20,7 +20,7 @@ export const config = {
 			const cashier = await onboardCashier(profile?.email as string, user.id as string)
 			if(cashier) return true
 			return profile?.email?.endsWith('@alexmuiruri.com') ?? ''
-		}
+		}, 
 	},
 } satisfies NextAuthConfig
 

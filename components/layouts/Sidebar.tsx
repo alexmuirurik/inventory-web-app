@@ -1,12 +1,14 @@
 import React from 'react'
-import Image from 'next/image'
 import SideList from './SideList'
+import { PiBankBold } from "react-icons/pi";
+import { Business } from '@prisma/client';
 
-const Sidebar = () => {
+const Sidebar = async ({business}: {business: Business | undefined}) => {
     return (
         <aside className="fixed hidden md:block bg-teal-600 w-52 h-[calc(100vh_-_.5rem)] border border-gray-300 top-px left-px transition-all delay-300 rounded-lg overflow-hidden">
-            <div className="sidebar-head flex items-center h-16 ps-4 border-b border-gray-300">
-                <Image src='/assets/img/silver-copyscribers.png' alt='' className='' width={180} height={50} />
+            <div className="sidebar-head flex items-center gap-4 text-lg text-gray-200 font-bold font-mono h-16 ps-5 border-b border-gray-300">
+                <PiBankBold className='h-6 w-6' />
+                {business?.name ?? ''}
             </div>
             <div className="sidebar-body mt-2">
                 <ul className="flex flex-col p-0 text-white">

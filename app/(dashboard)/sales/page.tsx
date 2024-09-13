@@ -10,15 +10,13 @@ import { redirect } from 'next/navigation';
 const SalesPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if(!business) return redirect('/settings')
+    if (!business) return redirect('/settings')
     const products = await getManyProducts() ?? []
     return (
         <div className="page-wrapper">
             <PageHeader title='Sales' description={String(products.length)} >
-                <div className="flex items-center gap-2">
-                    <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                    <AddProduct />
-                </div>
+                <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
+                <AddProduct />
             </PageHeader>
             <div className="page-body">
                 <ProductsCard products={products} />

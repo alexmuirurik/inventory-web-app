@@ -1,5 +1,14 @@
 import prisma from "@/prisma/prisma"
 
+export const getUser = async (userId: string) => {
+    try {
+        const user = await prisma.user.findUnique({ where: { id: userId } })
+        return user
+    } catch (error) {
+        console.log('We faced an error getting the user ' + error)
+    }
+}
+
 export const getCashier = async (email: string) => {
     try {
         const cashier = await prisma.cashier.findUnique({ where: { email: email } })

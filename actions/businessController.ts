@@ -27,7 +27,7 @@ export const createBusiness = async (data: z.infer<typeof businessSchema>) => {
                 where: { id: business.id },
                 data: { name: data.name }
             })
-            const location = createLocation(data, business.id)
+            const location = createLocation(session?.user?.id as string, data, business.id)
             return business
         }else {
             const createdbusiness = await prisma.business.create({
@@ -36,7 +36,7 @@ export const createBusiness = async (data: z.infer<typeof businessSchema>) => {
                     ownerId: session?.user?.id as string
                 }
             })
-            const location = createLocation(data, createdbusiness.id)
+            const location = createLocation(session?.user?.id as string, data, createdbusiness.id)
             return createdbusiness
         }
     } catch (error) {

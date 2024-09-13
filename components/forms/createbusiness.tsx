@@ -10,12 +10,23 @@ import { businessSchema } from "@/prisma/schema"
 import { createBusiness } from "@/actions/businessController"
 import { useToast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"
+import { Business, BusinessLocation } from "@prisma/client"
 
-const CreateBusiness = () => {
+const CreateBusiness = ({business, location}: {business: Business | undefined, location: BusinessLocation | undefined}) => {
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
     const router = useRouter()
-    const form = useForm<z.infer<typeof businessSchema>>({ resolver: zodResolver(businessSchema) })
+    console.log(location)
+    const form = useForm<z.infer<typeof businessSchema>>({ 
+        resolver: zodResolver(businessSchema), 
+        defaultValues: {
+            name        : business?.name, 
+            location    : location?.name, 
+            address     : location?.address, 
+            city        : location?.city, 
+            country     : location?.country
+        }
+    })
     const onFormSubmit = async (data: z.infer<typeof businessSchema>) => {
         setLoading(true)
         const business = await createBusiness(data)

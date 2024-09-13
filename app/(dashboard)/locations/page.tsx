@@ -1,27 +1,25 @@
 import React from 'react';
 import PageHeader from '@/components/layouts/PageHeader';
-import ProductsCard from '@/components/cards/productscard';
-import { getManyProducts } from '@/actions/productController';
 import AddProduct from '@/components/forms/addproduct';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
+import { getManyLocations } from '@/actions/locationController';
+import LocationsCard from '@/components/cards/locationscard';
 
 const LocationsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if(!business) return redirect('/settings')
-    const products = await getManyProducts() ?? []
+    if (!business) return redirect('/settings')
+    const locations = await getManyLocations(business.id) ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Locations' description={String(products.length)} >
-                <div className="flex items-center gap-2">
-                    <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                    <AddProduct />
-                </div>
+            <PageHeader title='Locations' description={String(locations.length)} >
+                <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
+                <AddProduct />
             </PageHeader>
             <div className="page-body">
-                <ProductsCard products={products} />
+                <LocationsCard locations={locations} />
             </div>
         </div>
     );
