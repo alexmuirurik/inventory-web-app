@@ -8,6 +8,11 @@ export const businessSchema = z.object({
     address:    z.string()
 })
 
+export const categorySchema = z.object({
+    name: z.string(),
+    businessId: z.string()
+})
+
 export const productSchema = z.object({
     title: z.string()
 }) 

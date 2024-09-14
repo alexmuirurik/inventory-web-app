@@ -19,10 +19,10 @@ const CustomDialog = ({ open, setOpen, btntitle, description, children }: dialog
                     {btntitle}
                 </LoadingButton>
             </DialogTrigger>
-            <DialogContent className="">
-                <DialogHeader>
-                    <DialogTitle>{btntitle}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+            <DialogContent className="bg-neutral-700 border-gray-500">
+                <DialogHeader className='flex justify-center items-center'>
+                    <DialogTitle className='text-teal-600 font-bold'>{btntitle}</DialogTitle>
+                    <DialogDescription className='text-gray-200'>{description}</DialogDescription>
                 </DialogHeader>
                 {children}
             </DialogContent>

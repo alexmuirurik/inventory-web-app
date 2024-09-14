@@ -14,9 +14,9 @@ export const routes = [
     },
     {
         icon: BiQrScan,
-        name: "Inventory",
-        title: "Inventory",
-        link: "/inventory",
+        name: "Products",
+        title: "Products",
+        link: "/products",
     },
     {
         icon: MdCategory,
@@ -32,9 +32,9 @@ export const routes = [
     },
     {
         icon: GiBuyCard,
-        name: "Purchases",
-        title: "Purchases",
-        link: "/purchases",
+        name: "Inventory",
+        title: "Inventory",
+        link: "/inventory",
     },
     {
         icon: FaHandHoldingUsd,

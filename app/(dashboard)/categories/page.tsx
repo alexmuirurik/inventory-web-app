@@ -1,25 +1,25 @@
 import React from 'react';
 import PageHeader from '@/components/layouts/PageHeader';
-import ProductsCard from '@/components/cards/productscard';
-import { getManyProducts } from '@/actions/productController';
-import AddProduct from '@/components/forms/addproduct';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
+import AddCategory from '@/components/forms/addcategory';
+import { getManyCategories } from '@/actions/categoryController';
+import CategoriesCard from '@/components/cards/categoriescard';
 
 const CategoriesPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-    const products = await getManyProducts() ?? []
+    const categories = await getManyCategories(business.id) ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Categories' description={String(products.length)} >
+            <PageHeader title='Categories' description={String(categories?.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct />
+                <AddCategory business={business} />
             </PageHeader>
-            <div className="page-body">
-                <ProductsCard products={products} />
+            <div className="page-body grid grid-cols-4 gap-2">
+                <CategoriesCard categories={categories.sort((a, b) => a.name.localeCompare(b.name) )} />
             </div>
         </div>
     );
