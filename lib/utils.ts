@@ -1,3 +1,4 @@
+import { Brand, Category, Tag } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 

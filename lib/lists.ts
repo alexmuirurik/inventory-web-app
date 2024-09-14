@@ -4,6 +4,7 @@ import { MdCategory } from "react-icons/md";
 import { GiBuyCard } from "react-icons/gi";
 import { FaChartPie, FaLocationPin } from "react-icons/fa6";
 import { MdBusAlert } from "react-icons/md";
+import { TbBrandApplePodcast } from "react-icons/tb";
 
 export const routes = [
     {
@@ -23,6 +24,12 @@ export const routes = [
         name: "Categories",
         title: "Categories",
         link: "/categories",
+    },
+    {
+        icon: TbBrandApplePodcast,
+        name: "Brands",
+        title: "Brands",
+        link: "/brands",
     },
     {
         icon: FaChartPie,
