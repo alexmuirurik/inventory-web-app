@@ -81,6 +81,7 @@ model Business {
 	name			String 
 	ownerId			String @db.ObjectId
     owner           User @relation(fields: [ownerId], references: [id])
+    categories      Category[]
     locations       BusinessLocation[]
     cashiers        Cashier[]
 	createdAt DateTime @default(now())
@@ -141,24 +142,63 @@ model Customer {
 model Product {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
+    description         String 
+    sku                 String
+    image               String
+    colors              Json 
     buyingPrice         Float
     sellingPrice        Float
     Discount            Float
     stock               Float
+    status              String
     purchaseId          String @db.ObjectId
+    categoryId          String @db.ObjectId
+    brandId             String @db.ObjectId
     purchase            Purchase @relation(fields: [purchaseId], references: [id])
-    categories          Category[]
+    category            Category @relation(fields: [categoryId], references: [id])
+    brand               Brand @relation(fields: [brandId], references: [id])
+    tags                ProductinTag[]
     checkoutitems       CheckoutItem[]
+    purchaseItems       PurchaseItem[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Brand {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    name                String    
+    products            Product[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Category {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    name                String   
+    businessId          String @db.ObjectId
+    business            Business @relation(fields: [businessId], references: [id]) 
+    tags                Tag[]
+    products            Product[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Tag { 
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
-    parent              String @db.ObjectId
-    productId           String? @db.ObjectId
-    product             Product? @relation(fields: [productId], references: [id])
+    categoryId          String @db.ObjectId
+    category            Category @relation(fields: [categoryId], references: [id])
+    products            ProductinTag[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model ProductinTag {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    productId           String @db.ObjectId
+    tagId               String @db.ObjectId
+    product             Product @relation(fields: [productId], references: [id])
+    tag                 Tag @relation(fields: [tagId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -197,7 +237,19 @@ model Purchase {
     status              String
     supplierId          String @db.ObjectId
     supplier            Supplier @relation(fields: [supplierId], references: [id])
+    purchaseitems       PurchaseItem[]
     products            Product[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model PurchaseItem {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    productId           String @db.ObjectId
+    purchaseId          String @db.ObjectId
+    status              String
+    product             Product @relation(fields: [productId], references: [id])
+    purchase            Purchase @relation(fields: [purchaseId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

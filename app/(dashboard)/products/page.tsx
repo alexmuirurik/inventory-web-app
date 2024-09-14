@@ -1,6 +1,5 @@
 import React from 'react';
 import PageHeader from '@/components/layouts/PageHeader';
-import { Button } from '@/components/ui/button';
 import ProductsCard from '@/components/cards/productscard';
 import { getManyProducts } from '@/actions/productController';
 import AddProduct from '@/components/forms/addproduct';
@@ -8,15 +7,14 @@ import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
 
-const PurchasesPage = async () => {
+const ProductsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-
     const products = await getManyProducts() ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Purchases' description={String(products.length)} >
+            <PageHeader title='Products' description={String(products.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
                 <AddProduct />
             </PageHeader>
@@ -27,4 +25,4 @@ const PurchasesPage = async () => {
     );
 }
 
-export default PurchasesPage;
+export default ProductsPage;
