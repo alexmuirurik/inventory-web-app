@@ -7,17 +7,16 @@ import { FormControl } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover" 
 import { Brand, Category, Tag } from "@prisma/client"
 import { UseFormReturn } from "react-hook-form"
+import { Input } from "../ui/input"
 
 const SelectAndAdd = ({ list, form, formItem, field}: {list: Category[] | Brand[] | Tag[], form: any, formItem: string, field: any } ) => {
     const labels =  list.map(item => ({ label: item.name, value: item.id }))
-
+    
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <FormControl>
-                    <Button variant="outline" role="combobox">
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
+                    <Input placeholder="Brand" {...field} className="border-gray-600 text-gray-200" />
                 </FormControl>
             </PopoverTrigger>
             <PopoverContent className="p-0">

@@ -34,6 +34,11 @@ export const slugify = (input: string) => {
 	return slug;
 }
 
+export const createSKU = (name: string, businessId: string, brandId: string ) => {
+	const SKU = name.substring( 0, 2) + brandId.substring( 0, 2) + '-' + businessId.substring(0, 4)
+	return SKU
+}
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
