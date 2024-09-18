@@ -6,6 +6,7 @@ import AddProduct from '@/components/forms/addproduct';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
+import AddInventory from '@/components/forms/addinventory';
 
 const SalesPage = async () => {
     const session = await auth()
@@ -16,7 +17,7 @@ const SalesPage = async () => {
         <div className="page-wrapper">
             <PageHeader title='Sales' description={String(products.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct />
+                <AddInventory business={business} />
             </PageHeader>
             <div className="page-body">
                 <ProductsCard products={products} />

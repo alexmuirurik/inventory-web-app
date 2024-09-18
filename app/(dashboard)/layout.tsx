@@ -6,7 +6,7 @@ import Navbar from '@/components/layouts/Navbar'
 import { getBusiness } from '@/actions/businessController'
 
 const DashboardLayout = async ({children}: React.PropsWithChildren) => {
-    const session = await auth()
+    const session = await auth() 
     if(!session?.user) redirect('/login')
     const business = await getBusiness(session.user.id as string) ?? undefined
     return (

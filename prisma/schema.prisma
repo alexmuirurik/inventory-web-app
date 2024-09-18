@@ -81,6 +81,7 @@ model Business {
 	name			String 
 	ownerId			String @db.ObjectId
     owner           User @relation(fields: [ownerId], references: [id])
+    products        Product[]
     categories      Category[]
     brands          Brand[]
     locations       BusinessLocation[]
@@ -97,6 +98,7 @@ model BusinessLocation {
 	address			String
     businessId      String @db.ObjectId
     business        Business @relation(fields: [businessId], references: [id])
+    productsInStock ProductInStock[]
     cashiers        Cashier[]
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -146,23 +148,36 @@ model Product {
     description         String 
     sku                 String
     image               String
-    colors              Json 
-    buyingPrice         Float
-    sellingPrice        Float
-    Discount            Float
-    stock               Float
     status              String
-    purchaseId          String @db.ObjectId
+    businessId          String @db.ObjectId
     categoryId          String @db.ObjectId
     brandId             String @db.ObjectId
-    purchase            Purchase @relation(fields: [purchaseId], references: [id])
+    business            Business @relation(fields: [businessId], references: [id])
     category            Category @relation(fields: [categoryId], references: [id])
     brand               Brand @relation(fields: [brandId], references: [id])
     tags                ProductinTag[]
     checkoutitems       CheckoutItem[]
     purchaseItems       PurchaseItem[]
+    productInStock      ProductInStock[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model ProductInStock {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    stock               Float
+    buyingPrice         Float
+    sellinPrice         Float
+    discount            Float
+    colors              Json
+    purchaseId          String @db.ObjectId
+    businessLocationId  String @db.ObjectId
+    productId           String @db.ObjectId
+    product             Product @relation(fields: [productId], references: [id])
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
+    purchase            Purchase @relation(fields: [purchaseId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt 
 }
 
 model Brand {
@@ -241,7 +256,7 @@ model Purchase {
     supplierId          String @db.ObjectId
     supplier            Supplier @relation(fields: [supplierId], references: [id])
     purchaseitems       PurchaseItem[]
-    products            Product[]
+    productsInStock     ProductInStock[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

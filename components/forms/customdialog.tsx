@@ -22,7 +22,7 @@ const CustomDialog = ({ open, setOpen, btntitle, description, children }: dialog
             <DialogContent className="bg-neutral-700 border-gray-500">
                 <DialogHeader className='flex justify-center items-center'>
                     <DialogTitle className='text-teal-600 font-bold'>{btntitle}</DialogTitle>
-                    <DialogDescription className='text-gray-200'>{description}</DialogDescription>
+                    <DialogDescription className='text-gray-400 text-xs'>{description}</DialogDescription>
                 </DialogHeader>
                 {children}
             </DialogContent>

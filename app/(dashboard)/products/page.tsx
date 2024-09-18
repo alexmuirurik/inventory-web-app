@@ -6,17 +6,21 @@ import AddProduct from '@/components/forms/addproduct';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
+import { getManyCategories } from '@/actions/categoryController';
+import { getManyBrands } from '@/actions/brandController';
 
 const ProductsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
     const products = await getManyProducts() ?? []
+    const categories = await getManyCategories(business.id) ?? []
+    const brands     = await getManyBrands(business.id) ?? []
     return (
         <div className="page-wrapper">
             <PageHeader title='Products' description={String(products.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct />
+                <AddProduct business={business} categories={categories} brands={brands} />
             </PageHeader>
             <div className="page-body">
                 <ProductsCard products={products} />
