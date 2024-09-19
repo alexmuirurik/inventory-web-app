@@ -6,6 +6,7 @@ import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
 import { getManyLocations } from '@/actions/locationController';
 import LocationsCard from '@/components/cards/locationscard';
+import AddLocation from '@/components/forms/addlocation';
 
 const LocationsPage = async () => {
     const session = await auth()
@@ -16,7 +17,7 @@ const LocationsPage = async () => {
         <div className="page-wrapper">
             <PageHeader title='Locations' description={String(locations.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct />
+                <AddLocation business={business} />
             </PageHeader>
             <div className="page-body">
                 <LocationsCard locations={locations} />

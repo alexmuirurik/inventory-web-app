@@ -63,15 +63,6 @@ const AddProduct = ({ business, categories, brands }: { business: Business, cate
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <FormField control={form.control} name='brandId' render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">Discount</FormLabel>
-                                <FormControl>
-                                    <Input type='number' placeholder="Discount" {...field} className="border-gray-600 text-gray-200" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />``
                     </div>
                     <div className="">
                         <FormField control={form.control} name='description' render={({ field }) => (
@@ -94,7 +85,7 @@ const AddProduct = ({ business, categories, brands }: { business: Business, cate
                                             <SelectValue className="text-gray-200 placeholder:text-sm" placeholder="Select category" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent>
+                                    <SelectContent className="bg-neutral-700 text-gray-300 border-gray-500">
                                         {categories.map(category => (
                                             <SelectItem value={category.id}>{category.name}</SelectItem>
                                         ))}
@@ -102,22 +93,33 @@ const AddProduct = ({ business, categories, brands }: { business: Business, cate
                                 </Select>
                                 <FormMessage />
                             </FormItem>
-                        )} />y
+                        )} />
                         <FormField control={form.control} name='brandId' render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">Brand</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger className="text-gray-200 placeholder:text-gray-500  border-gray-500">
-                                            <SelectValue className="text-gray-200placeholder:text-sm" placeholder="Select brand" />
+                                            <SelectValue className="text-gray-200 placeholder:text-sm" placeholder="Select brand" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent>
+                                    <SelectContent className="bg-neutral-700 text-gray-300 border-gray-500">
                                         {brands.map(brand => (
                                             <SelectItem value={brand.id}>{brand.name}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                    </div>
+                    <div className="md:flex gap-2">
+                        <FormField control={form.control} name='name' render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel className="text-teal-500">Tags</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Tags" {...field} className="border-gray-600 text-gray-200" />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />

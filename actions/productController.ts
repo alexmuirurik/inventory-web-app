@@ -18,9 +18,12 @@ export const getProduct = async (businessId: string, productName: string) => {
     }
 }
 
-export const getManyProducts = async () => {
+export const getManyProducts = async (businessId: string) => {
     try {
         const products = await prisma.product.findMany({ 
+            where: {
+                businessId: businessId
+            },
             include: {
                 category: true,
                 brand: true

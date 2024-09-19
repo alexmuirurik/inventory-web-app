@@ -98,6 +98,8 @@ model BusinessLocation {
 	address			String
     businessId      String @db.ObjectId
     business        Business @relation(fields: [businessId], references: [id])
+    suppliers       Supplier[]
+    purchases       Purchase[]
     productsInStock ProductInStock[]
     cashiers        Cashier[]
 	createdAt DateTime @default(now())
@@ -122,9 +124,11 @@ model Supplier {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
     company             String
-    amount              Float
-    paid                Float
-    arrears             Float
+    amount              Float?
+    paid                Float?
+    arrears             Float?
+    businessLocationId  String @db.ObjectId
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     purchases           Purchase[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -133,10 +137,9 @@ model Supplier {
 model Customer {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     name                String
-    company             String
-    amount              Float
-    paid                Float
-    arrears             Float
+    amount              Float?
+    paid                Float?
+    arrears             Float?
     sales               Sale[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -248,12 +251,10 @@ model CheckoutItem {
 
 model Purchase {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    amount              Float
-    paid                Float
-    arrears             Float
-    paymentmethod       String
     status              String
+    businessLocationId  String @db.ObjectId
     supplierId          String @db.ObjectId
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     supplier            Supplier @relation(fields: [supplierId], references: [id])
     purchaseitems       PurchaseItem[]
     productsInStock     ProductInStock[]
@@ -263,6 +264,11 @@ model Purchase {
 
 model PurchaseItem {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    count               Float
+    buyingPrice         Float
+    sellingPrice        Float
+    discount            Float
+    colors              Json
     productId           String @db.ObjectId
     purchaseId          String @db.ObjectId
     status              String
