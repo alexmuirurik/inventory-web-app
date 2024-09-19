@@ -7,6 +7,12 @@ export type productInStockAndProductAndPurchase = Prisma.ProductInStockGetPayloa
     }
 }>
 
+export type CheckoutItemsWithProducts = Prisma.PurchaseItemGetPayload<{
+    include: {
+        product: true
+    }
+}>
+
 export type ProductWithCategoriesAndBrands = Prisma.ProductGetPayload<{
     include: {
         category: true,
