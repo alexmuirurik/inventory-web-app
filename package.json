@@ -5,16 +5,10 @@
   "homepage": "http:localhost:3000",
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start"
   },
-  "author": "Iain Collins <me@iaincollins.com>",
-  "contributors": [
-    "Balázs Orbán <info@balazsorban.com>",
-    "Nico Domino <yo@ndo.dev>",
-    "Lluis Agusti <hi@llu.lu>",
-    "Thang Huu Vu <hi@thvu.dev>"
-  ],
+  "author": "Alex Muiruri <content@alexmuiruri.com>",
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
     "@hookform/resolvers": "^3.9.0",
