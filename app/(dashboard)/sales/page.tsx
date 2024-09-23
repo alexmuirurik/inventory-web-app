@@ -7,12 +7,16 @@ import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
 import AddInventory from '@/components/forms/addinventory';
+import { getManyCategories } from '@/actions/categoryController';
+import { getManyBrands } from '@/actions/brandController';
 
 const SalesPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-    const products = await getManyProducts() ?? []
+    const products = await getManyProducts(business.id) ?? []
+    const categories = await getManyCategories(business.id) ?? []
+    const brands     = await getManyBrands(business.id) ?? []
     return (
         <div className="page-wrapper">
             <PageHeader title='Sales' description={String(products.length)} >
