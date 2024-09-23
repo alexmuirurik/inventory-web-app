@@ -17,7 +17,6 @@ const ImageUploader = ({ form }: {form: UseFormReturn<z.infer<typeof productSche
             try {
                 reader.onload = () => setPreview(reader.result);
                 reader.readAsDataURL(acceptedFiles[0]);
-                form.setValue("image", acceptedFiles[0]);
                 form.clearErrors("image");
             } catch (error) {
                 setPreview(null);
