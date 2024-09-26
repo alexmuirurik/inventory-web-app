@@ -24,6 +24,16 @@ export const comboboxSchema = z.object({
     
 })
 
+export const stockSchema = z.object({
+    productId: z.string(),
+    count: z.string(),
+    buyingPrice: z.string(),
+    sellingPrice: z.string(),
+    discount: z.string(),
+    businessLocationId: z.string(),
+    colors: z.string()
+})
+
 export const cartSchema = z.object({
     productId: z.string(),
     buyingPrice: z.string(),
@@ -31,10 +41,7 @@ export const cartSchema = z.object({
     discount: z.string(),
     supplierId: z.string(),
     businessLocationId: z.string(),
-    colors: z.array(z.object({
-        label: z.string(),
-        value: z.string()
-    })).optional()
+    colors: z.string()
 })
 
 export const productSchema = z.object({

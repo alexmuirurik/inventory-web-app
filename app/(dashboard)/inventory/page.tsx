@@ -1,33 +1,29 @@
 import React from 'react';
 import PageHeader from '@/components/layouts/PageHeader';
-import { getProductsInStock } from '@/actions/productController';
+import { getManyProducts, getProductsInStock } from '@/actions/productController';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
-import AddInventory from '@/components/forms/addinventory';
 import StocksCard from '@/components/cards/stockscard';
-import Link from 'next/link';
-import { LoadingButton } from '@/components/ui/loadingbutton';
+import { getLocationById, getManyLocations } from '@/actions/locationController';
+import AddStock from '@/components/forms/addstock';
 
 const InventoryPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-
-    const products = await getProductsInStock(business.id) ?? []
+    const businessLocation = await getLocationById(session?.user.activeLocation as string)
+    const products = await getManyProducts(business.id) ?? []
+    const productsInStock = await getProductsInStock(businessLocation?.id as string) ?? []
+    const businessLocations = await getManyLocations(business.id) ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Inventory' description={String(products.length)} >
+            <PageHeader title='Inventory' description={String(productsInStock.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <LoadingButton variant="outline" asChild className='bg-teal-500 hover:bg-teal-400 text-gray-200 hover:text-gray-100 font-mono font-bold'>
-                    <Link href='/inventory/checkin'>
-                        CheckIn Inventory
-                    </Link>
-                    
-                </LoadingButton>
+                <AddStock products={products} businessLocations={businessLocations} />
             </PageHeader>
             <div className="page-body">
-                <StocksCard products={products} />
+                <StocksCard products={productsInStock} />
             </div>
         </div>
     );
