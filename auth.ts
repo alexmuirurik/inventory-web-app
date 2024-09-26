@@ -21,6 +21,10 @@ export const config = {
 			if(cashier) return true
 			return profile?.email?.endsWith('@alexmuiruri.com') ?? ''
 		}, 
+		session({session, user}){
+			session.user.activeLocation = user.activeLocation
+			return session
+		}
 	},
 } satisfies NextAuthConfig
 

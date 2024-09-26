@@ -18,9 +18,10 @@ const StocksCard = ({products}: {products: productInStockAndProductAndPurchase[]
                             <img src={stock.product.image} className='static w-6 h-6' alt=''/>
                             {stock.product.name}
                         </TableCell>
-                        <TableCell>{stock.stock}</TableCell>
+                        <TableCell>{stock.count}</TableCell>
                         <TableCell>{stock.buyingPrice}</TableCell>
-                        <TableCell>{stock.sellinPrice}</TableCell>
+                        <TableCell>{stock.sellingPrice}</TableCell>
+                        <TableCell>{stock.discount}</TableCell>
                         <TableCell className="text-right">{stock.product.status}</TableCell>
                     </TableRow>
                 ))}

@@ -39,6 +39,12 @@ export const createSKU = (name: string, businessId: string, brandId: string ) =>
 	return SKU
 }
 
+export const stringToJSON = (string: string) => {
+	const separateCommas = string.split(',')
+	const jsonfile = separateCommas.map((string, i, separateCommas) => { return string })
+	return jsonfile
+}
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
