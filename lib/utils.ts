@@ -34,6 +34,11 @@ export const slugify = (input: string) => {
 	return slug;
 }
 
+export const toOptions = (data: {name:string, id:string}[]) => {
+	const Options = data.map(item => { return { label: item.name, value: item.id }  })
+	return Options
+}
+
 export const createSKU = (name: string, businessId: string, brandId: string ) => {
 	const SKU = name.substring( 0, 2) + brandId.substring( 0, 2) + '-' + businessId.substring(0, 4)
 	return SKU

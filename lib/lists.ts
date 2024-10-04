@@ -1,6 +1,7 @@
 import { FaCreditCard, FaHandHoldingUsd, FaHeartbeat, FaUsers, FaUserTie } from "react-icons/fa";
 import { BiQrScan } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { GiBuyCard } from "react-icons/gi";
 import { FaChartPie, FaLocationPin } from "react-icons/fa6";
 import { MdBusAlert } from "react-icons/md";
@@ -14,28 +15,16 @@ export const routes = [
         link: '/',
     },
     {
+        icon: MdOutlineDashboardCustomize,
+        name: "Order Line",
+        title: "Order Line",
+        link: "/order-line",
+    },
+    {
         icon: BiQrScan,
         name: "Products",
         title: "Products",
         link: "/products",
-    },
-    {
-        icon: MdCategory,
-        name: "Categories",
-        title: "Categories",
-        link: "/categories",
-    },
-    {
-        icon: TbBrandApplePodcast,
-        name: "Brands",
-        title: "Brands",
-        link: "/brands",
-    },
-    {
-        icon: FaChartPie,
-        name: "Sales",
-        title: "Sales",
-        link: "/sales",
     },
     {
         icon: GiBuyCard,
@@ -44,16 +33,22 @@ export const routes = [
         link: "/inventory",
     },
     {
-        icon: FaHandHoldingUsd,
-        name: "Invoices",
-        title: "Invoices",
-        link: "/invoices",
+        icon: MdCategory,
+        name: "Cashiers",
+        title: "Cashiers",
+        link: "/cashiers",
     },
     {
-        icon: FaCreditCard,
-        name: "Billings",
-        title: "Billings",
-        link: "/billings",
+        icon: TbBrandApplePodcast,
+        name: "Customers",
+        title: "Customers",
+        link: "/customers",
+    },
+    {
+        icon: FaHandHoldingUsd,
+        name: "Reports",
+        title: "Reports",
+        link: "/reports",
     },
     {
         icon: FaLocationPin,
@@ -82,4 +77,39 @@ export const secondaryroutes = [
         title: "Clerks",
         link: '/clerks',
     }
+]
+
+export const FRAMEWORKS = [
+    {
+        value: "next.js",
+        label: "Next.js",
+    },
+    {
+        value: "sveltekit",
+        label: "SvelteKit",
+    },
+    {
+        value: "nuxt.js",
+        label: "Nuxt.js",
+    },
+    {
+        value: "remix",
+        label: "Remix",
+    },
+    {
+        value: "astro",
+        label: "Astro",
+    },
+    {
+        value: "wordpress",
+        label: "WordPress",
+    },
+    {
+        value: "express.js",
+        label: "Express.js",
+    },
+    {
+        value: "nest.js",
+        label: "Nest.js",
+    },
 ]

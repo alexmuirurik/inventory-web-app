@@ -1,32 +1,43 @@
 'use client'
-import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableRow } from '../ui/table';
-import { Checkbox } from '../ui/checkbox';
-import { ProductWithCategoriesAndBrands } from '@/prisma/types';
+import React, { useRef, useState } from 'react';
+import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
+import { Card, CardContent, CardFooter } from '../ui/card';
+import Image from 'next/image';
+import { Minus, Plus } from 'lucide-react';
+import { useCheckoutContext } from '@/context/usecheckout';
 
-const ProductsCard = ({products }: {products: ProductWithCategoriesAndBrands[]}) => {
-    const [checkbox, setCheckbox] = useState('hidden')
-    return (
-        <Table>
-            <TableBody className='border-t border-gray-200 rounded-md'>
-                {products.map(product => (
-                    <TableRow key={product.id} className='items-center'>
-                        <TableCell className='border-e border-gray-200 w-px p-1 pe-2'>
-                            <Checkbox className={ checkbox + ' me-2 border-gray-400 data-[state=checked]:bg-teal-600 ' } />
-                        </TableCell>
-                        <TableCell className="flex items-center gap-2 font-medium capitalize">
-                            <img src={product.image} className='static w-6 h-6' alt=''/>
-                            {product.name}
-                        </TableCell>
-                        <TableCell>{product.sku}</TableCell>
-                        <TableCell>{product.category.name}</TableCell>
-                        <TableCell>{product.brand.name}</TableCell>
-                        <TableCell className="text-right">{product.status}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
+const ProductsCard = ({ product }: { product: ProductWithCategoriesBrandsAndStock }) => { 
+    const [active, setActive] = useState('')
+    const count = useRef(0)
+    const { setProductId, removeProductId } = useCheckoutContext()
+    const productsinstock = product.productInStock?.reduce((prev, curr) => { return prev + curr.count }, 0)
+    const onCount = async (action: string) => {
+        if (action === 'plus' && count.current < productsinstock) {
+            count.current++
+            return setProductId(product.id, count.current)
+        } else if (action ==='minus' && count.current > 0) { 
+            count.current--
+            if (count.current < 1) {
+                return removeProductId(product.id)
+            } else {
+                return setProductId(product.id, count.current)
+            }
+        }
+        (count.current > 0) ? setActive('border-teal-500') : setActive('')
+    }
+    return <Card className={'bg-transparent p-0 overflow-hidden ' + active}>
+        <div className="flex image-box h-40 max-h-52 overflow-clip">
+            <Image className='!static w-fit h-full' src={'/uploads/1.jpg'} alt='' fill />
+        </div>
+        <CardContent className={' w-fill border-b p-3 overflow-hidden '}>
+            <p className='text-sm font-bold text-gray-800 text-nowrap'>{product.name }</p>
+            <p className='flex items-center gap-2 text-sm font-medium text-gray-500'>
+                <span className={'text-xs ' + (productsinstock > 0) ? 'text-teal-600' : 'text-red-600'}>
+                    {productsinstock > 0 ? productsinstock + ' in stock' : 'Out of Stock'}
+                </span>
+            </p>
+        </CardContent>
+    </Card>
 }
 
 export default ProductsCard;

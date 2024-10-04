@@ -17,7 +17,31 @@ export const getCashier = async (email: string) => {
     } catch (error) {
         console.log('We faced an error getting the Cashier ' + error)
     }
-} 
+}
+
+export const getCustomer = async (customerId:string) => {
+    try {
+        const customer = await prisma.customer.findUnique({ where: { id: customerId }})
+        return customer
+    } catch (error) {
+        console.log('Getting Customer Error: ' + error)
+    }
+}
+
+export const createRandomCustomer = async (customerId:string, businessLocationId: string) => {
+    try {
+        const customer = await getCustomer(customerId)
+        if (customer) return customer
+        const createdcustomer = await prisma.customer.create({ data: { 
+            name: `random`,
+            mobile: `0700238239`,
+            businessLocationId: businessLocationId
+        }})
+        return createdcustomer
+    } catch (error) {
+        console.log('Creating Customer Error: ' + error)
+    }
+}
 
 export const onboardCashier = async (email: string, id: string) => {
     try {
