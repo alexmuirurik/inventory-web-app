@@ -4,6 +4,16 @@ import prisma from "@/prisma/prisma"
 import { productSchema, stockSchema } from "@/prisma/schema"
 import { z } from "zod"
 import { uploadImage } from "./ImageController"
+import { findActiveSale } from "./salesController"
+
+export const getProductById = async (productId: string) => {
+    try {
+        const product = await prisma.product.findUnique({ where: { id: productId } })
+        return product
+    } catch (error) {
+        console.log('Getting Product By Id Error: ' + error)
+    }
+}
 
 export const getProduct = async (businessId: string, productName: string) => {
     try {
@@ -25,12 +35,29 @@ export const getManyProducts = async (businessId: string) => {
             },
             include: {
                 category: true,
-                brand: true
+                checkoutitems: true,
+                brand: true,
+                productInStock: true
             }
         })
         return products
     } catch (error) {
         return console.log('We faced an error getting many products ' + error)
+    }
+}
+
+export const getProductsinCart = async () => {
+    try {
+        const sale = await findActiveSale()
+        const checkoutitems = await prisma.checkoutItem.findMany({ 
+            where: { saleId: sale?.id },
+            include: {
+                product: true
+            } 
+        })
+        return checkoutitems
+    } catch (error) {
+        return console.log('Products in Cart Error ' + error)
     }
 }
 

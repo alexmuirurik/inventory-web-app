@@ -1,41 +1,50 @@
-"use client"
-import React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, } from "@/components/ui/command"
-import { FormControl } from "@/components/ui/form"
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover" 
-import { Brand, Category, Tag } from "@prisma/client"
-import { UseFormReturn } from "react-hook-form"
-import { Input } from "../ui/input"
+'use client'
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { Command, CommandInput, CommandItem, CommandList } from "../ui/command";
+import { useCheckoutContext } from "@/context/usecheckout";
+import { addProductToCart } from "@/actions/salesController";
 
-const SelectAndAdd = ({ list, form, formItem, field}: {list: Category[] | Brand[] | Tag[], form: any, formItem: string, field: any } ) => {
-    const labels =  list.map(item => ({ label: item.name, value: item.id }))
-    
+interface ICommandProps { 
+    setLoading: Dispatch<SetStateAction<boolean>>, 
+    locationId: string,
+    confirmList: any[], 
+    list: any[] 
+}
+
+const SelectAndAdd = ({ confirmList, setLoading, locationId, list }: ICommandProps) => {
+    const [sortlist, setSortList] = useState<{ label:string, value:string }[]>([])
+    const { products, setProductId } = useCheckoutContext()
+    const handleValueChange = (value: string) => {
+        if(!value || value === '') return setSortList([])
+        const labels = list.map(item => ({ label: item.name as string, value: item.id as string }))
+        const usedlabels = confirmList.map(item => ({ label: item.name as string, value: item.id as string }))
+        const sorteditems = labels.filter(item => !!usedlabels.includes(item))
+        const filteredlist = sorteditems.filter(item => item.label.toLowerCase().includes(value.toLocaleLowerCase()))
+        setSortList(filteredlist)
+    }
+    const handleValueClick = async (productId:string) => {
+        setLoading(true)
+        const addtocart = await addProductToCart(locationId, productId, 1)
+        if (!addtocart) return
+        setProductId(productId, 1)
+        const sortedlist = sortlist.filter(item => item.value !== productId)
+        setLoading(false)
+        setSortList(sortedlist)
+    }
     return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <FormControl>
-                    <Input placeholder="Brand" {...field} className="border-gray-600 text-gray-200" />
-                </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className="p-0">
-                <Command>
-                    <CommandInput placeholder="Search language..." />
-                    <CommandList>
-                        <CommandEmpty>No language found.</CommandEmpty>
-                        <CommandGroup>
-                            {labels.map(item => 
-                                <CommandItem value={item.label} key={item.value} onSelect={() => { form.setValue(formItem, item.value ) }} >
-                                    <Check className={"mr-2 h-4 w-4" + item.value === field.value ? "opacity-100" : "opacity-0" } />
-                                    {item.label}
-                                </CommandItem>)}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    )
+        <Command className="" >
+            <CommandInput  placeholder="Search Product..." onValueChange={handleValueChange} />
+                <CommandList>
+                    {sortlist.map( item =>
+                        <CommandItem className="cursor-pointer" key={item.value} value={item.value}>
+                            <span className="w-full" onClick={() => handleValueClick(item.value) }>
+                                {item.label}
+                            </span>
+                        </CommandItem>
+                    )} 
+                </CommandList>
+        </Command>
+    );
 }
 
 export default SelectAndAdd

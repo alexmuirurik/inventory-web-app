@@ -10,7 +10,7 @@ const DashboardLayout = async ({children}: React.PropsWithChildren) => {
     if(!session?.user) redirect('/login')
     const business = await getBusiness(session.user.id as string) ?? undefined
     return (
-        <main className="main relative md:w-[calc(100%_-_15rem)] md:left-52 mx-3 md:mx-0 md:ms-4 top-px">
+        <main className="main relative md:w-[calc(100%_-_6rem)] lg:w-[calc(100%_-_15rem)] md:left-16 lg:left-52 mx-3 md:mx-0 md:ms-4 top-px">
             <Sidebar business={business}/>
             <div className='main-wrapper'>
                 <Navbar />

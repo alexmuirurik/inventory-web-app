@@ -35,13 +35,16 @@ export const stockSchema = z.object({
 })
 
 export const cartSchema = z.object({
-    productId: z.string(),
-    buyingPrice: z.string(),
-    sellingPrice: z.string(),
-    discount: z.string(),
-    supplierId: z.string(),
+    businessLocationId: z.string()
+})
+
+export const checkoutSchema = z.object({
     businessLocationId: z.string(),
-    colors: z.string()
+    customerId: z.string(),
+    sellingPrice: z.number(),
+    buyingPrice: z.number(),
+    count: z.number(),
+    productId: z.string(),
 })
 
 export const productSchema = z.object({

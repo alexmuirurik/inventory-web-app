@@ -7,7 +7,7 @@ import NextTopLoader from "nextjs-toploader"
 const nunito = Nunito({ subsets: ['vietnamese'] })
 
 export const metadata: Metadata = {
-	title: "NextAuth.js Example",
+	title: "Inventory Bizz",
 	description: "This is an example site to demonstrate how to use NextAuth.js for authentication",
 }
 

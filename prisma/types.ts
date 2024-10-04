@@ -6,15 +6,17 @@ export type productInStockAndProductAndPurchase = Prisma.ProductInStockGetPayloa
     }
 }>
 
-export type CheckoutItemsWithProducts = Prisma.PurchaseItemGetPayload<{
+export type CheckoutitemswithProducts = Prisma.CheckoutItemGetPayload<{
     include: {
-        product: true
+        product: true,
     }
 }>
 
-export type ProductWithCategoriesAndBrands = Prisma.ProductGetPayload<{
+export type ProductWithCategoriesBrandsAndStock = Prisma.ProductGetPayload<{
     include: {
-        category: true,
-        brand: true
+        category?: true,
+        checkoutitems?: true,
+        brand?: true,
+        productInStock?: true
     }
 }>

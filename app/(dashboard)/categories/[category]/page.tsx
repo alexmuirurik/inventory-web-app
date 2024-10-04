@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InventoryCheckOutPage = () => {
+const CategoryPage = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const InventoryCheckOutPage = () => {
     );
 }
 
-export default InventoryCheckOutPage;
+export default CategoryPage;

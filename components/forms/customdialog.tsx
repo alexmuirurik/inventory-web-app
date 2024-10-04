@@ -15,7 +15,7 @@ const CustomDialog = ({ open, setOpen, btntitle, description, children }: dialog
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <LoadingButton variant="outline" className='bg-teal-500 hover:bg-teal-400 text-gray-200 hover:text-gray-100 font-mono font-bold'>
+                <LoadingButton variant="outline" className='bg-teal-500 hover:bg-teal-400 text-gray-200 hover:text-gray-100 w-full sm:w-auto font-mono font-bold'>
                     {btntitle}
                 </LoadingButton>
             </DialogTrigger>

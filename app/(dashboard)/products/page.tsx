@@ -19,11 +19,11 @@ const ProductsPage = async () => {
     return (
         <div className="page-wrapper">
             <PageHeader title='Products' description={String(products.length)} >
-                <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
+                <input type="text" className="bg-transparent hidden md:block focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
                 <AddProduct business={business} categories={categories} brands={brands} />
             </PageHeader>
-            <div className="page-body">
-                <ProductsCard products={products} />
+            <div className="page-body grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                { products.map( product => <ProductsCard product={product} /> )}
             </div>
         </div>
     );

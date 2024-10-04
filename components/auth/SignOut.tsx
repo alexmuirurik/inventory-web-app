@@ -2,7 +2,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
-import { LoadingButton } from "../ui/loadingbtn"
+import { LoadingButton } from "../ui/loadingbutton"
 
 export function SignOut() {
 	const [signout, setsignout] = useState(false)
