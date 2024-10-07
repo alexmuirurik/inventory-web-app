@@ -27,12 +27,6 @@ export const routes = [
         link: "/products",
     },
     {
-        icon: GiBuyCard,
-        name: "Inventory",
-        title: "Inventory",
-        link: "/inventory",
-    },
-    {
         icon: MdCategory,
         name: "Cashiers",
         title: "Cashiers",
