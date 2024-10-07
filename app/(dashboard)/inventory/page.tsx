@@ -6,7 +6,6 @@ import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
 import StocksCard from '@/components/cards/stockscard';
 import { getLocationById, getManyLocations } from '@/actions/locationController';
-import AddStock from '@/components/forms/addstock';
 
 const InventoryPage = async () => {
     const session = await auth()
@@ -20,7 +19,7 @@ const InventoryPage = async () => {
         <div className="page-wrapper">
             <PageHeader title='Inventory' description={String(productsInStock.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddStock products={products} businessLocations={businessLocations} />
+                
             </PageHeader>
             <div className="page-body">
                 <StocksCard products={productsInStock} />

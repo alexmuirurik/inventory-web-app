@@ -9,7 +9,9 @@ import { getManyCategories } from '@/actions/categoryController'
 import { getManyBrands } from '@/actions/brandController'
 import { CheckoutContextProvider } from '@/context/usecheckout'
 import CheckoutCart from '@/components/cards/checkoutcart'
-import OrderLineProductsCard from '@/components/cards/orderlineproductcard'
+import { SearchContextProvider } from '@/context/usesearch'
+import SearchForm from '@/components/forms/searchform'
+import OrderList from '@/components/cards/orderlist'
 
 const OrderLinePage = async () => {
     const session = await auth()
@@ -19,28 +21,26 @@ const OrderLinePage = async () => {
     const products = await getManyProducts(business.id) ?? []
     const categories = await getManyCategories(business.id) ?? []
     const brands = await getManyBrands(business.id) ?? []
+    const location = session?.user.activeLocation as string
     return (
         <div className="page-wrapper">
-            <PageHeader title='Order Line' description={String(productsincart.length)} >
-                <input type="text" className="bg-transparent hidden md:block focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct business={business} brands={brands} categories={categories} />
-            </PageHeader>
-            <div className="page-body md:flex gap-3">
-                <CheckoutContextProvider fullproducts={products} businessLocationId={session?.user.activeLocation as string} >
-                    <div className="md:order-last md:w-4/12 lg:w-3/12">
-                        <CheckoutCart checkoutItems={productsincart} locationId={session?.user.activeLocation as string} fullProducts={products} />
-                    </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:w-8/12 lg:w-9/12">
-                        {productsincart.map(checkoutitem => {
-                            const product = products.find(product => checkoutitem.product.id === product.id)
-                            if(!product) return
-                            return <OrderLineProductsCard key={checkoutitem.id} locationId={session?.user.activeLocation as string} 
-                                product={product} checkoutitem={checkoutitem} />
-                        })}
-                    </div>
-                </CheckoutContextProvider>
+            <SearchContextProvider>
+                <PageHeader title='Order Line' description={String(productsincart.length)} >
+                    <SearchForm />
+                    <AddProduct business={business} brands={brands} categories={categories} />
+                </PageHeader>
+                <div className="page-body md:flex gap-3">
+                    <CheckoutContextProvider productsInCart={productsincart} fullproducts={products} businessLocationId={session?.user.activeLocation as string} >
+                        <div className="md:order-last md:w-4/12 lg:w-3/12">
+                            <CheckoutCart checkoutItems={productsincart} locationId={session?.user.activeLocation as string} fullProducts={products} />
+                        </div>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:w-8/12 lg:w-9/12 transition-all">
+                            <OrderList locationId={location} products={products} checkoutitems={productsincart} />
+                        </div>
+                    </CheckoutContextProvider>
 
-            </div> 
+                </div> 
+            </SearchContextProvider>
         </div>
     )
 }

@@ -4,7 +4,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import Image from "next/image"
 import Link from "next/link"
-import { LoadingButton } from "@/components/ui/loadingbtn"
+import { LoadingButton } from "@/components/ui/loadingbutton"
 
 const LoginPage = () => {
 	return (

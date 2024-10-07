@@ -85,3 +85,12 @@ export const addProductToCart = async (businessLocationId: string, productId: st
         console.log('Adding to Cart Error: ' + error)
     }
 }
+
+export const removeProductFromCart = async (checkoutItemId: string) => {
+    try {
+        const removedproduct = await prisma.checkoutItem.delete({ where: { id: checkoutItemId } })
+        return removedproduct
+    } catch (error) {
+        console.log('Product Remove Error ' + error)
+    }
+}
