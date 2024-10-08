@@ -28,15 +28,15 @@ export const routes = [
     },
     {
         icon: MdCategory,
-        name: "Cashiers",
-        title: "Cashiers",
-        link: "/cashiers",
+        name: "Category",
+        title: "Category",
+        link: "/categories",
     },
     {
         icon: TbBrandApplePodcast,
-        name: "Customers",
-        title: "Customers",
-        link: "/customers",
+        name: "Arrears",
+        title: "Arrears",
+        link: "/arrears",
     },
     {
         icon: FaHandHoldingUsd,

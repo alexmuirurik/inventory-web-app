@@ -1,28 +1,29 @@
 import React from 'react';
 import PageHeader from '@/components/layouts/PageHeader';
+import AddProduct from '@/components/forms/addproduct';
 import { auth } from '@/auth';
 import { getBusiness } from '@/actions/businessController';
 import { redirect } from 'next/navigation';
-import { getManyBrands } from '@/actions/brandController';
-import AddBrand from '@/components/forms/addbrand';
-import BrandsCard from '@/components/cards/brandscard';
+import { getManyLocations } from '@/actions/locationController';
+import LocationsCard from '@/components/cards/locationscard';
+import AddLocation from '@/components/forms/addlocation';
 
-const BrandsPage = async () => {
+const ArrearsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-    const brands = await getManyBrands(business.id) ?? []
+    const locations = await getManyLocations(business.id) ?? []
     return (
         <div className="page-wrapper">
-            <PageHeader title='Brands' description={String(brands?.length)} >
+            <PageHeader title='Arrears' description={String(locations.length)} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddBrand business={business} />
+                <AddLocation business={business} />
             </PageHeader>
-            <div className="page-body grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-                <BrandsCard brands={brands.sort((a, b) => a.name.localeCompare(b.name) )} />
+            <div className="page-body">
+                <LocationsCard locations={locations} />
             </div>
         </div>
     );
 }
 
-export default BrandsPage;
+export default ArrearsPage;

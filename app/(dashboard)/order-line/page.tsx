@@ -17,7 +17,7 @@ const OrderLinePage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
     if (!business) return redirect('/settings')
-    const productsincart = await getProductsinCart() ?? []
+    const productsincart = await getProductsinCart(session?.user.activeLocation as string) ?? []
     const products = await getManyProducts(business.id) ?? []
     const categories = await getManyCategories(business.id) ?? []
     const brands = await getManyBrands(business.id) ?? []
@@ -38,7 +38,6 @@ const OrderLinePage = async () => {
                             <OrderList locationId={location} products={products} checkoutitems={productsincart} />
                         </div>
                     </CheckoutContextProvider>
-
                 </div> 
             </SearchContextProvider>
         </div>

@@ -8,8 +8,7 @@ import { getLocationById } from '@/actions/locationController'
 
 const Navbar = async () => {
     const session = await auth()
-    const user = await getUser(session?.user.id as string)
-	const activelocation = await getLocationById(user?.activeLocation as string)
+	const activelocation = await getLocationById(session?.user?.activeLocation as string)
     return (
         <div className="navbar h-16 border border-gray-300 rounded-lg p-0">
 			<div className="flex items-center w-full">
@@ -17,7 +16,7 @@ const Navbar = async () => {
 					<Avatar className='h-6 w-6'>
 						<AvatarImage className='h-6 w-6' src='/assets/img/Ellipse.png' alt=""/>
 					</Avatar>
-                    { activelocation?.name }
+                    <span className='hidden sm:block'>{ activelocation?.name }</span>
 				</div>
 				<div className="w-5/12 sm:w-4/12 flex flex-none ms-auto justify-end mb-2 mt-2 pe-4">
 					<NavBarMenu />

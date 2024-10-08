@@ -60,13 +60,13 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
             </CardHeader>
             <CardContent className='p-0 flex-col '>
                 <div className="space-y-2 px-2 w-full">
-                    <div className="flex items-center justify-between py-3">
-                        <div className='flex flex-col items-center '>
-                           <HiCurrencyDollar className='hover:bg-teal-200 text-teal-600 border w-36 h-10 px-8 py-2 cursor-pointer' /> 
+                    <div className="flex items-center justify-between gap-2 py-3">
+                        <div className='flex flex-col items-center w-full '>
+                           <HiCurrencyDollar className='hover:bg-teal-200 text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer' /> 
                            <span className='text-sm font-medium'>Cash</span>
                         </div>
-                        <div className="flex flex-col items-center">
-                            <CiMobile3 className='hover:bg-teal-200 text-teal-600 border w-36 h-10 px-8 py-2 cursor-pointer' />
+                        <div className="flex flex-col items-center w-full">
+                            <CiMobile3 className='hover:bg-teal-200 text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer' />
                             <span className='text-sm font-medium'>Mobile</span>
                         </div>
                     </div>
