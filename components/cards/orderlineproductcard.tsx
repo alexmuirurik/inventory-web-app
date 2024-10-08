@@ -7,6 +7,7 @@ import { useCheckoutContext } from '@/context/usecheckout';
 import { CheckoutitemswithProducts, ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
 import { addProductToCart, removeProductFromCart, updateProductinCart } from '@/actions/salesController';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 interface OrderLineProducts { 
     locationId: string,
     product: ProductWithCategoriesBrandsAndStock, 
@@ -51,7 +52,9 @@ const OrderLineProductsCard = ({ locationId, product, checkoutitem }: OrderLineP
             <Image className='!static w-fit h-full' src={'/uploads/1.jpg'} alt='' fill />
         </div>
         <CardContent className={' w-fill border-b p-3 overflow-hidden '}>
-            <p className='text-sm font-bold text-gray-800 text-nowrap'>{product.name }</p>
+            <Link href={'/products/' + product.id} className='hover:text-teal-900 text-sm font-bold text-gray-800 text-nowrap'>
+                {product.name }
+            </Link>
             <p className='flex items-center gap-2 text-sm font-medium text-gray-500'>
                 <span className={'text-xs ' + (productsinstock > 0) ? 'text-teal-600' : 'text-red-600'}>
                     {productsinstock > 0 ? productsinstock + ' in stock' : 'Out of Stock'}

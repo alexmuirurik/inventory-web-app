@@ -46,9 +46,9 @@ export const getManyProducts = async (businessId: string) => {
     }
 }
 
-export const getProductsinCart = async () => {
+export const getProductsinCart = async (businessLocationId: string) => {
     try {
-        const sale = await findActiveSale()
+        const sale = await findActiveSale(businessLocationId)
         const checkoutitems = await prisma.checkoutItem.findMany({ 
             where: { saleId: sale?.id },
             include: {

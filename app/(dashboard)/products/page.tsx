@@ -23,7 +23,7 @@ const ProductsPage = async () => {
                 <AddProduct business={business} categories={categories} brands={brands} />
             </PageHeader>
             <div className="page-body grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-                { products.map( product => <ProductsCard product={product} /> )}
+                <ProductsCard products={products} />
             </div>
         </div>
     );
