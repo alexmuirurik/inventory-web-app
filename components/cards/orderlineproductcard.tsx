@@ -17,36 +17,38 @@ interface OrderLineProducts {
 const OrderLineProductsCard = ({ locationId, product, checkoutitem }: OrderLineProducts ) => { 
     const [active, setActive] = useState((checkoutitem?.count ?? 0 > 0) && 'border-teal-500' )
     const count = useRef(checkoutitem?.count ?? 0)
-    const { setAddingToCart, setProductId, removeProductId } = useCheckoutContext()
+    const { products, setAddingToCart, setProductId, removeProductId } = useCheckoutContext()
     const router = useRouter()
-    const productsinstock = product.productInStock.find(stock => stock.businessLocationId === locationId)?.count ?? 0
+    const productsinstock = product.productInStock.find(stock => stock.businessLocationId === locationId)
+    const activeproduct = products.find(item => item.productId === product.id)
     const onCount = async (action: string) => {
-        if (action === 'plus' && count.current < productsinstock) {
+        if (action === 'plus' && count.current < (productsinstock?.count ?? 0)) {
             setAddingToCart(true)
-            count.current++
-            const addtocart = await addProductToCart(locationId, product.id, count.current)
+            const ccount = products.find(product => product.productId === checkoutitem?.productId)?.count ?? 0
+            count.current = ccount + 1
             setProductId(product.id, count.current)
+            const addtocart = await addProductToCart(locationId, product.id, count.current)
             router.refresh()
             setAddingToCart(false)
         } else if (action ==='minus' && count.current > 0) { 
             if(!checkoutitem) return
-            count.current--
-            if (count.current < 1) {
+            if (count.current === 1) {
                 setAddingToCart(true)
                 removeProductId(checkoutitem.product.id)
                 const removedproduct = await removeProductFromCart(checkoutitem.id)
                 setAddingToCart(false)
             } else {
+                count.current--
                 setAddingToCart(true)
-                const updateproduct = await updateProductinCart(checkoutitem?.id, count.current, 'unpaid')
                 setProductId(checkoutitem.product.id, count.current)
+                const updateproduct = await updateProductinCart(checkoutitem?.id, count.current, 'unpaid')
                 router.refresh()
                 setAddingToCart(false)
             }
         }
         (count.current > 0) ? setActive('border-teal-500') : setActive('')
     }
-
+    
     return <Card className={'bg-transparent h-fit p-0 overflow-hidden ' + active}>
         <div className="flex image-box h-40 max-h-52 overflow-clip">
             <Image className='!static w-fit h-full' src={'/uploads/1.jpg'} alt='' fill />
@@ -56,16 +58,16 @@ const OrderLineProductsCard = ({ locationId, product, checkoutitem }: OrderLineP
                 {product.name }
             </Link>
             <p className='flex items-center gap-2 text-sm font-medium text-gray-500'>
-                <span className={'text-xs ' + (productsinstock > 0) ? 'text-teal-600' : 'text-red-600'}>
-                    {productsinstock > 0 ? productsinstock + ' in stock' : 'Out of Stock'}
+                <span className={'text-xs ' + (productsinstock?.count ?? 0 > 0) ? 'text-teal-600' : 'text-red-600'}>
+                    {productsinstock?.count ?? 0 > 0 ? productsinstock?.count ?? 0 + ' in stock' : 'Out of Stock'}
                 </span>
             </p>
         </CardContent>
         <CardFooter className='flex justify-between items-center select-none px-3 py-2' >
-            <p className='text-lg text-teal-700 font-bold cursor-text'>${ productsinstock ?? 0}</p>
+            <p className='text-lg text-teal-700 font-bold cursor-text'>${ productsinstock?.sellingPrice ?? 0}</p>
             <div className="flex items-center gap-2">
                 <Minus className='bg-gray-300 text-gray-700 h-4 w-4 p-0.5 cursor-pointer' onClick={() => onCount('minus')} />
-                <span className='text-teal-500 font-bold'>{count.current}</span>
+                <span className='text-teal-500 font-bold'>{ activeproduct?.count ?? 0 }</span>
                 <Plus className='bg-teal-500 text-gray-700 w-4 h-4 p-0.5 cursor-pointer' onClick={() => onCount('plus')} />
             </div>
         </CardFooter>

@@ -2,7 +2,7 @@
 import { createSKU, stringToJSON } from "@/lib/utils"
 import prisma from "@/prisma/prisma"
 import { productSchema, stockSchema } from "@/prisma/schema"
-import { z } from "zod"
+import { number, z } from "zod"
 import { uploadImage } from "./ImageController"
 import { findActiveSale } from "./salesController"
 
@@ -67,7 +67,7 @@ export const getProductInStock = async (businessLocationId: string, productId: s
             businessLocationId: businessLocationId,
             productId: productId
         }})
-        if(product) return product
+        return product
     } catch (error) {
         return console.log('Product in Location ' + error)
     }
@@ -103,6 +103,20 @@ export const createProduct = async (data: z.infer<typeof productSchema>) => {
         return createdproduct
     } catch (error) {
         return console.log('We faced an error creating a product ' + error)
+    }
+}
+
+export const updateProductStock = async (businessLocationId: string, productId: string, count: number) => {
+    try {
+        const productInStock = await getProductInStock(businessLocationId, productId)
+        if(!productInStock) return
+        const updatedproductinstock = await prisma.productInStock.update({
+            where: { id: productInStock.id },
+            data: { count: count }
+        })
+        return updatedproductinstock
+    } catch (error) {
+        console.log('Update Product Stock Error ' + error)
     }
 }
 

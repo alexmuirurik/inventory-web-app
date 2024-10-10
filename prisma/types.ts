@@ -20,3 +20,10 @@ export type ProductWithCategoriesBrandsAndStock = Prisma.ProductGetPayload<{
         productInStock?: true
     }
 }>
+
+export type SaleWithCheckoutItem = Prisma.SaleGetPayload<{
+    include: {
+        checkoutitems: true,
+        customer: true,
+    }
+}>
