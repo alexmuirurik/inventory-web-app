@@ -1,22 +1,20 @@
 "use client"
-
 import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, } from "@/components/ui/chart"
 import { chartConfig, chartData } from "@/lib/chartdata"
 
-
-const DashChart = () => {
+const DashChart = ({className}: {className?: string}) => {
     return (
-        <Card className="bg-transparent mt-4 px-0">
+        <Card className={className}>
             <CardHeader>
                 <CardTitle>Area Chart - Gradient</CardTitle>
                 <CardDescription>
                     Showing total visitors for the last 6 months
                 </CardDescription>
             </CardHeader>
-            <CardContent className="relative h-80 w-full px-0">
+            <CardContent className="relative h-52 w-full px-0">
                 <ChartContainer config={chartConfig} className="relative h-full w-full">
                     <LineChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12, }} >
                         <CartesianGrid vertical={false} />

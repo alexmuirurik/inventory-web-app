@@ -1,5 +1,4 @@
 'use client'
-import { addProductToCart } from '@/actions/salesController';
 import { CheckoutitemswithProducts, ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
@@ -17,7 +16,8 @@ const checkoutInitializer = {
     setAddingToCart: (change: boolean) => { },
     products: [{ productId: '', stock: 0, count: 0, buyingPrice: 0, sellingPrice: 0 }],
     setProductId: (productId: string, count: number) => { },
-    removeProductId: (productId: string) => { }
+    removeProductId: (productId: string) => { },
+    completeCheckoutOrder: () => {}
 }
 
 const checkoutContext = createContext(checkoutInitializer)
@@ -61,7 +61,9 @@ export const CheckoutContextProvider = ({ productsInCart, fullproducts, business
         return setProducts(prods)
     }
 
-    return <checkoutContext.Provider value={{ addingToCart, setAddingToCart, products, setProductId, removeProductId }}>
+    const completeCheckoutOrder = () => setProducts([])
+
+    return <checkoutContext.Provider value={{ addingToCart, setAddingToCart, products, setProductId, removeProductId, completeCheckoutOrder }}>
         {children}
     </checkoutContext.Provider>
 }

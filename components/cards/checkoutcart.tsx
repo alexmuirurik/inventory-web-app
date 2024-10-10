@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useCheckoutContext } from '@/context/usecheckout';
 import { CheckoutitemswithProducts, ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
 import { LoadingButton } from '../ui/loadingbutton';
@@ -8,6 +8,9 @@ import { CiMobile3 } from "react-icons/ci";
 import { HiCurrencyDollar } from "react-icons/hi2";
 import { ImSpinner10 } from "react-icons/im";
 import CheckoutItemsCard from './checkoutitemscard';
+import { useToast } from '../ui/use-toast';
+import { completeSale } from '@/actions/salesController';
+import { useRouter } from 'next/navigation';
 
 interface CheckoutItems {
     checkoutItems: CheckoutitemswithProducts[],
@@ -16,9 +19,34 @@ interface CheckoutItems {
 }
 
 const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems) => {
+    const [activePayMethod, setActivePayMethod] = useState('')
     const [loading, setLoading] = useState(false)
-    const [activeButton, setActiveButton] = useState('')
-    const { addingToCart, setAddingToCart, products, removeProductId } = useCheckoutContext()
+    const {toast} = useToast()
+    const router = useRouter()
+    const { addingToCart, products, removeProductId, completeCheckoutOrder } = useCheckoutContext()
+    const totalsellingPrice = products.reduce((prev, curr) => {return prev + (curr.count * curr.sellingPrice) }, 0)
+    const totalprofit = products.reduce((prev, curr) => { return prev + ((curr.sellingPrice - curr.buyingPrice) * curr.count) }, 0)
+    const handleCompleteOrder = async () => {
+        if(activePayMethod === '') return toast({ description: 'Choose Payment Method First', variant: 'destructive' })
+        setLoading(true)
+        const completedsale = await completeSale(locationId, checkoutItems, totalsellingPrice, totalsellingPrice)
+        if(completedsale) {
+            completeCheckoutOrder()
+            router.refresh()
+            toast({
+                title: 'Success',
+                description: 'We\'ve successfully added the sale',
+                variant: 'success'
+            })
+        }else {
+            toast({
+                title: 'Failed',
+                description: 'We failed to add the sale',
+                variant: 'destructive'
+            })   
+        }
+        setLoading(false)
+    }
     return (
         <Card className='bg-transparent p-0'>
             <div className='flex items-center justify-between w-full px-3 py-2'>
@@ -26,7 +54,7 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
                 {addingToCart && <span className='text-teal-600'><ImSpinner10 className='animate-spin' /></span>}
             </div>
             <CardContent className='p-3 space-y-3'>
-                <CheckoutItemsCard fullproducts={fullProducts} />
+                <CheckoutItemsCard checkoutitems={checkoutItems} fullproducts={fullProducts} />
             </CardContent>
             <CardHeader className='px-3 py-2'>
                 <CardTitle className='text-sm'>Payments Summary</CardTitle>
@@ -36,9 +64,7 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
                     <div className="flex justify-between border-b p-1">
                         <span className='text-xs'>Selling Price SubTotal</span>
                         <span className='text-sm font-bold'>
-                            ${products.reduce((prev, curr) => {
-                                return prev + (curr.count * curr.sellingPrice)
-                            }, 0)}.00
+                            ${totalsellingPrice}.00
                         </span>
                     </div>
                     <div className="flex justify-between border-b p-1">
@@ -48,9 +74,7 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
                     <div className="flex justify-between border-b p-1">
                         <span className='text-xs'>Profit</span>
                         <span className='text-sm font-bold'>
-                            ${products.reduce((prev, curr) => {
-                                return prev + ((curr.sellingPrice - curr.buyingPrice) * curr.count)
-                            }, 0)}.00
+                            ${totalprofit}.00
                         </span>
                     </div>
                 </div>
@@ -61,18 +85,24 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
             <CardContent className='p-0 flex-col '>
                 <div className="space-y-2 px-2 w-full">
                     <div className="flex items-center justify-between gap-2 py-3">
-                        <div className='flex flex-col items-center w-full '>
-                           <HiCurrencyDollar className='hover:bg-teal-200 text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer' /> 
-                           <span className='text-sm font-medium'>Cash</span>
+                        <div className='flex flex-col items-center w-full ' onClick={() => setActivePayMethod('cash')}>
+                            <HiCurrencyDollar className={
+                                ((activePayMethod === 'cash') ? 'bg-teal-200 ' : 'hover:bg-teal-100 ') +
+                                ' text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer'
+                            } />
+                            <span className='text-sm font-medium'>Cash</span>
                         </div>
-                        <div className="flex flex-col items-center w-full">
-                            <CiMobile3 className='hover:bg-teal-200 text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer' />
+                        <div className="flex flex-col items-center w-full" onClick={() => setActivePayMethod('mobile')}>
+                            <CiMobile3 className={
+                                ((activePayMethod === 'mobile') ? 'bg-teal-200 ' : 'hover:bg-teal-100 ') +
+                                ' text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer'
+                            } />
                             <span className='text-sm font-medium'>Mobile</span>
                         </div>
                     </div>
                 </div>
                 <div className="flex p-3 pt-0 w-full">
-                    <LoadingButton loading={loading} className='bg-teal-500 hover:bg-teal-400 w-full'>
+                    <LoadingButton loading={loading} className='bg-teal-500 hover:bg-teal-400 w-full' onClick={() => handleCompleteOrder()} >
                         Complete Order
                     </LoadingButton>
                 </div>
