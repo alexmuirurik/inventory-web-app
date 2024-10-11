@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const businessSchema = z.object({
     name: z.string(),
+    mobile: z.string(),
+    logo: z.string().optional(),
     location: z.string(),
     country: z.string(),
     city: z.string(),

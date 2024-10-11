@@ -41,6 +41,7 @@
     "nextjs-toploader": "^1.6.12",
     "prisma": "^5.20.0",
     "react": "^18.2.0",
+    "react-avatar-edit": "^1.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.52.2",
