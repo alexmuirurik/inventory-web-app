@@ -4,6 +4,7 @@ import prisma from "@/prisma/prisma"
 import { businessSchema } from "@/prisma/schema"
 import { z } from "zod"
 import { createLocation } from "./locationController"
+import { createCashier } from "./userController"
 
 export const getBusiness = async (userId: string) => {
     try {
@@ -25,18 +26,36 @@ export const createBusiness = async (data: z.infer<typeof businessSchema>) => {
         if(business) { 
             prisma.business.update({
                 where: { id: business.id },
-                data: { name: data.name }
+                data: { 
+                    name: data.name,
+                    mobile: data.mobile,
+                    logo: data.logo
+                }
             })
-            const location = createLocation(session?.user?.id as string, data, business.id)
+            const location = await createLocation(session?.user?.id as string, data, business.id)
+            const cashier = await createCashier({
+                email: session?.user.email as string,
+                userId: session?.user.id as string,
+                businessId: business.id,
+                businessLocationId: location?.id as string
+            })
             return business
         }else {
             const createdbusiness = await prisma.business.create({
                 data: { 
                     name: data.name,
+                    mobile: data.mobile,
+                    logo: data.logo,
                     ownerId: session?.user?.id as string
                 }
             })
-            const location = createLocation(session?.user?.id as string, data, createdbusiness.id)
+            const location = await createLocation(session?.user?.id as string, data, createdbusiness.id)
+            const cashier = await createCashier({
+                email: session?.user.email as string,
+                userId: session?.user.id as string,
+                businessId: createdbusiness.id,
+                businessLocationId: location?.id as string
+            })
             return createdbusiness
         }
     } catch (error) {

@@ -11,43 +11,46 @@ import { createBusiness } from "@/actions/businessController"
 import { useToast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Business, BusinessLocation } from "@prisma/client"
+import { useCompanyContext } from "@/context/usecompany"
 
-const CreateBusiness = ({business, location}: {business: Business | undefined, location: BusinessLocation | undefined}) => {
+const CreateBusiness = ({ business, location }: { business: Business | undefined, location: BusinessLocation | undefined }) => {
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
+    const {logo} = useCompanyContext()
     const router = useRouter()
-    console.log(location)
-    const form = useForm<z.infer<typeof businessSchema>>({ 
-        resolver: zodResolver(businessSchema), 
+    const form = useForm<z.infer<typeof businessSchema>>({
+        resolver: zodResolver(businessSchema),
         defaultValues: {
-            name        : business?.name, 
-            location    : location?.name, 
-            address     : location?.address, 
-            city        : location?.city, 
-            country     : location?.country
+            name: business?.name,
+            location: location?.name,
+            address: location?.address,
+            city: location?.city,
+            country: location?.country
         }
     })
     const onFormSubmit = async (data: z.infer<typeof businessSchema>) => {
         setLoading(true)
-        const business = await createBusiness(data)
+        const business = await createBusiness({...data, logo: logo })
         if (!business) {
             toast({
                 title: 'Failed',
-                description: 'Please Try Again'
+                description: 'Please Try Again',
+                variant:'destructive'
             })
         } else {
             toast({
                 title: 'Success',
-                description: 'Business Created Successfully'
+                description: 'Business Created Successfully',
+                variant:'success'
             })
         }
         setLoading(false)
-        return router.refresh()
+        return router.push('/')
     }
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-6">
-                <div className="flex">
+                <div className="sm:flex gap-3">
                     <FormField control={form.control} name='name' render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel>Business Name</FormLabel>
@@ -57,17 +60,6 @@ const CreateBusiness = ({business, location}: {business: Business | undefined, l
                             <FormMessage />
                         </FormItem>
                     )} />
-                    <FormField control={form.control} name='location' render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel>Location Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Location" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )} />
-                </div>
-                <div className="flex">
                     <FormField control={form.control} name='address' render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel>Address</FormLabel>
@@ -78,7 +70,27 @@ const CreateBusiness = ({business, location}: {business: Business | undefined, l
                         </FormItem>
                     )} />
                 </div>
-                <div className="flex">
+                <div className="sm:flex gap-3">
+                    <FormField control={form.control} name='location' render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Location Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Location" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    <FormField control={form.control} name='mobile' render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Mobile</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Mobile Number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                </div>
+                <div className="sm:flex gap-3">
                     <FormField control={form.control} name='city' render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel>City</FormLabel>
@@ -99,7 +111,7 @@ const CreateBusiness = ({business, location}: {business: Business | undefined, l
                     )} />
                 </div>
                 <div className="flex justify-end ">
-                    <LoadingButton type="submit" loading={loading}>Add Business</LoadingButton>
+                    <LoadingButton type="submit" className="bg-teal-600" loading={loading}>Add Business</LoadingButton>
                 </div>
             </form>
         </Form>

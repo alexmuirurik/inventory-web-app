@@ -32,6 +32,8 @@ export const createRandomCustomer = async (customerId:string, businessLocationId
     try {
         const customer = await getCustomer(customerId)
         if (customer) return customer
+        const randomcustomer = await prisma.customer.findFirst({where: {name: 'random'}})
+        if (randomcustomer) return randomcustomer
         const createdcustomer = await prisma.customer.create({ data: { 
             name: `random`,
             mobile: `0700238239`,
@@ -40,6 +42,17 @@ export const createRandomCustomer = async (customerId:string, businessLocationId
         return createdcustomer
     } catch (error) {
         console.log('Creating Customer Error: ' + error)
+    }
+}
+
+export const createCashier = async (data: {email: string, userId: string, businessId: string, businessLocationId: string}) => {
+    try {
+        const cashier = await getCashier(data.email)
+        if(cashier) return cashier
+        const createdcashier = await prisma.cashier.create({data: {...data, status: 'approved'}})
+        return createdcashier
+    } catch (error) {
+        console.log('Creating Cashier Error ' + error)
     }
 }
 
