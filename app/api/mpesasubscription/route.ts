@@ -11,6 +11,7 @@ export async function POST(request: Request) {
 			MerchantRequestID: MerchantRequestID
 		}
 	})
+	console.log(body)
 	if (body.stkCallback.ResultCode !== 0) {
 		await prisma.subscription.delete({where: {id: subscription?.id } })
 		return new Response('')
