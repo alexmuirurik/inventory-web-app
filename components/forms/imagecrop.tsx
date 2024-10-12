@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import { Business, User } from '@prisma/client';
 import { useCompanyContext } from '@/context/usecompany';
 
-const ImageCrop = ({user, business}: {user?: User, business?: Business}) => {
+const ImageCrop = () => {
     const [preview, setPreview] = useState('')
     const {logo, setCompanyLogo} = useCompanyContext()
     const setLogo = () => setCompanyLogo(preview)

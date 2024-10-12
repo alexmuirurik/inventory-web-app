@@ -15,6 +15,7 @@ model User {
     image         			String?
     role                    String @default("owner")
     activeLocation          String? @db.ObjectId
+    payments                Payment[]
     accounts      			Account[]
     sessions      			Session[]  
     businesses              Business[]
@@ -81,7 +82,6 @@ model Business {
     mobile          String
     logo            String?
     subscription    String?
-    subexpiry       DateTime?
 	ownerId			String @db.ObjectId
     owner           User @relation(fields: [ownerId], references: [id])
     subscriptions   Subscription[]
@@ -95,13 +95,18 @@ model Business {
 }
 
 model Subscription {
-    id				String @id @default(auto()) @map("_id") @db.ObjectId
-    amount          String
-    type            String
-    month           String
-    year            String
-	businessId      String @db.ObjectId
-    business        Business @relation(fields: [businessId], references: [id])
+    id				    String @id @default(auto()) @map("_id") @db.ObjectId
+    amount              String
+    mobile              String
+    type                String
+    month               String
+    year                String
+    MerchantRequestID   String?
+    CheckoutRequestID   String?
+    MpesaReceiptNumber  String?
+    status              String
+	businessId          String @db.ObjectId
+    business            Business @relation(fields: [businessId], references: [id])
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -270,14 +275,15 @@ model CheckoutItem {
 
 model Payment {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    names               Float
     mobile              String
-    email               String
     amount              Float
+    MerchantRequestID   String?
+    CheckoutRequestID   String?
     status              String
+    userId              String @db.ObjectId
     saleId              String @db.ObjectId
+    user                User @relation(fields: [userId], references: [id])
     sale                Sale @relation(fields: [saleId], references: [id])
-    paymentMethod       String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
