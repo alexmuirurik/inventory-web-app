@@ -41,7 +41,7 @@ export const initiateMPesaPayment = async (amount: number, phone: string) => {
                 "PartyA": phone,
                 "PartyB": 174379,
                 "PhoneNumber": phone,
-                "CallBackURL": "http://localhost:3000/api/mpesasubscription",
+                "CallBackURL": "https://inventory-pearl.vercel.app/api/mpesasubscription",
                 "AccountReference": "CompanyXLTD",
                 "TransactionDesc": "Payment of X"
             })
