@@ -96,7 +96,7 @@ model Business {
 
 model Subscription {
     id				    String @id @default(auto()) @map("_id") @db.ObjectId
-    amount              String
+    amount              Float
     mobile              String
     type                String
     month               String

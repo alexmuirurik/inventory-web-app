@@ -1,4 +1,7 @@
 'use server'
+
+import { createBusinessSubscription } from "./businessController";
+
 export const generateTimestamp = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -23,7 +26,7 @@ export const generateAccessToken = async () => {
     }
 }
 
-export const initiateMPesaPayment = async (amount: number, phone: string) => {
+export const initiateMPesaPayment = async (amount: number, phone: string, businessId: string) => {
     try {
         const access_token = await generateAccessToken()
         let headers = new Headers();
@@ -43,11 +46,15 @@ export const initiateMPesaPayment = async (amount: number, phone: string) => {
                 "PhoneNumber": phone,
                 "CallBackURL": "https://inventory-pearl.vercel.app/api/mpesasubscription",
                 "AccountReference": "CompanyXLTD",
-                "TransactionDesc": "Payment of X"
+                "TransactionDesc": "Payment of X. Refundable"
             })
         })
         const res = await req.json()
-        return res
+        if (res.ResponseCode !== '0') return
+        const MerchantRequestID = res.stkCallback.MerchantRequestID
+        const CheckoutRequestID = res.stkCallback.CheckoutRequestID
+        const subscription = await createBusinessSubscription(amount, phone, 'monthly', businessId, MerchantRequestID, CheckoutRequestID)
+        return subscription
     } catch (error) {
         console.log('Initiating Payment Error ' + error)
     }
