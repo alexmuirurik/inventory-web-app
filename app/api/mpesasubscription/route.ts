@@ -2,7 +2,7 @@ import prisma from "@/prisma/prisma"
 
 export async function POST(request: Request) {
 	const req = await request.json()
-	if (req.stkCallback.ResultCode !== 0) return
+	if (req.stkCallback.ResultCode !== 0) return new Response('')
 	const CheckoutRequestID = req.stkCallback.CheckoutRequestID
 	const MerchantRequestID = req.stkCallback.MerchantRequestID
 	const MpesaReceiptNumber = req.stkCallback.CallbackMetadata.Item[2].Value
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 			MerchantRequestID: MerchantRequestID
 		}
 	})
-	if (!subscription) return
+	if (!subscription) return new Response('')
 	await prisma.subscription.update({
 		where: { id: subscription.id },
 		data: {
@@ -20,9 +20,9 @@ export async function POST(request: Request) {
 			status: 'paid'
 		}
 	})
-	return await prisma.business.update({
+	await prisma.business.update({
 		where: { id: subscription.businessId as string },
 		data: { subscription: 'active' }
 	})
-
+	return new Response('')
 }
