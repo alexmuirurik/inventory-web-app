@@ -1,30 +1,54 @@
 'use server'
-export const sendSTKRequest = async (mobileNumber: string) => {
-    try {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append("Authorization", "Bearer 7HwUY73EAFow1ebIJYHj87qvwb7c");
+export const generateTimestamp = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+}
 
-        const request = await fetch('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
-            method: 'Post',
-            headers: headers,
+export const generateAccessToken = async () => {
+    let authString = `${process.env.SAFARICOM_CONSUMER_KEY}:${process.env.SAFARICOM_CONSUMER_SECRET}`
+    let headers = new Headers()
+    headers.set('Authorization', 'Basic ' + btoa(authString))
+    try {
+        const req = await fetch("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", { headers: headers });
+        const res = await req.json();
+        return res.access_token
+    } catch (error) {
+        console.log('Generating Access Token Error ' + error)
+    }
+}
+
+export const initiateMPesaPayment = async (amount: number, phone: string) => {
+    try {
+        const access_token = await generateAccessToken()
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append("Authorization", `Bearer ${access_token} `);
+        const req = await fetch("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest", {
+            method: 'POST',
+            headers,
             body: JSON.stringify({
                 "BusinessShortCode": 174379,
-                "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQxMDEwMjE1OTIw",
-                "Timestamp": "20241010215920",
+                "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQxMDEyMTQ1NDU2",
+                "Timestamp": "20241012145456",
                 "TransactionType": "CustomerPayBillOnline",
-                "Amount": 1,
-                "PartyA": 254708374149,
+                "Amount": amount,
+                "PartyA": phone,
                 "PartyB": 174379,
-                "PhoneNumber": 254708374149,
-                "CallBackURL": "https://inventory-pearl.vercel.app//api/mpesasubscription",
+                "PhoneNumber": phone,
+                "CallBackURL": "http://localhost:3000/api/mpesasubscription",
                 "AccountReference": "CompanyXLTD",
                 "TransactionDesc": "Payment of X"
             })
         })
-        const response = await request.json()
-        return response
+        const res = await req.json()
+        return res
     } catch (error) {
-        console.log('Sending Mpesa STK Error:' + error)
+        console.log('Initiating Payment Error ' + error)
     }
 }
