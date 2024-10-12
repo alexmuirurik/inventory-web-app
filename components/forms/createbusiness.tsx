@@ -45,7 +45,7 @@ const CreateBusiness = ({ business, location }: { business: Business | undefined
             })
         }
         setLoading(false)
-        return router.push('/')
+        return router.refresh()
     }
     return (
         <Form {...form}>

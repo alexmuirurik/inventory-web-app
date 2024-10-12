@@ -11,7 +11,7 @@ import AddLocation from '@/components/forms/addlocation';
 const ArrearsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     const locations = await getManyLocations(business.id) ?? []
     return (
         <div className="page-wrapper">

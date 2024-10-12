@@ -16,7 +16,7 @@ import OrderList from '@/components/cards/orderlist'
 const OrderLinePage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     const productsincart = await getProductsinCart(session?.user.activeLocation as string) ?? []
     const products = await getManyProducts(business.id) ?? []
     const categories = await getManyCategories(business.id) ?? []

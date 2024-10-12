@@ -10,7 +10,7 @@ import DashSalesList from '@/components/dash/dashsaleslist'
 const Dashboard = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if(!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     return (
         <div className="content space-y-3">
             <DashboardPreviews />

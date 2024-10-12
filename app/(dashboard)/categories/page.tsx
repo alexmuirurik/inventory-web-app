@@ -10,7 +10,7 @@ import CategoriesCard from '@/components/cards/categoriescard';
 const CategoriesPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     const categories = await getManyCategories(business.id) ?? []
     return (
         <div className="page-wrapper">

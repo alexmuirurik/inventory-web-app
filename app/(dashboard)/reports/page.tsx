@@ -10,7 +10,7 @@ import { getManySales } from '@/actions/salesController';
 const ReportsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     const sales = await getManySales(session?.user.activeLocation as string) ?? []
     return (
         <div className="page-wrapper">
