@@ -1,22 +1,22 @@
 import prisma from "@/prisma/prisma"
 
 export async function POST(request: Request) {
-	const req = await request.json()
-	console.log(req)
-	const CheckoutRequestID = req.stkCallback.CheckoutRequestID
-	const MerchantRequestID = req.stkCallback.MerchantRequestID
+	const reqs = await request.json()
+	const body = reqs.Body
+	const CheckoutRequestID = body.stkCallback.CheckoutRequestID
+	const MerchantRequestID = body.stkCallback.MerchantRequestID
 	const subscription = await prisma.subscription.findFirst({
 		where: {
 			CheckoutRequestID: CheckoutRequestID,
 			MerchantRequestID: MerchantRequestID
 		}
 	})
-	if (req.stkCallback.ResultCode !== 0) {
+	if (body.stkCallback.ResultCode !== 0) {
 		await prisma.subscription.delete({where: {id: subscription?.id } })
 		return new Response('')
 	} 
 	if (!subscription) return new Response('')
-	const MpesaReceiptNumber = req.stkCallback.CallbackMetadata.Item[2].Value
+	const MpesaReceiptNumber = body.stkCallback.CallbackMetadata.Item[2].Value
 	await prisma.subscription.update({
 		where: { id: subscription.id },
 		data: {
