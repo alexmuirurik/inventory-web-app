@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { createProduct } from "@/actions/productController"
 import { useToast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"
-import { ImageUploader } from "./imageuploader"
+import { Imageweploader } from "./imageweploader"
 
 const AddProduct = ({ business, categories, brands }: { business: Business, categories: Category[], brands: Brand[] }) => {
     const [preview, setPreview] = useState('')
@@ -126,7 +126,7 @@ const AddProduct = ({ business, categories, brands }: { business: Business, cate
                         )} />
                     </div>
                     <div className="md:flex gap-2">
-                        <ImageUploader setPreview={setPreview} preview={preview} />
+                        <Imageweploader setPreview={setPreview} preview={preview} />
                         <FormField control={form.control} name='status' render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">Status</FormLabel>
