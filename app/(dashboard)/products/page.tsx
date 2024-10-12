@@ -12,7 +12,7 @@ import { getManyBrands } from '@/actions/brandController';
 const ProductsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business) return redirect('/settings')
+    if(!business || business.subscription !== 'active') return redirect('/settings')
     const products = await getManyProducts(business.id) ?? []
     const categories = await getManyCategories(business.id) ?? []
     const brands     = await getManyBrands(business.id) ?? []

@@ -51,8 +51,8 @@ export const initiateMPesaPayment = async (amount: number, phone: string, busine
         })
         const res = await req.json()
         if (res.ResponseCode !== '0') return
-        const MerchantRequestID = res.stkCallback.MerchantRequestID
-        const CheckoutRequestID = res.stkCallback.CheckoutRequestID
+        const MerchantRequestID = res.MerchantRequestID
+        const CheckoutRequestID = res.CheckoutRequestID
         const subscription = await createBusinessSubscription(amount, phone, 'monthly', businessId, MerchantRequestID, CheckoutRequestID)
         return subscription
     } catch (error) {
