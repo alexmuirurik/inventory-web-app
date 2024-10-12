@@ -24,7 +24,7 @@ const MpesaSubscribe = ({ userId, business }: { userId: string, business?: Busin
         const loop = setInterval(async () => {
             count.current++
             const subscription = await getBusinessSubscriptionByID(stksent.id)
-            if (!subscription) {
+            if (!subscription || count.current > 10) {
                 setError('Payment Not Successfull')
                 setLoading(false)
                 clearInterval(loop)
@@ -33,7 +33,8 @@ const MpesaSubscribe = ({ userId, business }: { userId: string, business?: Busin
                 setLoading(false)
                 clearInterval(loop)
             }
-        }, 1000,)
+
+        }, 2000,)
     }
     return (
         <div className='flex flex-col items-center gap-4 border p-4 '>

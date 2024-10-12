@@ -2,6 +2,7 @@ import prisma from "@/prisma/prisma"
 
 export async function POST(request: Request) {
 	const req = await request.json()
+	console.log(req)
 	const CheckoutRequestID = req.stkCallback.CheckoutRequestID
 	const MerchantRequestID = req.stkCallback.MerchantRequestID
 	const subscription = await prisma.subscription.findFirst({
