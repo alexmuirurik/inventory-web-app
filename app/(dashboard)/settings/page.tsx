@@ -13,7 +13,7 @@ const Settings = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string) ?? undefined
     const user = await getUser(session?.user.id as string) ?? undefined
-    const location = await getLocationById(user?.activeLocation as string) ?? undefined
+    const location = (user?.activeLocation) ? await getLocationById(user?.activeLocation as string) ?? undefined : undefined
     return (
         <div className="page-wrapper">
             <PageHeader title='Settings' description='new' >

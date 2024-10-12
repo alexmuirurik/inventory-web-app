@@ -18,8 +18,14 @@ export const config = {
 	callbacks: {
 		async signIn({ user, profile}) {
 			const cashier = await onboardCashier(profile?.email as string, user.id as string)
-			if(cashier) return true
-			return profile?.email?.endsWith('@alexmuiruri.com') ?? ''
+			if(cashier) {
+				user.role = 'cashier'
+				await prisma.cashier.update({ 
+					where: { id: cashier.id},
+					data: { userid: user.id }
+				})
+			} 
+			return true
 		}, 
 		session({session, user}){
 			session.user.activeLocation = user.activeLocation
