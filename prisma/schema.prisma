@@ -80,8 +80,8 @@ model Business {
 	name			String 
     mobile          String
     logo            String?
-    subscription    String
-    subexpiry       DateTime
+    subscription    String?
+    subexpiry       DateTime?
 	ownerId			String @db.ObjectId
     owner           User @relation(fields: [ownerId], references: [id])
     subscriptions   Subscription[]
