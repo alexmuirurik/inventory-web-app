@@ -18,6 +18,7 @@ const MpesaSubscribe = ({userId, business}: {userId: string, business?: Business
     const handleMobile = (event: ChangeEvent<HTMLInputElement>) => setMobile(event.currentTarget.value)
     const handleSubmit = async () => {
         if(mobile === '' || mobile.length < 12) return setError('Incorrect Mobile Number')
+        setError('')
         setLoading(true)
         const stksent = await initiateMPesaPayment(10, mobile)
         if(!stksent) return setLoading(false)
