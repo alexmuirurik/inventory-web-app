@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import Avatar from 'react-avatar-edit'
 
-export const ImageUploader = ({ setPreview, preview }: {setPreview: Dispatch<SetStateAction<string>>, preview: string }) => {
+export const Imageweploader = ({ setPreview, preview }: {setPreview: Dispatch<SetStateAction<string>>, preview: string }) => {
     const [src, setSrc] = useState('')
     const onCrop = (view: any) => setPreview(view)
     const onClose = (view: any) => setPreview(view)

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '../ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { ImageUploader } from './imageuploader';
+import { Imageweploader } from './imageweploader';
 import { Button } from '../ui/button';
 import { Business, User } from '@prisma/client';
 import { useCompanyContext } from '@/context/usecompany';
@@ -31,7 +31,7 @@ const ImageCrop = ({user, business}: {user?: User, business?: Business}) => {
                     Size of the uploaded image will be auto adjusted to fit
                 </DialogHeader>
                 <div className="flex justify-center">
-                    <ImageUploader setPreview={setPreview} preview={preview} />
+                    <Imageweploader setPreview={setPreview} preview={preview} />
                 </div>
                 <DialogFooter className="flex gap-4">
                     <DialogClose asChild>
