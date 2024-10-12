@@ -11,12 +11,13 @@ import { LoadingButton } from "../ui/loadingbutton"
 import { Textarea } from "../ui/textarea"
 import { Brand, Business, Category } from "@prisma/client"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import ImageUploader from "./imageuploader"
 import { createProduct } from "@/actions/productController"
 import { useToast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"
+import { ImageUploader } from "./imageuploader"
 
 const AddProduct = ({ business, categories, brands }: { business: Business, categories: Category[], brands: Brand[] }) => {
+    const [preview, setPreview] = useState('')
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const { toast } = useToast()
@@ -125,7 +126,7 @@ const AddProduct = ({ business, categories, brands }: { business: Business, cate
                         )} />
                     </div>
                     <div className="md:flex gap-2">
-                        <ImageUploader form={form} />
+                        <ImageUploader setPreview={setPreview} preview={preview} />
                         <FormField control={form.control} name='status' render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">Status</FormLabel>
