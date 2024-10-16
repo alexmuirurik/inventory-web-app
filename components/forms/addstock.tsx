@@ -7,18 +7,19 @@ import { stockSchema } from '@/prisma/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { LoadingButton } from '../ui/loadingbutton';
-import { Product } from '@prisma/client';
+import { Product, ProductInStock } from '@prisma/client';
 import { createProductInStock } from '@/actions/productController';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../ui/use-toast';
+import { JsonArray } from '@prisma/client/runtime/library';
 
-const AddStock = ({product, businessLocationId}: {product: Product, businessLocationId: string}) => {
+const AddStock = ({product, businessLocationId, stock}: {product: Product, businessLocationId: string, stock?: ProductInStock}) => {
     const [loading, setLoading] = useState(false)
     const [sizes, setSizes] = useState([
-        {size: 's', available: false}, 
-        {size: 'm', available: false}, 
-        {size: 'l', available: false}, 
-        {size: 'xl', available: false}
+        {size: 's', available: (stock?.sizes) ? Array.from(stock.sizes as JsonArray).find(item => item === 's') ?? false  : false }, 
+        {size: 'm', available: (stock?.sizes) ? Array.from(stock.sizes as JsonArray).find(item => item === 'm') ?? false  : false }, 
+        {size: 'l', available: (stock?.sizes) ? Array.from(stock.sizes as JsonArray).find(item => item === 'l') ?? false  : false }, 
+        {size: 'xl', available:(stock?.sizes) ? Array.from(stock.sizes as JsonArray).find(item => item === 'xl') ?? false  : false }
     ])
     const {toast} = useToast()
     const router = useRouter()
@@ -76,7 +77,7 @@ const AddStock = ({product, businessLocationId}: {product: Product, businessLoca
                         <FormItem className='w-full'>
                             <FormLabel className='text-teal-500'>Discount</FormLabel>
                             <FormControl>
-                                <Input type='number' {...field} />
+                                <Input type='number' {...field} defaultValue={stock?.discount?.toFixed(2) ?? '' as string} step={0.01} />
                             </FormControl>
                         </FormItem>
                     )} />
@@ -84,7 +85,7 @@ const AddStock = ({product, businessLocationId}: {product: Product, businessLoca
                         <FormItem className='w-full'>
                             <FormLabel className='text-teal-500'>Items in Stock</FormLabel>
                             <FormControl>
-                                <Input type='number' {...field} />
+                                <Input type='number' {...field} defaultValue={stock?.count.toFixed(2) ?? '' as string} step={0.01} />
                             </FormControl>
                         </FormItem>
                     )} />
