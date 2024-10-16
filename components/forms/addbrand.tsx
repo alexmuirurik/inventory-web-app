@@ -52,7 +52,7 @@ const AddBrand = ({ business }: { business: Business | undefined}) => {
                     <div className="">
                         <FormField control={form.control} name='name' render={({ field }) => (
                             <FormItem className="">
-                                <FormLabel className="text-teal-500">brand Name</FormLabel>
+                                <FormLabel className="text-teal-500">Brand Name</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Brand Name" className="border-gray-600 text-gray-200" {...field} />
                                 </FormControl>

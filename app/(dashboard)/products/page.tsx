@@ -20,7 +20,7 @@ const ProductsPage = async () => {
         <div className="page-wrapper">
             <PageHeader title='Products' description={String(products.length)} >
                 <input type="text" className="bg-transparent hidden md:block focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddProduct business={business} categories={categories} brands={brands} />
+                <AddProduct business={business} />
             </PageHeader>
             <div className="page-body grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 <ProductsCard products={products} />

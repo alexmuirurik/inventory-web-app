@@ -1,9 +1,8 @@
 'use server'
 import { createSKU, stringToJSON } from "@/lib/utils"
 import prisma from "@/prisma/prisma"
-import { productSchema, stockSchema } from "@/prisma/schema"
-import { number, z } from "zod"
-import { uploadImage } from "./ImageController"
+import { productSchema, stockSchema, updateProductSChema } from "@/prisma/schema"
+import { z } from "zod"
 import { findActiveSale } from "./salesController"
 
 export const getProductById = async (productId: string) => {
@@ -23,7 +22,7 @@ export const getProduct = async (businessId: string, productName: string) => {
         }})
         return product
     } catch (error) {
-        return console.log('We faced an error getting a product ' + error)
+        console.log('We faced an error getting a product ' + error)
     }
 }
 
@@ -42,7 +41,7 @@ export const getManyProducts = async (businessId: string) => {
         })
         return products
     } catch (error) {
-        return console.log('We faced an error getting many products ' + error)
+        console.log('We faced an error getting many products ' + error)
     }
 }
 
@@ -57,7 +56,7 @@ export const getProductsinCart = async (businessLocationId: string) => {
         })
         return checkoutitems
     } catch (error) {
-        return console.log('Products in Cart Error ' + error)
+        console.log('Products in Cart Error ' + error)
     }
 }
 
@@ -69,7 +68,7 @@ export const getProductInStock = async (businessLocationId: string, productId: s
         }})
         return product
     } catch (error) {
-        return console.log('Product in Location ' + error)
+        console.log('Product in Location ' + error)
     }
 }
 
@@ -85,26 +84,46 @@ export const getProductsInStock = async (businessLocationId: string) => {
         })
         return products
     } catch (error) {
-        return console.log('Product in Location ' + error)
+        console.log('Product in Location ' + error)
+    }
+}
+
+export const updateProduct = async (data: z.infer<typeof updateProductSChema>) => {
+    try {
+        const product = await prisma.product.update({
+            where: {id: data.productId},
+            data: {
+                name: data.name,
+                description: data.description,
+                image: data.image,
+                buyingPrice: Number(data.buyingPrice),
+                sellingPrice: Number(data.sellingPrice),
+                variants: stringToJSON(data.variants as string), 
+                tags: stringToJSON(data.tags as string)
+            }
+        })
+        return product
+    } catch (error) {
+        console.log('Update Product Error: ' + error)
     }
 }
 
 export const createProduct = async (data: z.infer<typeof productSchema>) => {
     try {
-        console.log(data.image)
         const product = await getProduct(data.businessId, data.name)
         if(product) return product
-        const uploadimage = (data.image) ? await uploadImage(data.image) : '/assets/img/Ellipse.png'
         const createdproduct = await prisma.product.create({ data: {
             ...data,
-            image: uploadimage,
-            sku: createSKU(data.name, data.businessId, data.brandId)
+            image: data.image ?? '/uploads/1.jpg',
+            tags: stringToJSON(data.tags as string), 
+            sku: createSKU(data.name)
         }})
         return createdproduct
     } catch (error) {
-        return console.log('We faced an error creating a product ' + error)
+        console.log('We faced an error creating a product ' + error)
     }
 }
+
 
 export const updateProductStock = async (businessLocationId: string, productId: string, count: number) => {
     try {
@@ -125,25 +144,21 @@ export const createProductInStock = async (data: z.infer<typeof stockSchema>) =>
         const productInStock = await getProductInStock(data.businessLocationId, data.productId)
         if(productInStock) return prisma.productInStock.update({
             where: { id: productInStock.id },
-            data: {
-                count: Number(data.count),
-                buyingPrice: Number(data.buyingPrice),
-                sellingPrice: Number(data.sellingPrice),
+            data: { 
+                sizes: data.sizes,
                 discount: Number(data.discount),
-                colors: stringToJSON(data.colors),
+                count: Number(data.count) 
             }
         })
         const createdProductInStock = await prisma.productInStock.create({ data : {
-            buyingPrice: Number(data.buyingPrice),
-            sellingPrice: Number(data.sellingPrice),
-            discount: Number(data.discount),
-            colors: stringToJSON(data.colors),
             count: Number(data.count),
+            sizes: data.sizes,
+            discount: Number(data.discount),
             productId: data.productId,
             businessLocationId: data.businessLocationId,
         }})
         if(createdProductInStock) return createdProductInStock
     } catch (error) {
-        return console.log('Creating Product Stock Error: ' + error)
+        console.log('Creating Product Stock Error: ' + error)
     }
 }

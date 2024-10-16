@@ -28,8 +28,8 @@ export const CheckoutContextProvider = ({ productsInCart, fullproducts, business
         const product = fullproducts.find(product => product.id === checkoutItem.product.id)
         const stock = product?.productInStock.find(stock => stock.businessLocationId === businessLocationId)
         const itemsinstock = stock?.count ?? 0
-        const sellingPrice = stock?.sellingPrice ?? 0
-        const buyingPrice = stock?.buyingPrice ?? 0
+        const sellingPrice = product?.sellingPrice ?? 0
+        const buyingPrice = product?.buyingPrice ?? 0
         return {
             productId: checkoutItem.product.id,
             stock: itemsinstock,
@@ -43,8 +43,8 @@ export const CheckoutContextProvider = ({ productsInCart, fullproducts, business
         const product = fullproducts.find(product => product.id === productId)
         const stock = product?.productInStock.find(stock => stock.businessLocationId === businessLocationId)
         const itemsinstock = stock?.count ?? 0
-        const sellingPrice = stock?.sellingPrice ?? 0
-        const buyingPrice = stock?.buyingPrice ?? 0
+        const sellingPrice = product?.sellingPrice ?? 0
+        const buyingPrice = product?.buyingPrice ?? 0
         if (products.find(item => item.productId === productId)) {
             const newproducts = products.map(product => {
                 if (product.productId === productId) return { ...product, count: count }

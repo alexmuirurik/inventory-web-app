@@ -1,5 +1,6 @@
-import { Brand, Category, Tag } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx"
+import Resizer from "react-image-file-resizer";
+import { randomUUID } from "crypto";
 import { twMerge } from "tailwind-merge"
 
 export const toTitleCase = (slug: string) => {
@@ -34,22 +35,25 @@ export const slugify = (input: string) => {
 	return slug;
 }
 
-export const toOptions = (data: {name:string, id:string}[]) => {
-	const Options = data.map(item => { return { label: item.name, value: item.id }  })
+export const toOptions = (data: { name: string, id: string }[]) => {
+	const Options = data.map(item => { return { label: item.name, value: item.id } })
 	return Options
 }
 
-export const createSKU = (name: string, businessId: string, brandId: string ) => {
-	const SKU = name.substring( 0, 2) + brandId.substring( 0, 2) + '-' + businessId.substring(0, 4)
+export const createSKU = (name: string) => {
+	const rand = randomUUID()
+	const SKU = name.substring(0, 2) + rand
 	return SKU
 }
 
 export const stringToJSON = (string: string) => {
-	const separateCommas = string.split(',')
-	const jsonfile = separateCommas.map((string, i, separateCommas) => { return string })
+	const separateCommas = string.split(', ')
+	const jsonfile = separateCommas.map((string) => { return string })
 	return jsonfile
 }
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
+
+

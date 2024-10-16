@@ -11,7 +11,7 @@ const ProductsCard = ({ products }: { products: ProductWithCategoriesBrandsAndSt
         const productsinstock = product.productInStock?.reduce((prev, curr) => { return prev + curr.count }, 0)
         return <Card className={'bg-transparent p-0 overflow-hidden '}>
             <div className="flex image-box h-40 max-h-52 overflow-clip">
-                <Image className='!static w-fit h-full' src={'/uploads/1.jpg'} alt='' fill />
+                <Image className='!static w-fit h-full' src={product.image ?? '/uploads/1.jpg'} alt='' fill />
             </div>
             <CardContent className={' w-fill border-b p-3 overflow-hidden '}>
                 <Link href={'/products/' + product.id } className='hover:text-teal-900 text-sm font-bold text-gray-800 text-nowrap'>
