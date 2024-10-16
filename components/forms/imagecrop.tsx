@@ -31,7 +31,7 @@ const ImageCrop = () => {
                     Size of the uploaded image will be auto adjusted to fit
                 </DialogHeader>
                 <div className="flex justify-center">
-                    <Imageweploader setPreview={setPreview} preview={preview} />
+                    <Imageweploader height={300} width={300} setPreview={setPreview} preview={preview} />
                 </div>
                 <DialogFooter className="flex gap-4">
                     <DialogClose asChild>

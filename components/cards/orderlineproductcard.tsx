@@ -64,7 +64,7 @@ const OrderLineProductsCard = ({ locationId, product, checkoutitem }: OrderLineP
             </p>
         </CardContent>
         <CardFooter className='flex justify-between items-center select-none px-3 py-2' >
-            <p className='text-lg text-teal-700 font-bold cursor-text'>${ productsinstock?.sellingPrice ?? 0}</p>
+            <p className='text-lg text-teal-700 font-bold cursor-text'>${ product.sellingPrice ?? 0}</p>
             <div className="flex items-center gap-2">
                 <Minus className='bg-gray-300 text-gray-700 h-4 w-4 p-0.5 cursor-pointer' onClick={() => onCount('minus')} />
                 <span className='text-teal-500 font-bold'>{ activeproduct?.count ?? 0 }</span>

@@ -30,7 +30,8 @@ export const getManySales = async (businessLocationId: string) => {
     try {
         const sales = await prisma.sale.findMany({
             where: {
-                businessLocationId: businessLocationId
+                businessLocationId: businessLocationId,
+                status: 'completed'
             },
             include: {
                 checkoutitems: true,
@@ -100,6 +101,8 @@ export const addProductToCart = async (businessLocationId: string, productId: st
         const createdcheckoutItem = await prisma.checkoutItem.create({
             data: {
                 count: count,
+                buyingPrice: Number(product.buyingPrice),
+                sellingPrice: Number(product.sellingPrice),
                 productId: productId,
                 saleId: sale?.id as string,
                 status: 'unpaid'

@@ -27,7 +27,7 @@ const OrderLinePage = async () => {
             <SearchContextProvider>
                 <PageHeader title='Order Line' description={String(productsincart.length)} >
                     <SearchForm />
-                    <AddProduct business={business} brands={brands} categories={categories} />
+                    <AddProduct business={business} />
                 </PageHeader>
                 <div className="page-body md:flex gap-3">
                     <CheckoutContextProvider productsInCart={productsincart} fullproducts={products} businessLocationId={session?.user.activeLocation as string} >
