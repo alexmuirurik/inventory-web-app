@@ -19,8 +19,8 @@ const StocksCard = ({products}: {products: productInStockAndProductAndPurchase[]
                             {stock.product.name}
                         </TableCell>
                         <TableCell>{stock.count}</TableCell>
-                        <TableCell>{stock.buyingPrice}</TableCell>
-                        <TableCell>{stock.sellingPrice}</TableCell>
+                        <TableCell>{stock.product.buyingPrice}</TableCell>
+                        <TableCell>{stock.product.sellingPrice}</TableCell>
                         <TableCell>{stock.discount}</TableCell>
                         <TableCell className="text-right">{stock.product.status}</TableCell>
                     </TableRow>

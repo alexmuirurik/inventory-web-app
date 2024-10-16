@@ -11,6 +11,7 @@ import CheckoutItemsCard from './checkoutitemscard';
 import { useToast } from '../ui/use-toast';
 import { completeSale } from '@/actions/salesController';
 import { useRouter } from 'next/navigation';
+import { Input } from '../ui/input';
 
 interface CheckoutItems {
     checkoutItems: CheckoutitemswithProducts[],
@@ -20,6 +21,7 @@ interface CheckoutItems {
 
 const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems) => {
     const [activePayMethod, setActivePayMethod] = useState('')
+    const [customerName, setCustomerName] = useState('Random Customer')
     const [loading, setLoading] = useState(false)
     const {toast} = useToast()
     const router = useRouter()
@@ -28,6 +30,7 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
     const totalprofit = products.reduce((prev, curr) => { return prev + ((curr.sellingPrice - curr.buyingPrice) * curr.count) }, 0)
     const handleCompleteOrder = async () => {
         if(activePayMethod === '') return toast({ description: 'Choose Payment Method First', variant: 'destructive' })
+        if(customerName === '') return toast({ description: 'We Need a Customer Name', variant: 'destructive' })
         setLoading(true)
         const completedsale = await completeSale(locationId, checkoutItems, totalsellingPrice, totalsellingPrice)
         if(completedsale) {
@@ -50,10 +53,16 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
     return (
         <Card className='bg-transparent p-0'>
             <div className='flex items-center justify-between w-full px-3 py-2'>
-                <CardTitle className='text-sm'>Order Product</CardTitle>
+                <CardTitle className='text-sm'>Customer Name</CardTitle>
                 {addingToCart && <span className='text-teal-600'><ImSpinner10 className='animate-spin' /></span>}
             </div>
-            <CardContent className='p-3 space-y-3'>
+            <CardContent className='px-3 pb-0 space-y-3'> 
+                <Input className='text-xs w-full' placeholder='Customer Name' defaultValue={customerName} onChange={(e) => setCustomerName(e.currentTarget.value)} />
+            </CardContent>
+            <div className='flex items-center justify-between w-full px-3 py-2'>
+                <CardTitle className='text-sm'>Order Product</CardTitle>
+            </div>
+            <CardContent className='px-3 space-y-3'>
                 <CheckoutItemsCard checkoutitems={checkoutItems} fullproducts={fullProducts} />
             </CardContent>
             <CardHeader className='px-3 py-2'>
@@ -83,23 +92,24 @@ const CheckoutCart = ({ checkoutItems, locationId, fullProducts }: CheckoutItems
                 <CardTitle className='text-sm'>Payments Summary</CardTitle>
             </CardHeader>
             <CardContent className='p-0 flex-col '>
-                <div className="space-y-2 px-2 w-full">
-                    <div className="flex items-center justify-between gap-2 py-3">
-                        <div className='flex flex-col items-center w-full ' onClick={() => setActivePayMethod('cash')}>
+                <div className="space-y-2 px-2 w-full py-3">
+                    <div className="flex items-center justify-between gap-2 ">
+                        <div className='flex flex-col items-center w-full space-y-1' onClick={() => setActivePayMethod('cash')}>
                             <HiCurrencyDollar className={
-                                ((activePayMethod === 'cash') ? 'bg-teal-200 ' : 'hover:bg-teal-100 ') +
+                                ((activePayMethod === 'cash') ? 'bg-teal-300 ' : 'hover:bg-teal-100 ') +
                                 ' text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer'
                             } />
-                            <span className='text-sm font-medium'>Cash</span>
+                            <span className='text-xs font-medium'>Cash</span>
                         </div>
-                        <div className="flex flex-col items-center w-full" onClick={() => setActivePayMethod('mobile')}>
+                        <div className="flex flex-col items-center w-full space-y-1" onClick={() => setActivePayMethod('mobile')}>
                             <CiMobile3 className={
-                                ((activePayMethod === 'mobile') ? 'bg-teal-200 ' : 'hover:bg-teal-100 ') +
+                                ((activePayMethod === 'mobile') ? 'bg-teal-300 ' : 'hover:bg-teal-100 ') +
                                 ' text-teal-600 border w-full h-10 px-8 py-2 cursor-pointer'
                             } />
-                            <span className='text-sm font-medium'>Mobile</span>
+                            <span className='text-xs font-medium'>Mobile</span>
                         </div>
                     </div>
+                    {(activePayMethod === 'mobile') && <Input className='text-xs w-full' placeholder='Mobile Number 2547...' />}
                 </div>
                 <div className="flex p-3 pt-0 w-full">
                     <LoadingButton loading={loading} className='bg-teal-500 hover:bg-teal-400 w-full' onClick={() => handleCompleteOrder()} >

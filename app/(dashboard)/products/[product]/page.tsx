@@ -2,7 +2,7 @@ import React from 'react';
 import { getManyBrands } from '@/actions/brandController';
 import { getBusiness } from '@/actions/businessController';
 import { getManyCategories } from '@/actions/categoryController';
-import { getProductById } from '@/actions/productController';
+import { getProductById, getProductInStock } from '@/actions/productController';
 import { auth } from '@/auth';
 import AddBrand from '@/components/forms/addbrand';
 import AddCategory from '@/components/forms/addcategory';
@@ -18,6 +18,7 @@ const SingleProductPage = async ({ params }: { params: { product: string } }) =>
     if (!business || business.subscription !== 'active') return redirect('/settings')
     const product = await getProductById(params.product) ?? undefined
     if(!product) redirect('/products')
+    const stock = await getProductInStock(session?.user.activeLocation as string, product.id) ?? undefined
     const categories = await getManyCategories(business.id) ?? []
     const brands = await getManyBrands(business.id) ?? []
     return (
@@ -41,7 +42,7 @@ const SingleProductPage = async ({ params }: { params: { product: string } }) =>
                             <CardTitle className='text-sm'>Add Stock</CardTitle>
                         </CardHeader>
                         <CardContent className='p-3'>
-                            <AddStock product={product} businessLocationId={session?.user.activeLocation as string} />
+                            <AddStock product={product} businessLocationId={session?.user.activeLocation as string} stock={stock} />
                         </CardContent>
                     </Card>
                 </div>

@@ -1,9 +1,8 @@
 'use client'
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
-import { useCheckoutContext } from '@/context/usecheckout';
 import Link from 'next/link';
 
 const ProductsCard = ({ products }: { products: ProductWithCategoriesBrandsAndStock[] }) => {
