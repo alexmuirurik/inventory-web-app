@@ -12,10 +12,9 @@ interface selecttypes {
 
 const SearchAndSelect = ({ onValueChange, title, defaultValue, list }: selecttypes ) => {
     const [sortlist, setSortList] = useState<{ label: string, value: string }[]>([])
-    const [value, setValue] = useState('')
+    const [value, setValue] = useState(defaultValue)
     const labels = list?.map(item => ({ label: item.name as string, value: item.id as string }))
     const label = labels?.find(item => item.value === value)?.label
-    const defaul = labels?.find(item => item.value === defaultValue)?.label
     const handleValueChange = (value: string) => {
         setValue(value)
         onValueChange(value)
@@ -30,7 +29,7 @@ const SearchAndSelect = ({ onValueChange, title, defaultValue, list }: selecttyp
     }
     return (
         <div className="relative bg-transparent w-full" >
-            <Input placeholder={title} onChange={(e) => handleValueChange(e.currentTarget.value)} value={label} defaultValue={defaul}/>
+            <Input placeholder={title} onChange={(e) => handleValueChange(e.currentTarget.value)} value={label} defaultValue={label}/>
             {(sortlist.length > 0 ) && <div className='absolute bg-neutral-100 w-full top-11 z-20 ' >
                 <ul className={" bg-transparent w-full border py-3 px-1"}>
                     {sortlist.map(item =>
