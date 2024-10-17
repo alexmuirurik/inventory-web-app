@@ -27,7 +27,9 @@ const AddStock = ({product, businessLocationId, stock}: {product: Product, busin
         resolver: zodResolver(stockSchema),
         defaultValues: {
             businessLocationId: businessLocationId,
-            productId: product.id
+            productId: product.id,
+            discount: stock?.discount?.toFixed(2) ?? '' as string,
+            count: stock?.count.toFixed(2) ?? '' as string
         } 
     })
     const onFormSubmit = async (data: z.infer<typeof stockSchema>) => {
@@ -77,7 +79,7 @@ const AddStock = ({product, businessLocationId, stock}: {product: Product, busin
                         <FormItem className='w-full'>
                             <FormLabel className='text-teal-500'>Discount</FormLabel>
                             <FormControl>
-                                <Input type='number' {...field} defaultValue={stock?.discount?.toFixed(2) ?? '' as string} step={0.01} />
+                                <Input type='number' {...field} step={0.01} />
                             </FormControl>
                         </FormItem>
                     )} />
@@ -85,7 +87,7 @@ const AddStock = ({product, businessLocationId, stock}: {product: Product, busin
                         <FormItem className='w-full'>
                             <FormLabel className='text-teal-500'>Items in Stock</FormLabel>
                             <FormControl>
-                                <Input type='number' {...field} defaultValue={stock?.count.toFixed(2) ?? '' as string} step={0.01} />
+                                <Input type='number' {...field} step={0.01} />
                             </FormControl>
                         </FormItem>
                     )} />

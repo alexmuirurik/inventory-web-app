@@ -24,7 +24,13 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
     const form = useForm<z.infer<typeof updateProductSChema>>({ 
         resolver: zodResolver(updateProductSChema),
         defaultValues: {
-            productId: product?.id as string
+            productId: product?.id as string,
+            name: product?.name as string,
+            buyingPrice: String(product?.buyingPrice),
+            sellingPrice: String(product?.sellingPrice),
+            description: product?.description,
+            variants: product?.variants?.toLocaleString(),
+            tags: product?.tags?.toLocaleString() 
         }
     })
     const onFormSubmit = async (data: z.infer<typeof updateProductSChema>) => {
@@ -85,7 +91,7 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
                         <FormItem className="w-full">
                             <FormLabel className="text-xs text-teal-500">Buying Price</FormLabel>
                             <FormControl>
-                                <Input type='number' placeholder='Buying Price' {...field} defaultValue={String(product?.buyingPrice)} />
+                                <Input type='number' placeholder='Buying Price' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -94,7 +100,7 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
                         <FormItem className="w-full">
                             <FormLabel className="text-xs text-teal-500">Selling Price</FormLabel>
                             <FormControl>
-                                <Input type='number' placeholder='Selling Price' {...field} defaultValue={String(product?.sellingPrice)} />
+                                <Input type='number' placeholder='Selling Price' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -105,7 +111,7 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
                         <FormItem className="w-full">
                             <FormLabel className="text-xs text-teal-500">Description</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Description" {...field} className=" " defaultValue={product?.description} />
+                                <Textarea placeholder="Description" {...field} className=" "/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -116,7 +122,7 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
                         <FormItem className="w-full">
                             <FormLabel className="text-xs text-teal-500">Variants</FormLabel>
                             <FormControl>
-                                <Input placeholder='Variants' {...field} defaultValue={product?.variants?.toLocaleString()} />
+                                <Input placeholder='Variants' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -147,7 +153,7 @@ const EditProduct = ({ brands, categories, product }: { brands: Brand[], categor
                         <FormItem className="w-full">
                             <FormLabel className="text-xs text-teal-500">Tags</FormLabel>
                             <FormControl>
-                                <Input placeholder="Tags" {...field} className="" defaultValue={product?.tags?.toString()} />
+                                <Input placeholder="Tags" {...field} className=""  />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
