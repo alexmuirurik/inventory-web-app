@@ -1,25 +1,43 @@
 'use server'
-import prisma from "@/prisma/prisma"
-import { cartSchema, checkoutSchema } from "@/prisma/schema"
-import { z } from "zod"
-import { createRandomCustomer } from "./userController"
-import { getProductById, getProductInStock, updateProductStock } from "./productController"
-import { CheckoutitemswithProducts } from "@/prisma/types"
+import prisma from '@/prisma/prisma'
+import { cartSchema, checkoutSchema } from '@/prisma/schema'
+import { z } from 'zod'
+import { createRandomCustomer } from './userController'
+import {
+    getProductById,
+    getProductInStock,
+    updateProductStock,
+} from './productController'
+import { CheckoutitemswithProducts } from '@/prisma/types'
 
 export const findActiveSale = async (businessLocationId: string) => {
     try {
-        const sale = await prisma.sale.findFirst({ where: { status: 'pending' } })
+        const sale = await prisma.sale.findFirst({
+            where: { status: 'pending' },
+        })
         if (sale) return sale
-        const createdsale = createSale({ businessLocationId: businessLocationId })
+        const createdsale = createSale({
+            businessLocationId: businessLocationId,
+        })
         return createdsale
     } catch (error) {
         console.log('Find Active Sale Error: ' + error)
     }
 }
 
-export const findCustomerSale = async (businessLocationId: string, customerId: string) => {
+export const findCustomerSale = async (
+    status: string,
+    businessLocationId: string,
+    customerId: string
+) => {
     try {
-        const sale = await prisma.sale.findFirst({ where: { businessLocationId: businessLocationId, customerId: customerId } })
+        const sale = await prisma.sale.findFirst({
+            where: {
+                status: status,
+                businessLocationId: businessLocationId,
+                customerId: customerId,
+            },
+        })
         return sale
     } catch (error) {
         console.log('Finding Sale Error: ' + error)
@@ -31,12 +49,12 @@ export const getManySales = async (businessLocationId: string) => {
         const sales = await prisma.sale.findMany({
             where: {
                 businessLocationId: businessLocationId,
-                status: 'completed'
+                status: 'completed',
             },
             include: {
                 checkoutitems: true,
-                customer: true
-            }
+                customer: true,
+            },
         })
         return sales
     } catch (error) {
@@ -49,8 +67,8 @@ export const getCheckoutItem = async (productId: string, saleId: string) => {
         const checkoutItem = await prisma.checkoutItem.findFirst({
             where: {
                 productId: productId,
-                saleId: saleId
-            }
+                saleId: saleId,
+            },
         })
         return checkoutItem
     } catch (error) {
@@ -60,15 +78,22 @@ export const getCheckoutItem = async (productId: string, saleId: string) => {
 
 export const createSale = async (data: z.infer<typeof cartSchema>) => {
     try {
-        const customer = await createRandomCustomer('random', data.businessLocationId)
-        const sale = await findCustomerSale(data.businessLocationId, customer?.id as string)
+        const customer = await createRandomCustomer(
+            'random',
+            data.businessLocationId
+        )
+        const sale = await findCustomerSale(
+            'pending',
+            data.businessLocationId,
+            customer?.id as string
+        )
         if (sale) return sale
         const createdsale = await prisma.sale.create({
             data: {
                 customerId: customer?.id as string,
                 businessLocationId: data.businessLocationId,
-                status: 'pending'
-            }
+                status: 'pending',
+            },
         })
         return createdsale
     } catch (error) {
@@ -76,14 +101,18 @@ export const createSale = async (data: z.infer<typeof cartSchema>) => {
     }
 }
 
-export const updateProductinCart = async (checkoutItemId: string, count: number, status: string) => {
+export const updateProductinCart = async (
+    checkoutItemId: string,
+    count: number,
+    status: string
+) => {
     try {
         const updatecheckoutitem = await prisma.checkoutItem.update({
             where: { id: checkoutItemId },
             data: {
                 count: count,
-                status: status
-            }
+                status: status,
+            },
         })
         return updatecheckoutitem
     } catch (error) {
@@ -91,13 +120,21 @@ export const updateProductinCart = async (checkoutItemId: string, count: number,
     }
 }
 
-export const addProductToCart = async (businessLocationId: string, productId: string, count: number) => {
+export const addProductToCart = async (
+    businessLocationId: string,
+    productId: string,
+    count: number
+) => {
     try {
         const sale = await findActiveSale(businessLocationId)
         const product = await getProductById(productId)
         if (!product) return
-        const checkoutItem = await getCheckoutItem(productId, sale?.id as string)
-        if (checkoutItem) return await updateProductinCart(checkoutItem.id, count, 'unpaid')
+        const checkoutItem = await getCheckoutItem(
+            productId,
+            sale?.id as string
+        )
+        if (checkoutItem)
+            return await updateProductinCart(checkoutItem.id, count, 'unpaid')
         const createdcheckoutItem = await prisma.checkoutItem.create({
             data: {
                 count: count,
@@ -105,8 +142,8 @@ export const addProductToCart = async (businessLocationId: string, productId: st
                 sellingPrice: Number(product.sellingPrice),
                 productId: productId,
                 saleId: sale?.id as string,
-                status: 'unpaid'
-            }
+                status: 'unpaid',
+            },
         })
         return createdcheckoutItem
     } catch (error) {
@@ -114,29 +151,51 @@ export const addProductToCart = async (businessLocationId: string, productId: st
     }
 }
 
-export const completeSale = async (businessLocationId: string, checkoutitems: CheckoutitemswithProducts[], amount: number, paid: number, customerId?: string,) => {
+export const completeSale = async (
+    businessLocationId: string,
+    checkoutitems: CheckoutitemswithProducts[],
+    amount: number,
+    paid: number,
+    customerId?: string
+) => {
     try {
-        const sale = (!customerId) ? await findActiveSale(businessLocationId) : await findCustomerSale(businessLocationId, customerId)
+        const sale = !customerId
+            ? await findActiveSale(businessLocationId)
+            : await findCustomerSale('pending', businessLocationId, customerId)
+
+        if (!sale) return
+
+        const updatecheckoutitem = await prisma.checkoutItem.updateMany({
+            where: { saleId: sale.id },
+            data: { status: 'paid' },
+        })
+
+        console.log(updatecheckoutitem)
+        const updateproductsinstock = checkoutitems.forEach(async (item) => {
+            const productInStock = await getProductInStock(
+                businessLocationId,
+                item.productId
+            )
+            if (productInStock) {
+                const totalcount = productInStock.count - item.count
+                await updateProductStock(
+                    businessLocationId,
+                    item.productId,
+                    totalcount
+                )
+            }
+        })
+        console.log(updateproductsinstock)
+
         const updatedsale = await prisma.sale.update({
             where: { id: sale?.id },
             data: {
                 amount: amount,
                 paid: amount - paid,
-                status: ((amount - paid) <= 0) ? 'completed' : 'incomplete'
-            }
+                status: amount - paid <= 0 ? 'completed' : 'incomplete',
+            },
         })
-        if (updatedsale) {
-            const updatecheckoutitem = await prisma.checkoutItem.updateMany({
-                where: { saleId: sale?.id },
-                data: { status: 'paid' },
-            })
-            const updateproductsinstock = checkoutitems.forEach(async (item) => {
-                const productInStock = await getProductInStock(businessLocationId, item.productId)
-                if(!productInStock ) return
-                const totalcount = productInStock.count - item.count
-                return await updateProductStock(businessLocationId, item.productId, totalcount)
-            })
-        }
+
         return updatedsale
     } catch (error) {
         console.log('Complete Sale Error ' + error)
@@ -145,7 +204,9 @@ export const completeSale = async (businessLocationId: string, checkoutitems: Ch
 
 export const removeProductFromCart = async (checkoutItemId: string) => {
     try {
-        const removedproduct = await prisma.checkoutItem.delete({ where: { id: checkoutItemId } })
+        const removedproduct = await prisma.checkoutItem.delete({
+            where: { id: checkoutItemId },
+        })
         return removedproduct
     } catch (error) {
         console.log('Product Remove Error ' + error)
