@@ -5,18 +5,21 @@ export async function POST(request: Request) {
 	const body = reqs.Body
 	const CheckoutRequestID = body.stkCallback.CheckoutRequestID
 	const MerchantRequestID = body.stkCallback.MerchantRequestID
+
 	const subscription = await prisma.subscription.findFirst({
 		where: {
 			CheckoutRequestID: CheckoutRequestID,
 			MerchantRequestID: MerchantRequestID
 		}
 	})
-	console.log(body)
+
 	if (body.stkCallback.ResultCode !== 0) {
 		await prisma.subscription.delete({where: {id: subscription?.id } })
 		return new Response('')
 	} 
+
 	if (!subscription) return new Response('')
+
 	const MpesaReceiptNumber = body.stkCallback.CallbackMetadata.Item[2].Value
 	await prisma.subscription.update({
 		where: { id: subscription.id },
@@ -25,9 +28,11 @@ export async function POST(request: Request) {
 			status: 'paid'
 		}
 	})
+
 	await prisma.business.update({
 		where: { id: subscription.businessId as string },
 		data: { subscription: 'active' }
 	})
+	
 	return new Response('')
 }
