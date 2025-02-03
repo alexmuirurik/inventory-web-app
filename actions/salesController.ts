@@ -10,6 +10,19 @@ import {
 } from './productController'
 import { CheckoutitemswithProducts } from '@/prisma/types'
 
+export const findSale = async (saleId: string) => {
+    try {
+        const sale = await prisma.sale.findUnique({
+            where: {
+                id: saleId,
+            },
+        })
+        return sale
+    } catch (error) {
+        console.log('Error Finding Sale ' + error)
+    }
+}
+
 export const findActiveSale = async (businessLocationId: string) => {
     try {
         const sale = await prisma.sale.findFirst({
