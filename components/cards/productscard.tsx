@@ -1,29 +1,48 @@
 'use client'
-import React from 'react';
-import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
-import { Card, CardContent } from '../ui/card';
-import Image from 'next/image';
-import Link from 'next/link';
+import React from 'react'
+import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types'
+import Image from 'next/image'
 
-const ProductsCard = ({ products }: { products: ProductWithCategoriesBrandsAndStock[] }) => {
-    return products.map(product => {
-        const productsinstock = product.productInStock?.reduce((prev, curr) => { return prev + curr.count }, 0)
-        return <Card className={'bg-transparent p-0 overflow-hidden '}>
-            <div className="flex image-box h-40 max-h-52 overflow-clip">
-                <Image className='!static w-fit h-full' src={product.image ?? '/uploads/1.jpg'} alt='' fill />
-            </div>
-            <CardContent className={' w-fill border-b p-3 overflow-hidden '}>
-                <Link href={'/products/' + product.id } className='hover:text-teal-900 text-sm font-bold text-gray-800 text-nowrap'>
-                    {product.name}
-                </Link>
-                <p className='flex items-center gap-2 text-sm font-medium text-gray-500'>
-                    <span className={'text-xs ' + (productsinstock > 0) ? 'text-teal-600' : 'text-red-600'}>
-                        {productsinstock > 0 ? productsinstock + ' in stock' : 'Out of Stock'}
+const ProductsCard = ({
+    products,
+}: {
+    products: ProductWithCategoriesBrandsAndStock[]
+}) => {
+    return products.map((product) => {
+        const productsinstock = product.productInStock?.reduce((prev, curr) => {
+            return prev + curr.count
+        }, 0)
+        return (
+            <div className="flex justify-between items-center gap-2 border p-2">
+                <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer px-2">
+                    <Image
+                        className="!static border h-8 w-12"
+                        src={product.image ?? '/uploads/1.jpg'}
+                        alt=""
+                        width={6}
+                        height={6}
+                    />
+                    <span className='text-sm font-bold'>{product.name}</span>
+                </div>
+                <div className="px-2 w-2/12 ">
+                    <span className="text-sm font-semibold">{product.categoryId}</span>
+                </div>
+                <div className="px-2 w-3/12 ">
+                    <span className="text-sm">
+                        {productsinstock > 0
+                            ? productsinstock + ' in stock'
+                            : 'Out of Stock'}
                     </span>
-                </p>
-            </CardContent>
-        </Card>
+                </div>
+                <div className="px-2 w-2/12 ">
+                    <span className="text-sm">{product.sellingPrice}</span>
+                </div>
+                <div className="px-2 w-1/12 text-end">
+                    <span className="bg-slate-400 text-white text-xs py-1 px-2 cursor-pointer">{product.status}</span>
+                </div>
+            </div>
+        )
     })
 }
 
-export default ProductsCard;
+export default ProductsCard
