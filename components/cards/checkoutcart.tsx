@@ -1,12 +1,20 @@
 'use client'
 import React, { useState, useTransition } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '../ui/card'
 import { useCheckoutContext } from '@/context/usecheckout'
 import { Sale } from '@prisma/client'
 import { LoadingButton } from '../ui/loadingbutton'
 import { findActiveSale } from '@/actions/salesController'
 import { useToast } from '../ui/use-toast'
 import { useRouter } from 'next/navigation'
+import Checkoutpaymentcard from './checkoutpaymentcard'
+import { FaAngleRight } from 'react-icons/fa'
 
 const CheckoutCart = ({
     activeSale,
@@ -59,10 +67,10 @@ const CheckoutCart = ({
             <CardHeader className="px-3 py-2">
                 <CardTitle className="text-sm">Payments Summary</CardTitle>
             </CardHeader>
-            <CardContent className="p-0 flex-col space-y-4">
+            <CardContent className="p-0 flex-col space-y-2">
                 <div className=" w-full p-2 space-y-2">
-                    <div className="flex justify-between border-b p-1">
-                        <span className="text-xs">Selling Price SubTotal</span>
+                    <div className="flex justify-between p-1">
+                        <span className="text-xs">Selling Price</span>
                         <span className="text-sm font-bold">
                             ${totalsellingPrice}.00
                         </span>
@@ -71,34 +79,26 @@ const CheckoutCart = ({
                         <span className="text-xs">Tax Total</span>
                         <span className="text-sm font-bold">${0}.00</span>
                     </div>
-                    <div className="flex justify-between border-b p-1">
-                        <span className="text-xs">Profit</span>
+                    <div className="flex justify-between p-1">
+                        <span className="text-xs">Price SubTotal</span>
                         <span className="text-sm font-bold">
-                            ${totalprofit}.00
+                            ${totalsellingPrice}.00
                         </span>
                     </div>
                 </div>
             </CardContent>
-            <CardHeader className="px-3 py-2">
-                <CardTitle className="text-sm">Proceed</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 flex-col ">
-                <div className="space-y-2 w-full px-6 pb-4">
-                    <p className="text-xs">
-                        Click complete order button below to proceed to checkout
-                        page
-                    </p>
-                </div>
-                <div className="flex p-3 pt-0 w-full">
+            <CardFooter className="p-0 py-4 flex-col ">
+                <div className="flex p-2 pt-0 w-full">
                     <LoadingButton
                         loading={loading}
-                        className="bg-teal-500 hover:bg-teal-400 text-center text-white border rounded-lg w-full p-2"
+                        className="bg-teal-500 hover:bg-teal-400 flex items-center gap-1 text-center border rounded-lg w-full p-2"
                         onClick={() => handleButtonClick()}
                     >
-                        Complete Order
+                        <span className='text-white '>Make Payment</span>
+                        <FaAngleRight className='text-white text-sm' />
                     </LoadingButton>
                 </div>
-            </CardContent>
+            </CardFooter>
         </Card>
     )
 }
