@@ -1,71 +1,49 @@
 'use client'
-import { CheckoutitemswithProducts, ProductWithCategoriesBrandsAndStock } from '@/prisma/types';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useState,
+} from 'react'
 
-interface checkoutContextProvider {
-    productsInCart: CheckoutitemswithProducts[],
-    fullproducts: ProductWithCategoriesBrandsAndStock[],
-    businessLocationId: string,
+const demoProduct = {
+    id: '',
+    name: '',
+    buyingPrice: 0,
+    sellingPrice: 0,
+    count: 0,
+}
+
+export interface CheckoutProduct {
+    id: String
+    name: String
+    buyingPrice: number
+    sellingPrice: number
+    count: number
+}
+
+const CheckoutContext = createContext<{
+    products: CheckoutProduct[]
+    setProducts: Dispatch<SetStateAction<CheckoutProduct[]>>
+}>({
+    products: [demoProduct],
+    setProducts: () => {},
+})
+
+export const CheckoutContextProvider = ({
+    children,
+}: {
     children: ReactNode
+}) => {
+    const [products, setProducts] = useState<CheckoutProduct[]>([demoProduct])
+    console.log(products)
+    return (
+        <CheckoutContext.Provider value={{ products, setProducts }}>
+            {children}
+        </CheckoutContext.Provider>
+    )
 }
 
-export interface itemInCart { productId: string, stock: number, count: number, buyingPrice: number, sellingPrice: number }
-
-const checkoutInitializer = {
-    addingToCart: false,
-    setAddingToCart: (change: boolean) => { },
-    products: [{ productId: '', stock: 0, count: 0, buyingPrice: 0, sellingPrice: 0 }],
-    setProductId: (productId: string, count: number) => { },
-    removeProductId: (productId: string) => { },
-    completeCheckoutOrder: () => {}
-}
-
-const checkoutContext = createContext(checkoutInitializer)
-
-export const CheckoutContextProvider = ({ productsInCart, fullproducts, businessLocationId, children }: checkoutContextProvider) => {
-    const [addingToCart, setAddingToCart] = useState(false)
-    const [products, setProducts] = useState<itemInCart[]>(productsInCart.map(checkoutItem => {
-        const product = fullproducts.find(product => product.id === checkoutItem.product.id)
-        const stock = product?.productInStock.find(stock => stock.businessLocationId === businessLocationId)
-        const itemsinstock = stock?.count ?? 0
-        const sellingPrice = product?.sellingPrice ?? 0
-        const buyingPrice = product?.buyingPrice ?? 0
-        return {
-            productId: checkoutItem.product.id,
-            stock: itemsinstock,
-            count: checkoutItem.count,
-            buyingPrice: buyingPrice,
-            sellingPrice: sellingPrice
-        }
-    }))
-
-    const setProductId = async (productId: string, count: number) => {
-        const product = fullproducts.find(product => product.id === productId)
-        const stock = product?.productInStock.find(stock => stock.businessLocationId === businessLocationId)
-        const itemsinstock = stock?.count ?? 0
-        const sellingPrice = product?.sellingPrice ?? 0
-        const buyingPrice = product?.buyingPrice ?? 0
-        if (products.find(item => item.productId === productId)) {
-            const newproducts = products.map(product => {
-                if (product.productId === productId) return { ...product, count: count }
-                return product
-            })
-            return setProducts(newproducts)
-        }
-        products.push({ productId: productId, stock: itemsinstock, count: count,  buyingPrice: buyingPrice, sellingPrice: sellingPrice })
-        return setProducts(products)
-    }
-
-    const removeProductId = (productId: string) => {
-        const prods = products.filter(product => product.productId !== productId)
-        return setProducts(prods)
-    }
-
-    const completeCheckoutOrder = () => setProducts([])
-
-    return <checkoutContext.Provider value={{ addingToCart, setAddingToCart, products, setProductId, removeProductId, completeCheckoutOrder }}>
-        {children}
-    </checkoutContext.Provider>
-}
-
-export const useCheckoutContext = () => useContext(checkoutContext);
+export const useCheckoutContext = () => useContext(CheckoutContext)

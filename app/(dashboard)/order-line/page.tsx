@@ -11,6 +11,9 @@ import SearchForm from '@/components/forms/searchform'
 import OrderList from '@/components/cards/orderlist'
 import { findActiveSale } from '@/actions/salesController'
 import Link from 'next/link'
+import PageHeader from '@/components/layouts/PageHeader'
+import CheckoutItemsCard from '@/components/cards/checkoutitemscard'
+import Checkoutcategorycard from '@/components/cards/checkoutcategorycard'
 
 const OrderLinePage = async () => {
     const session = await auth()
@@ -25,37 +28,38 @@ const OrderLinePage = async () => {
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
-                <div className="flex justify-between items-center gap-8 py-4">
-                    <div className="md:w-8/12 lg:w-9/12">
-                        <SearchForm />
-                    </div>
+                <PageHeader
+                    title="Order Line"
+                    description={products.length + ' products'}
+                >
+                    <SearchForm placeholder="Search Products" />
                     <Link
-                        className="bg-teal-500 hover:bg-teal-400 text-white text-sm text-center font-mono border rounded-lg px-4 py-2"
+                        className="bg-teal-500 hover:bg-teal-400  text-center font-mono border rounded-lg px-4 py-2"
                         href={'/products/add-product'}
                     >
-                        Add Product
+                        <span className="text-white text-sm text-nowrap">
+                            Add Product
+                        </span>
                     </Link>
-                </div>
-                <div className="page-body md:flex gap-3">
-                    <CheckoutContextProvider
-                        productsInCart={productsincart}
-                        fullproducts={products}
-                        businessLocationId={
-                            session?.user.activeLocation as string
-                        }
-                    >
-                        <div className="md:order-last md:w-4/12 lg:w-3/12">
+                </PageHeader>
+                <div className="page-body md:flex gap-2 ">
+                    <CheckoutContextProvider>
+                        <div className="md:order-last md:w-4/12 lg:w-3/12 space-y-1">
+                            <CheckoutItemsCard />
                             <CheckoutCart
                                 activeSale={activesale}
                                 locationId={location}
                             />
                         </div>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 md:w-8/12 lg:w-9/12 transition-all">
-                            <OrderList
-                                locationId={location}
-                                products={products}
-                                checkoutitems={productsincart}
-                            />
+                        <div className="md:w-8/12 lg:w-9/12 space-y-4">
+                            <Checkoutcategorycard />
+                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 transition-all">
+                                <OrderList
+                                    locationId={location}
+                                    products={products}
+                                    checkoutitems={productsincart}
+                                />
+                            </div>
                         </div>
                     </CheckoutContextProvider>
                 </div>
