@@ -4,7 +4,6 @@ import { auth } from '@/auth';
 import { getBusiness } from '@/src/actions/businessController';
 import { redirect } from 'next/navigation';
 import AddLocation from '@/src/components/forms/addlocation';
-import SalesCard from '@/src/components/cards/salescard';
 import { getManySales } from '@/src/actions/salesController';
 
 const ReportsPage = async () => {
@@ -19,7 +18,7 @@ const ReportsPage = async () => {
                 <AddLocation business={business} />
             </PageHeader>
             <div className="page-body">
-                <SalesCard sales={sales} />
+                
             </div>
         </div>
     );

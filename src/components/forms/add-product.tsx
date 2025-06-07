@@ -19,8 +19,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
+import { Category } from '@prisma/client'
 
-const AddProduct = () => {
+const AddProduct = ({ categories }: { categories: Category[] }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const form = useForm()
@@ -104,36 +105,27 @@ const AddProduct = () => {
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel className="text-teal-500">
-                                        Email
+                                        Category Name
                                     </FormLabel>
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                     >
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a verified email to display" />
+                                            <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
+                                                <SelectValue className='text-neutral-600' placeholder="Select a verified email to display" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
-                                            <SelectItem
-                                                className="text-teal-500"
-                                                value="m@example.com"
-                                            >
-                                                m@example.com
-                                            </SelectItem>
-                                            <SelectItem
-                                                className="text-teal-500"
-                                                value="m@google.com"
-                                            >
-                                                m@google.com
-                                            </SelectItem>
-                                            <SelectItem
-                                                className="text-teal-500"
-                                                value="m@support.com"
-                                            >
-                                                m@support.com
-                                            </SelectItem>
+                                        <SelectContent className="bg-neutral-700 border-gray-500">
+                                            {categories.map((category) => (
+                                                <SelectItem
+                                                    key={category.id}
+                                                    className="text-teal-500"
+                                                    value={category.id}
+                                                >
+                                                    {category.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />

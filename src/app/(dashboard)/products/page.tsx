@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import ProductList from '@/src/components/lists/product-list'
 import AddProduct from '@/src/components/forms/add-product'
 import SearchForm from '@/src/components/forms/search-form'
+import { getManyCategories } from '@/src/actions/categoryController'
 
 const ProductsPage = async () => {
     const session = await auth()
@@ -15,11 +16,12 @@ const ProductsPage = async () => {
     if (isInActive) return redirect('/settings')
 
     const products = (await getManyProducts(business.id)) ?? []
+    const categories = (await getManyCategories(business.id)) ?? []
     return (
         <div className="page-wrapper">
             <PageHeader title="Products" description={String(products.length)}>
                 <SearchForm />
-                <AddProduct />
+                <AddProduct categories={categories} />
             </PageHeader>
             <ProductList products={products} />
         </div>
