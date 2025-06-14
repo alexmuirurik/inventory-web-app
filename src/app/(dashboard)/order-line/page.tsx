@@ -11,19 +11,11 @@ import OrderLineActions from '@/src/components/forms/order-line-actions'
 
 const OrderLinePage = async () => {
     const session = await auth()
-    const business = await getBusiness(session?.user?.id as string)
-    if (!business || business.subscription !== 'active')
-        return redirect('/settings')
-
-    const products = (await getManyProducts(business.id)) ?? []
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
-                <PageHeader
-                    title="Order Line"
-                    description={products.length + ' products'}
-                >
+                <PageHeader title="Order Line" description={' products'}>
                     <SearchForm />
                     <OrderLineActions />
                 </PageHeader>

@@ -20,7 +20,6 @@ model User {
     sessions      			Session[]  
     businesses              Business[]
     Authenticator 			Authenticator[]
-    cashiers                Cashier[]
     createdAt 				DateTime @default(now())
     updatedAt 				DateTime @updatedAt
 }
@@ -85,11 +84,7 @@ model Business {
 	ownerId			String @db.ObjectId
     owner           User @relation(fields: [ownerId], references: [id])
     subscriptions   Subscription[]
-    products        Product[]
-    categories      Category[]
-    brands          Brand[]
     locations       BusinessLocation[]
-    cashiers        Cashier[]
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -119,139 +114,66 @@ model BusinessLocation {
 	address			String
     businessId      String @db.ObjectId
     business        Business @relation(fields: [businessId], references: [id])
-    suppliers       Supplier[]
-    productsInStock ProductInStock[]
-    sales           Sale[]
-    cashiers        Cashier[]
-    customers       Customer[]
+    ctegories       Category[]
+    products        Product[]
+    pettyCash       PettyCash[]
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model Cashier {
-    id				    String @id @default(auto()) @map("_id") @db.ObjectId
-    email               String @unique
-    userid              String? @db.ObjectId
-    businessId          String @db.ObjectId
-    businesslocationId  String? @db.ObjectId
-    status              String
-    business            Business @relation(fields: [businessId], references: [id])
-    businesslocation    BusinessLocation? @relation(fields: [businesslocationId], references: [id])
-    user                User? @relation(fields: [userid], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Supplier {
+model Category {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    name                String
-    company             String
-    amount              Float?
-    paid                Float?
-    arrears             Float?
+    name                String  
     businessLocationId  String @db.ObjectId
-    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Customer {
-    id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    name                String
-    mobile              String
-    amount              Float?
-    paid                Float?
-    arrears             Float?
-    businessLocationId  String @db.ObjectId
-    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
-    sales               Sale[]
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id]) 
+    products            Product[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Product {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    businessLocationId  String @db.ObjectId
     name                String
     description         String 
-    sku                 String
-    image               String
-    buyingPrice         Float?
-    sellingPrice        Float?
-    variants            Json? 
     status              String
     businessId          String @db.ObjectId
-    categoryId          String? @db.ObjectId
-    brandId             String? @db.ObjectId
-    business            Business @relation(fields: [businessId], references: [id])
-    category            Category? @relation(fields: [categoryId], references: [id])
-    brand               Brand? @relation(fields: [brandId], references: [id])
-    tags                Json?
-    checkoutitems       CheckoutItem[]
-    productInStock      ProductInStock[]
+    categoryId          String @db.ObjectId
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id] )
+    category            Category @relation(fields: [categoryId], references: [id])
+    supplies            Supply[]
+    sales               Sale[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model ProductInStock {
+model Supply {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    count               Float
-    sizes               Json?
-    discount            Float?
-    businessLocationId  String @db.ObjectId
     productId           String @db.ObjectId
+    buyingPrice         Float
+    itemsCount          Float
     product             Product @relation(fields: [productId], references: [id])
-    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt 
-}
-
-model Brand {
-    id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    name                String    
-    businessId          String @db.ObjectId
-    business            Business @relation(fields: [businessId], references: [id])
-    products            Product[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-model Category {
-    id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    name                String   
-    businessId          String @db.ObjectId
-    business            Business @relation(fields: [businessId], references: [id]) 
-    tags                Json?
-    products            Product[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Sale {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    customerId          String @db.ObjectId
-    amount              Float?
-    paid                Float?
-    arrears             Float?
-    status              String
-    businessLocationId  String @db.ObjectId
-    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
-    customer            Customer @relation(fields: [customerId], references: [id])
-    checkoutitems       CheckoutItem[]
-    payments            Payment[]
+    productId           String @db.ObjectId
+    sellingPrice        Float
+    itemsCount          Float
+    product             Product @relation(fields: [productId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
-model CheckoutItem {
+model PettyCash {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    count               Int
-    buyingPrice         Float
-    sellingPrice        Float
-    productId           String @db.ObjectId
-    saleId              String @db.ObjectId
-    status              String
-    product             Product @relation(fields: [productId], references: [id])
-    sale                Sale @relation(fields: [saleId], references: [id])
+    businessLocationId  String @db.ObjectId
+    pettyCash           Float
+    losses              Float
+    miscellaneous       Float
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -260,13 +182,11 @@ model Payment {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     mobile              String
     amount              Float
-    MerchantRequestID   String?
+    MerchantRequestID   String
     CheckoutRequestID   String?
     status              String
     userId              String @db.ObjectId
-    saleId              String @db.ObjectId
     user                User @relation(fields: [userId], references: [id])
-    sale                Sale @relation(fields: [saleId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

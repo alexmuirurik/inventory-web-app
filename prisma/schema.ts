@@ -12,7 +12,7 @@ export const businessSchema = z.object({
 
 export const categorySchema = z.object({
     name: z.string(),
-    businessId: z.string()
+    businessLocationId: z.string()
 })
 
 export const brandSchema = z.object({

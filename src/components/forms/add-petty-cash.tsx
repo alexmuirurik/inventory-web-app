@@ -1,4 +1,4 @@
-'use client'
+import React from 'react'
 import {
     Form,
     FormControl,
@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { Input } from '../ui/input'
 
-const AddStockReport = () => {
+const AddPettyCash = () => {
     const form = useForm()
     const handleFormSubmit = () => {}
     return (
@@ -25,11 +25,11 @@ const AddStockReport = () => {
                     render={({ field }) => (
                         <FormItem className="">
                             <FormLabel className="text-teal-500">
-                                Product Name
+                                Petty Cash
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Product Name"
+                                    placeholder="Petty Cash"
                                     className="border-gray-600 text-gray-200"
                                     {...field}
                                 />
@@ -45,11 +45,11 @@ const AddStockReport = () => {
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">
-                                    Buying Price
+                                    Loses
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Buying Price"
+                                        placeholder="Loses"
                                         className="border-gray-600 text-gray-200"
                                         {...field}
                                     />
@@ -64,11 +64,11 @@ const AddStockReport = () => {
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">
-                                    No. of Items
+                                    miscellaneous
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="No. of Items"
+                                        placeholder="Mislenious"
                                         className="border-gray-600 text-gray-200"
                                         {...field}
                                     />
@@ -83,4 +83,4 @@ const AddStockReport = () => {
     )
 }
 
-export default AddStockReport
+export default AddPettyCash
