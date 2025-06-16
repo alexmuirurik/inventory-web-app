@@ -8,15 +8,20 @@ import ProductList from '@/src/components/lists/product-list'
 import AddProduct from '@/src/components/forms/add-product'
 import SearchForm from '@/src/components/forms/search-form'
 import { getManyCategories } from '@/src/actions/categoryController'
+import { getLocationById } from '@/src/actions/locationController'
 
 const ProductsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    const isInActive = !business || business.subscription !== 'active'
-    if (isInActive) return redirect('/settings')
+    if (!business) return redirect('/settings')
 
-    const products = (await getManyProducts(business.id)) ?? []
-    const categories = (await getManyCategories(business.id)) ?? []
+    const businessLocation = await getLocationById(
+        session?.user.activeLocation as string
+    )
+    const products =
+        (await getManyProducts(businessLocation?.id as string)) ?? []
+    const categories =
+        (await getManyCategories(businessLocation?.id as string)) ?? []
     return (
         <div className="page-wrapper">
             <PageHeader title="Products" description={String(products.length)}>

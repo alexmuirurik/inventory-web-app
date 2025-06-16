@@ -1,13 +1,7 @@
 'use server'
-import { createSKU, stringToJSON } from '@/src/lib/utils'
 import prisma from '@/prisma/prisma'
-import {
-    productSchema,
-    stockSchema,
-    updateProductSChema,
-} from '@/prisma/schema'
+import { productSchema, updateProductSChema } from '@/prisma/schema'
 import { z } from 'zod'
-import { findActiveSale } from './salesController'
 
 export const getProductById = async (productId: string) => {
     try {
@@ -50,7 +44,6 @@ export const getManyProducts = async (businessId: string) => {
     }
 }
 
-
 export const updateProduct = async (
     data: z.infer<typeof updateProductSChema>
 ) => {
@@ -75,7 +68,6 @@ export const createProduct = async (data: z.infer<typeof productSchema>) => {
         const createdproduct = await prisma.product.create({
             data: {
                 ...data,
-    
             },
         })
         return createdproduct
