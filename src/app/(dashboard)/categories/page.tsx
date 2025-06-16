@@ -9,17 +9,15 @@ import CategoriesCard from '@/src/components/cards/categoriescard';
 
 const CategoriesPage = async () => {
     const session = await auth()
-    const business = await getBusiness(session?.user?.id as string)
-    if(!business || business.subscription !== 'active') return redirect('/settings')
-    const categories = await getManyCategories(business.id) ?? []
+    
     return (
         <div className="page-wrapper">
-            <PageHeader title='Categories' description={String(categories?.length)} >
+            <PageHeader title='Categories' description={String('')} >
                 <input type="text" className="bg-transparent focus-within:!ring-0 border text-sm ps-5 py-2" placeholder="Search" />
-                <AddCategory business={business} />
+                <AddCategory business={undefined} />
             </PageHeader>
             <div className="page-body grid  sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-                <CategoriesCard categories={categories.sort((a, b) => a.name.localeCompare(b.name) )} />
+                <CategoriesCard categories={[]} />
             </div>
         </div>
     );
