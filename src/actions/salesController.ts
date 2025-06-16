@@ -1,8 +1,6 @@
 'use server'
 import prisma from '@/prisma/prisma'
-import { cartSchema, checkoutSchema } from '@/prisma/schema'
 import { z } from 'zod'
-import { getProductById } from './productController'
 
 export const findSale = async (saleId: string) => {
     try {
@@ -28,19 +26,5 @@ export const getManySales = async (productId: string) => {
         return sales
     } catch (error) {
         console.log('Getting Sales Error: ' + error)
-    }
-}
-
-
-export const createSale = async (data: z.infer<typeof cartSchema>) => {
-    try {
-        const createdsale = await prisma.sale.create({
-            data: {
-                productId: data.businessLocationId
-            },
-        })
-        return createdsale
-    } catch (error) {
-        console.log('Creating Sale Error: ' + error)
     }
 }

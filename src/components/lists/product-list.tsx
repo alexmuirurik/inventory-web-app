@@ -1,12 +1,12 @@
 import React from 'react'
 import { FaSort } from 'react-icons/fa'
 import ProductsCard from '../cards/productscard'
-import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types'
+import { Product } from '@prisma/client'
 
 const ProductList = ({
     products,
 }: {
-    products: ProductWithCategoriesBrandsAndStock[]
+    products: Product[]
 }) => {
     return (
         <div className="page-body space-y-1">

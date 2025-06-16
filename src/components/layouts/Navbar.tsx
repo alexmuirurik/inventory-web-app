@@ -2,7 +2,6 @@ import React from 'react'
 import { auth } from '@/auth'
 import NavBarMenu from './NavBarMenu'
 import { Avatar, AvatarImage } from '../ui/avatar'
-import { getUser } from '@/src/actions/userController'
 import { getLocationById } from '@/src/actions/locationController'
 import { getBusiness } from '@/src/actions/businessController'
 
