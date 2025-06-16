@@ -135,9 +135,10 @@ model Product {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     businessLocationId  String @db.ObjectId
     name                String
-    description         String 
+    description         String
+    buyingPrice         Float 
+    startingStock       Float
     status              String
-    businessId          String @db.ObjectId
     categoryId          String @db.ObjectId
     businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id] )
     category            Category @relation(fields: [categoryId], references: [id])

@@ -15,12 +15,16 @@ import { z } from 'zod'
 import { categorySchema } from '@/prisma/schema'
 import { Input } from '../ui/input'
 import { LoadingButton } from '../ui/loadingbutton'
-import { Business } from '@prisma/client'
+import { Business, BusinessLocation } from '@prisma/client'
 import { createCategory } from '@/src/actions/categoryController'
 import { useToast } from '../ui/use-toast'
 import { useRouter } from 'next/navigation'
 
-const AddCategory = ({ business }: { business: Business | undefined }) => {
+const AddCategory = ({
+    businessLocation,
+}: {
+    businessLocation: BusinessLocation | undefined | null
+}) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
@@ -29,10 +33,12 @@ const AddCategory = ({ business }: { business: Business | undefined }) => {
     const description = 'Add a category to easier sort your category'
     const form = useForm<z.infer<typeof categorySchema>>({
         resolver: zodResolver(categorySchema),
-        defaultValues: { businessId: business?.id },
+        defaultValues: {
+            businessLocationId: businessLocation?.id,
+        },
     })
     const onFormSubmit = async (data: z.infer<typeof categorySchema>) => {
-        setOpen(false)
+        
         setLoading(true)
         const category = await createCategory(data)
         if (!category) {
@@ -49,6 +55,7 @@ const AddCategory = ({ business }: { business: Business | undefined }) => {
             })
             form.reset({})
         }
+        setOpen(false)
         setLoading(false)
         return router.refresh()
     }

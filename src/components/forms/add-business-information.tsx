@@ -10,13 +10,14 @@ import {
 import { useForm } from 'react-hook-form'
 import { Input } from '../ui/input'
 import { LoadingButton } from '../ui/loadingbutton'
-import { z } from 'zod'
+import { object, z } from 'zod'
 import { businessSchema } from '@/prisma/schema'
 import { createBusiness, getBusiness } from '@/src/actions/businessController'
 import { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import { Business, BusinessLocation, User } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { redirect } from 'next/navigation'
 
 const AddBusinessInformation = ({
     user,
@@ -35,7 +36,7 @@ const AddBusinessInformation = ({
             ownerId: user.id,
             name: business?.name,
             mobile: business?.mobile,
-            location: location?.name,
+            location: location?.name ?? 'Nairobi',
             city: location?.city,
             country: location?.country,
             address: location?.address,
@@ -64,6 +65,7 @@ const AddBusinessInformation = ({
             })
         }
         setLoading(false)
+        return redirect('/')
     }
     return (
         <Form {...form}>
@@ -72,7 +74,7 @@ const AddBusinessInformation = ({
                 onSubmit={form.handleSubmit(handleFormSubmit)}
             >
                 <div className="flex items-center gap-2 w-full">
-                    {form.formState.errors.address?.message}
+                    
                     <FormField
                         name="name"
                         control={form.control}
@@ -170,7 +172,7 @@ const AddBusinessInformation = ({
                         type="submit"
                         disabled={!!business}
                         loading={loading}
-                        className="bg-teal-600"
+                        className="bg-teal-600 hover:bg-teal-500"
                     >
                         <span className="text-nowrap">Save Information</span>
                     </LoadingButton>

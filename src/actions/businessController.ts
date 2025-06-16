@@ -8,7 +8,12 @@ import { createLocation } from './locationController'
 export const getBusiness = async (userId: string) => {
     try {
         const business = await prisma.business.findFirst({
-            where: { ownerId: userId },
+            where: { 
+                ownerId: userId 
+            },
+            include: {
+                locations: true
+            }
         })
         return business
     } catch (error) {

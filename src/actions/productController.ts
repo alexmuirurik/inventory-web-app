@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma/prisma'
-import { productSchema, updateProductSChema } from '@/prisma/schema'
+import { productSchema } from '@/prisma/schema'
 import { z } from 'zod'
 
 export const getProductById = async (productId: string) => {
@@ -14,11 +14,14 @@ export const getProductById = async (productId: string) => {
     }
 }
 
-export const getProduct = async (businessId: string, productName: string) => {
+export const getProduct = async (
+    businessLocationId: string,
+    productName: string
+) => {
     try {
         const product = await prisma.product.findFirst({
             where: {
-                businessId: businessId,
+                businessLocationId: businessLocationId,
                 name: productName,
             },
         })
@@ -28,11 +31,11 @@ export const getProduct = async (businessId: string, productName: string) => {
     }
 }
 
-export const getManyProducts = async (businessId: string) => {
+export const getManyProducts = async (businessLocationId: string) => {
     try {
         const products = await prisma.product.findMany({
             where: {
-                businessId: businessId,
+                businessLocationId: businessLocationId,
             },
             include: {
                 category: true,
@@ -44,15 +47,13 @@ export const getManyProducts = async (businessId: string) => {
     }
 }
 
-export const updateProduct = async (
-    data: z.infer<typeof updateProductSChema>
-) => {
+export const updateProduct = async (data: z.infer<typeof productSchema>) => {
     try {
-        const product = await prisma.product.update({
-            where: { id: data.productId },
+        const product = await getProduct(data.businessLocationId, data.name)
+        const updateProduct = await prisma.product.update({
+            where: { id: product?.id },
             data: {
                 name: data.name,
-                description: data.description,
             },
         })
         return product
@@ -63,10 +64,12 @@ export const updateProduct = async (
 
 export const createProduct = async (data: z.infer<typeof productSchema>) => {
     try {
-        const product = await getProduct(data.businessId, data.name)
+        const product = await getProduct(data.businessLocationId, data.name)
         if (product) return product
         const createdproduct = await prisma.product.create({
             data: {
+                description: data.name,
+                status: data.startingStock > 0 ? 'in-stock' : 'depleted',
                 ...data,
             },
         })

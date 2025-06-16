@@ -19,14 +19,75 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../ui/select'
-import { Category } from '@prisma/client'
+import { BusinessLocation, Category } from '@prisma/client'
+import { z } from 'zod'
+import { productSchema } from '@/prisma/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createCategory } from '@/src/actions/categoryController'
+import { createProduct } from '@/src/actions/productController'
+import { useToast } from '../ui/use-toast'
+import { useRouter } from 'next/navigation'
 
-const AddProduct = ({ categories }: { categories: Category[] }) => {
+const AddProduct = ({
+    categories,
+    businessLocation,
+}: {
+    categories: Category[]
+    businessLocation: BusinessLocation | undefined | null
+}) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
-    const form = useForm()
+    const { toast } = useToast()
+    const router = useRouter()
+    const form = useForm<z.infer<typeof productSchema>>({
+        resolver: zodResolver(productSchema),
+        defaultValues: {
+            businessLocationId: businessLocation?.id
+        }
+    })
 
-    const handleFormSubmit = () => {}
+    const createNewCategory = async () => {
+        setLoading(true)
+        const category = await createCategory({
+            businessLocationId: businessLocation?.id as string,
+            name: 'Uncategorized',
+        })
+        if (category) {
+            console.log(category)
+            router.refresh()
+        }
+
+        return setLoading(false)
+    }
+
+    const handleFormSubmit = async (data: z.infer<typeof productSchema>) => {
+        let categoryId = data.categoryId
+        setLoading(true)
+        if (data.categoryId === 'Uncategorized') {
+            const category = await createCategory({
+                businessLocationId: businessLocation?.id as string,
+                name: data.categoryId,
+            })
+            categoryId = category?.id as string
+        }
+
+        const product = await createProduct({ ...data, categoryId: categoryId })
+        if (product) {
+            toast({
+                title: 'Success',
+                description: 'Product created successfully',
+                variant: 'success',
+            })
+        } else {
+            toast({
+                title: 'Failed',
+                description: 'Kindly contact admin for assistance',
+                variant: 'destructive',
+            })
+        }
+        setLoading(false)
+        return router.refresh()
+    }
     return (
         <CustomDialog
             open={open}
@@ -39,8 +100,11 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                     className="space-y-4"
                     onSubmit={form.handleSubmit(handleFormSubmit)}
                 >
+                    {Object.values(form.formState.errors).map((val, i) => (
+                        <div>{i +''+ val.message}</div>
+                    ))}
                     <FormField
-                        name=""
+                        name="name"
                         control={form.control}
                         render={({ field }) => (
                             <FormItem className="w-full">
@@ -49,7 +113,7 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Category Name"
+                                        placeholder="Product Name"
                                         className="border-gray-600 text-gray-200"
                                         {...field}
                                     />
@@ -60,7 +124,7 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                     />
                     <div className="md:flex justify-between items-center gap-2 w-full">
                         <FormField
-                            name=""
+                            name="startingStock"
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem className="w-full">
@@ -69,8 +133,9 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Category Name"
+                                            placeholder="Starting Stock"
                                             className="border-gray-600 text-gray-200"
+                                            type="number"
                                             {...field}
                                         />
                                     </FormControl>
@@ -79,7 +144,7 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                             )}
                         />
                         <FormField
-                            name=""
+                            name="buyingPrice"
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem className="w-full">
@@ -88,8 +153,9 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Category Name"
+                                            placeholder="Buying Price"
                                             className="border-gray-600 text-gray-200"
+                                            type="number"
                                             {...field}
                                         />
                                     </FormControl>
@@ -101,26 +167,34 @@ const AddProduct = ({ categories }: { categories: Category[] }) => {
                     <div className="flex w-full">
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="categoryId"
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel className="text-teal-500">
                                         Category Name
                                     </FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
+                                    <Select onValueChange={val => form.setValue('categoryId', val)}>
                                         <FormControl>
                                             <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
-                                                <SelectValue className='text-neutral-600' placeholder="Select a verified email to display" />
+                                                <SelectValue
+                                                    className="text-neutral-600"
+                                                    placeholder="Select category"
+                                                />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent className="bg-neutral-700 border-gray-500">
+                                            {categories.length === 0 && (
+                                                 <SelectItem
+                                                    className="text-teal-500 hover:bg-neutral-600"
+                                                    value="Uncategorized"
+                                                >
+                                                    Uncategorized
+                                                </SelectItem>
+                                            )}
                                             {categories.map((category) => (
                                                 <SelectItem
                                                     key={category.id}
-                                                    className="text-teal-500"
+                                                    className="text-teal-500 hover:bg-neutral-600"
                                                     value={category.id}
                                                 >
                                                     {category.name}

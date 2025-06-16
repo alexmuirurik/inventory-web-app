@@ -1,11 +1,8 @@
 'use client'
-import React from 'react'
-import { ProductWithCategoriesBrandsAndStock } from '@/prisma/types'
-const ProductsCard = ({
-    products,
-}: {
-    products: ProductWithCategoriesBrandsAndStock[]
-}) => {
+
+import { Product } from '@prisma/client'
+
+const ProductsCard = ({ products }: { products: Product[] }) => {
     return products.map((product, i) => (
         <div
             key={product.id}
@@ -18,17 +15,17 @@ const ProductsCard = ({
             </div>
             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                 <span className="text-sm text-neutral-400">
-                    {product.createdAt.getDate()}
+                    {product.categoryId}
                 </span>
             </div>
             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                 <span className="text-sm">{product.buyingPrice}</span>
             </div>
             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                <span className="text-sm">{product.sellingPrice}</span>
+                <span className="text-sm">{product.startingStock}</span>
             </div>
             <div className="px-2 w-2/12">
-                <span className="text-sm">{product.buyingPrice}</span>
+                <span className="text-sm">{0}</span>
             </div>
         </div>
     ))

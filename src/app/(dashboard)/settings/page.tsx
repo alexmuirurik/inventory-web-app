@@ -1,9 +1,5 @@
 import { auth } from '@/auth'
 import { getBusiness } from '@/src/actions/businessController'
-import {
-    getLocationById,
-    getManyLocations,
-} from '@/src/actions/locationController'
 import AddBusinessInformation from '@/src/components/forms/add-business-information'
 import PageHeader from '@/src/components/layouts/PageHeader'
 import { Input } from '@/src/components/ui/input'
@@ -13,9 +9,10 @@ import { User } from '@prisma/client'
 const SettingsPage = async () => {
     const session = await auth()
     const business = await getBusiness(session?.user.id as string)
-    const businessLocation = await getLocationById(
-        session?.user?.activeLocation as string
+    const businessLocation = business?.locations.find(
+        (location) => location.id === session?.user.activeLocation
     )
+
     return (
         <div className="page-wrapper">
             <PageHeader

@@ -23,10 +23,10 @@ export const brandSchema = z.object({
 
 export const productSchema = z.object({
     name: z.string(),
-    businessId: z.string(),
-    description: z.string(),
-    image: z.string().optional(),
-    tags: z.string().optional(),
-    status: z.string()
+    businessLocationId: z.string(),
+    buyingPrice: z.coerce.number(),
+    startingStock: z.coerce.number(),
+    categoryId: z.string(),
+    
 })
 
