@@ -1,7 +1,6 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { UseFormReturn } from 'react-hook-form'
 import {
-    Form,
     FormControl,
     FormField,
     FormItem,
@@ -9,27 +8,61 @@ import {
     FormMessage,
 } from '../ui/form'
 import { Input } from '../ui/input'
+import { z } from 'zod'
+import { salesSchema } from '@/prisma/schema'
+import { CompleteProduct } from '@/prisma/types'
+import { AutoComplete } from '../ui/autocomplete'
 
-const AddSaleReport = () => {
-    const form = useForm()
-    const handleFormSubmit = () => {}
+const AddSaleReport = ({
+    form,
+    products,
+}: {
+    form: UseFormReturn<z.infer<typeof salesSchema>>
+    products: CompleteProduct[]
+}) => {
+    const newProducts = products.map((product) => {
+        return {
+            label: product.name,
+            value: product.id,
+        }
+    })
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(handleFormSubmit)}
-                className="space-y-4"
-            >
+        <div className="space-y-4">
+            <FormField
+                control={form.control}
+                name="productId"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel className="text-teal-500">
+                            Product Name
+                        </FormLabel>
+
+                        <FormControl>
+                            <AutoComplete
+                                options={newProducts}
+                                emptyMessage="No results."
+                                placeholder="Find something"
+                                onValueChange={(option) =>
+                                    field.onChange(option.value)
+                                }
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <div className="flex items-center gap-2">
                 <FormField
-                    name=""
+                    name="sellingPrice"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem className="">
+                        <FormItem className="w-full">
                             <FormLabel className="text-teal-500">
-                                Product Name
+                                Selling Price
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Product Name"
+                                    placeholder="Selling Price"
                                     className="border-gray-600 text-gray-200"
                                     {...field}
                                 />
@@ -38,48 +71,27 @@ const AddSaleReport = () => {
                         </FormItem>
                     )}
                 />
-                <div className="flex items-center gap-2">
-                    <FormField
-                        name=""
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">
-                                    Selling Price
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Selling Price"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name=""
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">
-                                    No. of Items
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="No. of Items"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-            </form>
-        </Form>
+                <FormField
+                    name="itemsCount"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel className="text-teal-500">
+                                No. of Items
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="No. of Items"
+                                    className="border-gray-600 text-gray-200"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+        </div>
     )
 }
 

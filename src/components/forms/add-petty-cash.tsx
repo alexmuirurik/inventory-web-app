@@ -8,29 +8,49 @@ import {
     FormLabel,
     FormMessage,
 } from '../ui/form'
-import { useForm } from 'react-hook-form'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import { Input } from '../ui/input'
+import { z } from 'zod'
+import { pettySchema } from '@/prisma/schema'
 
-const AddPettyCash = () => {
-    const form = useForm()
-    const handleFormSubmit = () => {}
+const AddPettyCash = ({
+    form,
+}: {
+    form: UseFormReturn<z.infer<typeof pettySchema>>
+}) => {
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(handleFormSubmit)}
-                className="space-y-4"
-            >
+        <div className="space-y-4">
+            <FormField
+                name="pettyCash"
+                control={form.control}
+                render={({ field }) => (
+                    <FormItem className="">
+                        <FormLabel className="text-teal-500">
+                            Petty Cash
+                        </FormLabel>
+                        <FormControl>
+                            <Input
+                                placeholder="Petty Cash"
+                                className="border-gray-600 text-gray-200"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <div className="flex items-center gap-2">
                 <FormField
-                    name=""
+                    name="losses"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem className="">
+                        <FormItem className="w-full">
                             <FormLabel className="text-teal-500">
-                                Petty Cash
+                                Loses
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Petty Cash"
+                                    placeholder="Loses"
                                     className="border-gray-600 text-gray-200"
                                     {...field}
                                 />
@@ -39,48 +59,27 @@ const AddPettyCash = () => {
                         </FormItem>
                     )}
                 />
-                <div className="flex items-center gap-2">
-                    <FormField
-                        name=""
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">
-                                    Loses
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Loses"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        name=""
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">
-                                    miscellaneous
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Mislenious"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-            </form>
-        </Form>
+                <FormField
+                    name="miscellaneous"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel className="text-teal-500">
+                                miscellaneous
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="miscellaneous"
+                                    className="border-gray-600 text-gray-200"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+        </div>
     )
 }
 

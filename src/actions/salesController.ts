@@ -1,6 +1,8 @@
 'use server'
 import prisma from '@/prisma/prisma'
+import { salesSchema } from '@/prisma/schema'
 import { z } from 'zod'
+import { createOrderLine } from './orderLineController'
 
 export const findSale = async (saleId: string) => {
     try {
@@ -21,10 +23,32 @@ export const getManySales = async (productId: string) => {
             where: {
                 productId: productId,
             },
-           
         })
         return sales
     } catch (error) {
         console.log('Getting Sales Error: ' + error)
+    }
+}
+
+export const createSale = async (data: z.infer<typeof salesSchema>) => {
+    try {
+        const orderLine = await createOrderLine({
+            businessLocationId: data.businessLocationId,
+            date: new Date().toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: '2-digit',
+            }),
+        })
+
+        const sale = await prisma.sale.create({
+            data: {
+                orderLineId: orderLine.id,
+                ...data,
+            },
+        })
+        return Promise.resolve(sale)
+    } catch (error) {
+        return Promise.reject(error)
     }
 }

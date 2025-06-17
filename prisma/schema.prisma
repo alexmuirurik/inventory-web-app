@@ -116,7 +116,10 @@ model BusinessLocation {
     business        Business @relation(fields: [businessId], references: [id])
     ctegories       Category[]
     products        Product[]
+    supplies        Supply[]
+    sales           Sale[]
     pettyCash       PettyCash[]
+    orderLine       OrderLine[]
 	createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -136,8 +139,6 @@ model Product {
     businessLocationId  String @db.ObjectId
     name                String
     description         String
-    buyingPrice         Float 
-    startingStock       Float
     status              String
     categoryId          String @db.ObjectId
     businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id] )
@@ -151,9 +152,13 @@ model Product {
 model Supply {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     productId           String @db.ObjectId
+    orderLineId         String @db.ObjectId
+    businessLocationId  String @db.ObjectId
     buyingPrice         Float
     itemsCount          Float
     product             Product @relation(fields: [productId], references: [id])
+    orderLine           OrderLine @relation(fields: [orderLineId], references: [id])
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -161,9 +166,13 @@ model Supply {
 model Sale {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     productId           String @db.ObjectId
+    orderLineId         String @db.ObjectId
+    businessLocationId  String @db.ObjectId
     sellingPrice        Float
     itemsCount          Float
     product             Product @relation(fields: [productId], references: [id])
+    orderLine           OrderLine @relation(fields: [orderLineId], references: [id])
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -171,10 +180,24 @@ model Sale {
 model PettyCash {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
     businessLocationId  String @db.ObjectId
+    orderLineId         String @db.ObjectId
     pettyCash           Float
     losses              Float
     miscellaneous       Float
     businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
+    orderLine           OrderLine @relation(fields: [orderLineId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model OrderLine {
+    id                  String @id @default(auto()) @map("_id") @db.ObjectId
+    date                String @unique
+    businessLocationId  String @db.ObjectId
+    businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
+    sales               Sale[]
+    supplies            Supply[]
+    pettyCash           PettyCash[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

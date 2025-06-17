@@ -1,12 +1,11 @@
+import { Command as CommandPrimitive } from 'cmdk'
+import { useState, useRef, useCallback, type KeyboardEvent } from 'react'
+import { CommandGroup, CommandInput, CommandItem, CommandList } from './command'
+import { cn } from '@/src/lib/utils'
+import { Check } from 'lucide-react'
+import { Skeleton } from './skeleton'
 
-import { Command as CommandPrimitive } from "cmdk"
-import { useState, useRef, useCallback, type KeyboardEvent } from "react"
-import { CommandGroup, CommandInput, CommandItem, CommandList } from "./command"
-import { cn } from "@/src/lib/utils"
-import { Check } from "lucide-react"
-import { Skeleton } from "./skeleton"
-
-export type Option = Record<"value" | "label", string> & Record<string, string>
+export type Option = Record<'value' | 'label', string> & Record<string, string>
 
 type AutoCompleteProps = {
     options: Option[]
@@ -30,7 +29,7 @@ export const AutoComplete = ({
     const inputRef = useRef<HTMLInputElement>(null)
     const [isOpen, setOpen] = useState(false)
     const [selected, setSelected] = useState<Option>(value as Option)
-    const [inputValue, setInputValue] = useState<string>(value?.label || "")
+    const [inputValue, setInputValue] = useState<string>(value?.label || '')
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent<HTMLDivElement>) => {
@@ -45,9 +44,9 @@ export const AutoComplete = ({
             }
 
             // This is not a default behaviour of the <input /> field
-            if (event.key === "Enter" && input.value !== "") {
+            if (event.key === 'Enter' && input.value !== '') {
                 const optionToSelect = options.find(
-                    (option) => option.label === input.value,
+                    (option) => option.label === input.value
                 )
                 if (optionToSelect) {
                     setSelected(optionToSelect)
@@ -55,11 +54,11 @@ export const AutoComplete = ({
                 }
             }
 
-            if (event.key === "Escape") {
+            if (event.key === 'Escape') {
                 input.blur()
             }
         },
-        [isOpen, options, onValueChange],
+        [isOpen, options, onValueChange]
     )
 
     const handleBlur = useCallback(() => {
@@ -80,11 +79,11 @@ export const AutoComplete = ({
                 inputRef?.current?.blur()
             }, 0)
         },
-        [onValueChange],
+        [onValueChange]
     )
 
     return (
-        <CommandPrimitive onKeyDown={handleKeyDown} className="relative"> 
+        <CommandPrimitive onKeyDown={handleKeyDown} className="relative border border-neutral-500">
             <div>
                 <CommandInput
                     ref={inputRef}
@@ -93,13 +92,17 @@ export const AutoComplete = ({
                     onFocus={() => setOpen(true)}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className="text-base"
+                    className="text-neutral-200 rounded-lg"
+                    value={inputValue}
                 />
             </div>
             <div className="absolute mt-1 bg-white w-full z-50">
-                <div className={
-                    cn( "animate-in fade-in-0 zoom-in-95 absolute top-0 z-10 w-full rounded-xl bg-white outline-none", isOpen ? "block" : "hidden", )
-                }>
+                <div
+                    className={cn(
+                        'animate-in fade-in-0 zoom-in-95 absolute top-0 z-10 w-full bg-white outline-none',
+                        isOpen ? 'block' : 'hidden'
+                    )}
+                >
                     <CommandList className="rounded-lg ring-1 ring-slate-200">
                         {isLoading ? (
                             <CommandPrimitive.Loading>
@@ -111,7 +114,8 @@ export const AutoComplete = ({
                         {options.length > 0 && !isLoading ? (
                             <CommandGroup>
                                 {options.map((option) => {
-                                    const isSelected = selected?.value === option.value
+                                    const isSelected =
+                                        selected?.value === option.value
                                     return (
                                         <CommandItem
                                             key={option.value}
@@ -120,13 +124,17 @@ export const AutoComplete = ({
                                                 event.preventDefault()
                                                 event.stopPropagation()
                                             }}
-                                            onSelect={() => handleSelectOption(option)}
+                                            onSelect={() =>
+                                                handleSelectOption(option)
+                                            }
                                             className={cn(
-                                                "flex w-full items-center gap-2",
-                                                !isSelected ? "pl-8" : null,
+                                                'flex w-full items-center gap-2',
+                                                !isSelected ? 'pl-8' : null
                                             )}
                                         >
-                                            {isSelected ? <Check className="w-4" /> : null}
+                                            {isSelected ? (
+                                                <Check className="w-4" />
+                                            ) : null}
                                             {option.label}
                                         </CommandItem>
                                     )

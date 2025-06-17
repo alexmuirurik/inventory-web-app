@@ -42,8 +42,9 @@ const AddProduct = ({
     const form = useForm<z.infer<typeof productSchema>>({
         resolver: zodResolver(productSchema),
         defaultValues: {
-            businessLocationId: businessLocation?.id
-        }
+            businessLocationId: businessLocation?.id,
+            status: 'in-stock'
+        },
     })
 
     const createNewCategory = async () => {
@@ -100,42 +101,19 @@ const AddProduct = ({
                     className="space-y-4"
                     onSubmit={form.handleSubmit(handleFormSubmit)}
                 >
-                    {Object.values(form.formState.errors).map((val, i) => (
-                        <div>{i +''+ val.message}</div>
-                    ))}
-                    <FormField
-                        name="name"
-                        control={form.control}
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel className="text-teal-500">
-                                    Product Name
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Product Name"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <div className="md:flex justify-between items-center gap-2 w-full">
                         <FormField
-                            name="startingStock"
+                            name="name"
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel className="text-teal-500">
-                                        Starting Stock
+                                        Product Name
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Starting Stock"
                                             className="border-gray-600 text-gray-200"
-                                            type="number"
                                             {...field}
                                         />
                                     </FormControl>
@@ -143,28 +121,6 @@ const AddProduct = ({
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            name="buyingPrice"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormLabel className="text-teal-500">
-                                        Buying Price
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Buying Price"
-                                            className="border-gray-600 text-gray-200"
-                                            type="number"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="flex w-full">
                         <FormField
                             control={form.control}
                             name="categoryId"
@@ -173,7 +129,11 @@ const AddProduct = ({
                                     <FormLabel className="text-teal-500">
                                         Category Name
                                     </FormLabel>
-                                    <Select onValueChange={val => form.setValue('categoryId', val)}>
+                                    <Select
+                                        onValueChange={(val) =>
+                                            form.setValue('categoryId', val)
+                                        }
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
                                                 <SelectValue
@@ -184,7 +144,7 @@ const AddProduct = ({
                                         </FormControl>
                                         <SelectContent className="bg-neutral-700 border-gray-500">
                                             {categories.length === 0 && (
-                                                 <SelectItem
+                                                <SelectItem
                                                     className="text-teal-500 hover:bg-neutral-600"
                                                     value="Uncategorized"
                                                 >
@@ -207,6 +167,25 @@ const AddProduct = ({
                             )}
                         />
                     </div>
+                    <FormField
+                        name="description"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel className="text-teal-500">
+                                    Product Descripton
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Product Description"
+                                        className="border-gray-600 text-gray-200"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <div className="flex justify-center items-center">
                         <LoadingButton
                             className="bg-teal-600 hover:bg-teal-500 border-teal-400"

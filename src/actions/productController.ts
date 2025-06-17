@@ -39,6 +39,9 @@ export const getManyProducts = async (businessLocationId: string) => {
             },
             include: {
                 category: true,
+                supplies: true,
+                sales: true,
+                businessLocation: true
             },
         })
         return products
@@ -56,7 +59,7 @@ export const updateProduct = async (data: z.infer<typeof productSchema>) => {
                 name: data.name,
             },
         })
-        return product
+        return updateProduct
     } catch (error) {
         console.log('Update Product Error: ' + error)
     }
@@ -66,13 +69,7 @@ export const createProduct = async (data: z.infer<typeof productSchema>) => {
     try {
         const product = await getProduct(data.businessLocationId, data.name)
         if (product) return product
-        const createdproduct = await prisma.product.create({
-            data: {
-                description: data.name,
-                status: data.startingStock > 0 ? 'in-stock' : 'depleted',
-                ...data,
-            },
-        })
+        const createdproduct = await prisma.product.create({ data })
         return createdproduct
     } catch (error) {
         console.log('We faced an error creating a product ' + error)
