@@ -25,9 +25,7 @@ const OrderLineCard = ({
         return (
             <div className="flex justify-between items-center border border-neutral-300 w-full">
                 <div className="w-2/12 p-3">
-                    <span className="text-sm font-bold">
-                        {order.createdAt.toLocaleDateString()}
-                    </span>
+                    <span className="text-sm font-bold">{order.date}</span>
                 </div>
                 <div className="border-s border-neutral-300 rounded-none w-2/12 p-3">
                     <span className="text-sm">{totalSupplies}</span>
@@ -42,7 +40,9 @@ const OrderLineCard = ({
                     <span className="text-sm">{totalPettyCash.toFixed(2)}</span>
                 </div>
                 <div className="border-s border-neutral-300 rounded-none w-2/12 p-3">
-                    <span className="text-sm">{totalMiscellaneous.toFixed(2)}</span>
+                    <span className="text-sm">
+                        {totalMiscellaneous.toFixed(2)}
+                    </span>
                 </div>
             </div>
         )

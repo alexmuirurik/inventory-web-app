@@ -19,13 +19,15 @@ const ProductsCard = ({ products }: { products: Product[] }) => {
                 </span>
             </div>
             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                <span className="text-sm">{product.buyingPrice}</span>
+                <span className="text-sm">{product.description}</span>
             </div>
             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                <span className="text-sm">{product.startingStock}</span>
+                <span className="text-sm">{product.status}</span>
             </div>
             <div className="px-2 w-2/12">
-                <span className="text-sm">{0}</span>
+                <span className="text-sm">
+                    {product.createdAt.toLocaleDateString()}
+                </span>
             </div>
         </div>
     ))
