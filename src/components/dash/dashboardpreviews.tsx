@@ -1,8 +1,14 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Activity, CreditCard, DollarSign, Users } from 'lucide-react';
+import React from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import { Activity, CreditCard, DollarSign, Users } from 'lucide-react'
+import { DaySaleSupplyAndPettyCash } from '@/prisma/types'
 
-const DashboardPreviews = () => {
+const DashboardPreviews = ({
+    orderLines,
+}: {
+    orderLines: DaySaleSupplyAndPettyCash[]
+}) => {
+    const orderLine = () => {}
     return (
         <div className="grid md:grid-cols-2 gap-2 lg:grid-cols-4">
             <Card x-chunk="dashboard-01-chunk-0">
@@ -22,7 +28,7 @@ const DashboardPreviews = () => {
             <Card x-chunk="dashboard-01-chunk-1">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                        Subscriptions
+                        Supplies
                     </CardTitle>
                     <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
@@ -47,7 +53,9 @@ const DashboardPreviews = () => {
             </Card>
             <Card x-chunk="dashboard-01-chunk-3">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                        In Stock
+                    </CardTitle>
                     <Activity className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -58,7 +66,7 @@ const DashboardPreviews = () => {
                 </CardContent>
             </Card>
         </div>
-    );
+    )
 }
 
-export default DashboardPreviews;
+export default DashboardPreviews

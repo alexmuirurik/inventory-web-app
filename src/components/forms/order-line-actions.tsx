@@ -43,14 +43,14 @@ const OrderLineActions = ({
     const salesForm = useForm<z.infer<typeof salesSchema>>({
         resolver: zodResolver(salesSchema),
         defaultValues: {
-            businessLocationId: businessLocation?.id
-        }
+            businessLocationId: businessLocation?.id,
+        },
     })
     const pettyForm = useForm<z.infer<typeof pettySchema>>({
         resolver: zodResolver(pettySchema),
         defaultValues: {
-            businessLocationId: businessLocation?.id
-        }
+            businessLocationId: businessLocation?.id,
+        },
     })
 
     const form =
@@ -136,7 +136,7 @@ const OrderLineActions = ({
                     <div className="bg-transparent border-0 p-5 space-y-8">
                         {step === 0 && (
                             <div className="space-y-4">
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-col md:flex-row items-center gap-4 ">
                                     <div
                                         className={`${
                                             action === 'sales' && 'bg-teal-600'

@@ -50,7 +50,7 @@ const AddStockReport = ({
                     </FormItem>
                 )}
             />
-            <div className="flex items-center gap-2">
+            <div className="md:flex items-center gap-2">
                 <FormField
                     name="buyingPrice"
                     control={form.control}

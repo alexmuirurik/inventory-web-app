@@ -51,7 +51,7 @@ const AddSaleReport = ({
                     </FormItem>
                 )}
             />
-            <div className="flex items-center gap-2">
+            <div className="md:flex items-center gap-2">
                 <FormField
                     name="sellingPrice"
                     control={form.control}

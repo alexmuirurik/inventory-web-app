@@ -39,7 +39,7 @@ const AddPettyCash = ({
                     </FormItem>
                 )}
             />
-            <div className="flex items-center gap-2">
+            <div className="md:flex items-center gap-2">
                 <FormField
                     name="losses"
                     control={form.control}
