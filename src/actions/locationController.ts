@@ -6,22 +6,39 @@ import { z } from 'zod'
 export const getLocationById = async (locationId: string) => {
     try {
         const location = await prisma.businessLocation.findFirst({
-            where: { id: locationId },
+            where: {
+                id: locationId,
+            },
+            include: {
+                sales: true,
+                supplies: true,
+                pettyCash: true,
+                products: true,
+            },
         })
-        return location
+        return Promise.resolve(location)
     } catch (error) {
-        console.log('We faced an error getting a location by Id' + error)
+        return Promise.reject(error)
     }
 }
 
 export const getLocation = async (businessId: string, name: string) => {
     try {
         const location = await prisma.businessLocation.findFirst({
-            where: { businessId: businessId, name: name },
+            where: {
+                businessId: businessId,
+                name: name,
+            },
+            include: {
+                sales: true,
+                supplies: true,
+                pettyCash: true,
+                products: true,
+            },
         })
-        return location
+        return Promise.resolve(location)
     } catch (error) {
-        console.log('We faced an error getting a location ' + error)
+        return Promise.reject(error)
     }
 }
 

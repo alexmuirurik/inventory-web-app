@@ -192,8 +192,8 @@ model PettyCash {
 
 model OrderLine {
     id                  String @id @default(auto()) @map("_id") @db.ObjectId
-    date                String @unique
     businessLocationId  String @db.ObjectId
+    date                String 
     businessLocation    BusinessLocation @relation(fields: [businessLocationId], references: [id])
     sales               Sale[]
     supplies            Supply[]

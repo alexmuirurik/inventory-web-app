@@ -82,16 +82,16 @@ const DashSalesList = ({
                                 <TableRow>
                                     <TableHead>Day</TableHead>
                                     <TableHead className="hidden sm:table-cell">
-                                        Supply
+                                        Stock
                                     </TableHead>
                                     <TableHead className="hidden sm:table-cell">
                                         Sale
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
-                                        Losses
+                                        Spoilt
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
-                                        Miscellaneous
+                                        Other Expenses
                                     </TableHead>
                                     <TableHead className="table-cell">
                                         Petty Cash
@@ -127,21 +127,24 @@ const DashSalesList = ({
                                             return prev + curr.miscellaneous
                                         }, 0)
                                     return (
-                                        <TableRow className="bg-accent">
+                                        <TableRow
+                                            key={order.id}
+                                            className="bg-accent"
+                                        >
                                             <TableCell>
                                                 <div className="font-medium">
                                                     {order.date}
                                                 </div>
                                             </TableCell>
                                             <TableCell className="hidden sm:table-cell">
-                                                {totalSales}
+                                                {totalSupplies}
                                             </TableCell>
                                             <TableCell className="hidden sm:table-cell">
                                                 <Badge
                                                     className="text-xs"
                                                     variant="secondary"
                                                 >
-                                                    {totalSupplies}
+                                                    {totalSales}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
@@ -150,7 +153,7 @@ const DashSalesList = ({
                                             <TableCell className="hidden md:table-cell">
                                                 {totalMiscellaneous}
                                             </TableCell>
-                                            <TableCell className="text-right">
+                                            <TableCell className="">
                                                 {totalPettyCash}
                                             </TableCell>
                                         </TableRow>

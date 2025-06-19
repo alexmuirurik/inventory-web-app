@@ -2,15 +2,23 @@
 import prisma from '@/prisma/prisma'
 import { OrderLine } from '@/prisma/types'
 
-export const getOrderLineByDate = async (date: Date = new Date()) => {
+export const getOrderLineByDate = async (
+    date: Date = new Date(),
+    businessLocationId: string
+) => {
     try {
         const orderLine = await prisma.orderLine.findUnique({
             where: {
+                businessLocationId: businessLocationId,
                 date: date.toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
                     day: '2-digit',
                 }),
+            },
+            include: {
+                supplies: true,
+                sales: true,
             },
         })
         return Promise.resolve(orderLine)
@@ -19,9 +27,12 @@ export const getOrderLineByDate = async (date: Date = new Date()) => {
     }
 }
 
-export const getManyOrderLines = async () => {
+export const getManyOrderLines = async (businessLocationId: string) => {
     try {
         const orderLines = await prisma.orderLine.findMany({
+            where: {
+                businessLocationId: businessLocationId,
+            },
             include: {
                 pettyCash: true,
                 sales: true,
@@ -37,11 +48,20 @@ export const getManyOrderLines = async () => {
 
 export const createOrderLine = async (data: OrderLine) => {
     try {
-        const orderLine = await getOrderLineByDate(new Date(data.date))
+        const orderLine = await getOrderLineByDate(
+            new Date(data.date),
+            data.businessLocationId
+        )
         if (orderLine) {
             return Promise.resolve(orderLine)
         }
-        const createOrderLine = await prisma.orderLine.create({ data })
+        const createOrderLine = await prisma.orderLine.create({
+            data,
+            include: {
+                sales: true,
+                supplies: true,
+            },
+        })
         return Promise.resolve(createOrderLine)
     } catch (error) {
         return Promise.reject(error)

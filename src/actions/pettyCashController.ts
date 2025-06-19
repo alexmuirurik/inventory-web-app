@@ -15,6 +15,20 @@ export const createPettyCash = async (data: z.infer<typeof pettySchema>) => {
             }),
         })
 
+        const supplies = orderLine.supplies.reduce(
+            (prev, curr) => prev + curr.itemsCount,
+            0
+        )
+
+        const sales = orderLine.sales.reduce(
+            (prev, curr) => prev + curr.itemsCount,
+            0
+        )
+
+        if (supplies - sales < data.losses) {
+            throw new Error("Loses can't exceed supplies")
+        }
+
         const pettyCash = await prisma.pettyCash.create({
             data: {
                 ...data,

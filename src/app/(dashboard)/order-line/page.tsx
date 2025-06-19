@@ -19,12 +19,16 @@ const OrderLinePage = async () => {
         (location) => location.id === session?.user.activeLocation
     )
     const products = (await getManyProducts(businessLocation?.id ?? '')) ?? []
-    const orderLineItems = (await getManyOrderLines()) ?? []
+    const orderLineItems =
+        (await getManyOrderLines(businessLocation?.id as string)) ?? []
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
-                <PageHeader title="Order Line" description={' products'}>
+                <PageHeader
+                    title="Order Line"
+                    description={String(orderLineItems.length)}
+                >
                     <SearchForm />
                     <OrderLineActions
                         businessLocation={businessLocation}

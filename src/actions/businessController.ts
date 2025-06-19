@@ -15,9 +15,9 @@ export const getBusiness = async (userId: string) => {
                 locations: true
             }
         })
-        return business
+        return Promise.resolve(business)
     } catch (error) {
-        console.log('We faced an error getting a business ' + error)
+        return Promise.reject(error)
     }
 }
 

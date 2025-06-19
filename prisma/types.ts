@@ -5,6 +5,15 @@ export interface OrderLine {
     businessLocationId: string
 }
 
+export type CompleteLocation = Prisma.BusinessLocationGetPayload<{
+    include: {
+        sales: true,
+        supplies: true,
+        pettyCash: true,
+        products: true
+    }
+}>
+
 export type DaySaleSupplyAndPettyCash = Prisma.OrderLineGetPayload<{
     include: {
         pettyCash: true

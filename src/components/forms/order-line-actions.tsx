@@ -110,7 +110,7 @@ const OrderLineActions = ({
         } catch (error: any) {
             toast({
                 title: 'Failed',
-                description: error,
+                description: error.message,
                 variant: 'destructive',
             })
         }

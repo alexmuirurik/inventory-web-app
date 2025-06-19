@@ -41,6 +41,20 @@ export const createSale = async (data: z.infer<typeof salesSchema>) => {
             }),
         })
 
+        const supplies = orderLine.supplies.reduce(
+            (prev, curr) => prev + curr.itemsCount,
+            0
+        )
+
+        const sales = orderLine.sales.reduce(
+            (prev, curr) => prev + curr.itemsCount,
+            0
+        )
+
+        if (supplies - sales < data.itemsCount) {
+            throw new Error("Sales can't exceed supplies")
+        }
+
         const sale = await prisma.sale.create({
             data: {
                 orderLineId: orderLine.id,
