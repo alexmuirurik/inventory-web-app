@@ -7,7 +7,7 @@ export const getOrderLineByDate = async (
     businessLocationId: string
 ) => {
     try {
-        const orderLine = await prisma.orderLine.findUnique({
+        const orderLine = await prisma.orderLine.findFirst({
             where: {
                 businessLocationId: businessLocationId,
                 date: date.toLocaleDateString(undefined, {

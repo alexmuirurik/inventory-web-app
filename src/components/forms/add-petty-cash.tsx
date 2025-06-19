@@ -46,7 +46,7 @@ const AddPettyCash = ({
                     render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel className="text-teal-500">
-                                Loses
+                                Spoilt Items
                             </FormLabel>
                             <FormControl>
                                 <Input
@@ -65,7 +65,7 @@ const AddPettyCash = ({
                     render={({ field }) => (
                         <FormItem className="w-full">
                             <FormLabel className="text-teal-500">
-                                miscellaneous
+                                Other Expenses
                             </FormLabel>
                             <FormControl>
                                 <Input
