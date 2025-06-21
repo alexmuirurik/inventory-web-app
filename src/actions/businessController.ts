@@ -1,19 +1,21 @@
 'use server'
-import { auth } from '@/auth'
 import prisma from '@/prisma/prisma'
 import { businessSchema } from '@/prisma/schema'
 import { z } from 'zod'
 import { createLocation } from './locationController'
 
-export const getBusiness = async (userId: string) => {
+export const getBusiness = async (userId: string | undefined) => {
     try {
+        if (!userId) {
+            throw new Error('No User Id')
+        }
         const business = await prisma.business.findFirst({
-            where: { 
-                ownerId: userId 
+            where: {
+                ownerId: userId,
             },
             include: {
-                locations: true
-            }
+                locations: true,
+            },
         })
         return Promise.resolve(business)
     } catch (error) {
@@ -21,8 +23,13 @@ export const getBusiness = async (userId: string) => {
     }
 }
 
-export const getBusinessSubscriptionByID = async (subscriptionId: string) => {
+export const getBusinessSubscriptionByID = async (
+    subscriptionId: string | undefined
+) => {
     try {
+        if (!subscriptionId) {
+            throw new Error('No Subscription Id')
+        }
         const subscription = await prisma.subscription.findUnique({
             where: { id: subscriptionId },
         })
@@ -48,7 +55,7 @@ export const createBusiness = async (data: z.infer<typeof businessSchema>) => {
                 data,
                 business.id
             )
-            return business
+            return Promise.resolve(business)
         } else {
             const createdbusiness = await prisma.business.create({
                 data: {
@@ -62,10 +69,10 @@ export const createBusiness = async (data: z.infer<typeof businessSchema>) => {
                 data,
                 createdbusiness.id
             )
-            return createdbusiness
+            return Promise.resolve(createdbusiness)
         }
     } catch (error) {
-        console.log('We faced an error creating a business ' + error)
+        return Promise.reject(error)
     }
 }
 
@@ -92,8 +99,8 @@ export const createBusinessSubscription = async (
                 status: 'unpaid',
             },
         })
-        return subscription
+        return Promise.resolve(subscription)
     } catch (error) {
-        console.log('Create Business Subscription Error ' + error)
+        return Promise.reject(error)
     }
 }

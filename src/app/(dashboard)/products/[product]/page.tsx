@@ -21,8 +21,7 @@ const SingleProductPage = async ({
     const { product: productId } = await params
     const session = await auth()
     const business = await getBusiness(session?.user?.id as string)
-    if (!business || business.subscription !== 'active')
-        return redirect('/settings')
+    if (!business) return redirect('/settings')
     const product = (await getProductById(productId)) ?? undefined
     if (!product) redirect('/products')
 

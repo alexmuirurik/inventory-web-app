@@ -27,8 +27,13 @@ export const getOrderLineByDate = async (
     }
 }
 
-export const getManyOrderLines = async (businessLocationId: string) => {
+export const getManyOrderLines = async (
+    businessLocationId: string | undefined
+) => {
     try {
+        if (!businessLocationId) {
+            throw new Error('No Business Location Id')
+        }
         const orderLines = await prisma.orderLine.findMany({
             where: {
                 businessLocationId: businessLocationId,

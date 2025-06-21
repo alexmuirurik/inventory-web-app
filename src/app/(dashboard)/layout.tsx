@@ -8,7 +8,10 @@ import { getBusiness } from '@/src/actions/businessController'
 const DashboardLayout = async ({ children }: React.PropsWithChildren) => {
     const session = await auth()
     if (!session?.user) redirect('/login')
-    const business = (await getBusiness(session.user.id as string)) ?? undefined
+    const business = await getBusiness(session.user.id)
+    const activelocation = business?.locations.find(
+        (location) => location.id === session.user.activeLocation
+    )
     return (
         <main
             id="main"
@@ -17,7 +20,7 @@ const DashboardLayout = async ({ children }: React.PropsWithChildren) => {
         >
             <Sidebar business={business} />
             <div id="main-wrapper">
-                <Navbar />
+                <Navbar business={business} activeLocation={activelocation} />
                 <div className="container-fluid relative mt-2 mb-6 min-h-[calc(100vh_-_8.5rem_-_2px)]">
                     {children}
                 </div>

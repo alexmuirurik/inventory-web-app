@@ -18,7 +18,7 @@ export const categorySchema = z.object({
 export const productSchema = z.object({
     name: z.string(),
     businessLocationId: z.string(),
-    description: z.string(),
+    units: z.string(),
     status: z.string(),
     categoryId: z.string(),
 })

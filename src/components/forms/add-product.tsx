@@ -43,7 +43,7 @@ const AddProduct = ({
         resolver: zodResolver(productSchema),
         defaultValues: {
             businessLocationId: businessLocation?.id,
-            status: 'in-stock'
+            status: 'in-stock',
         },
     })
 
@@ -112,7 +112,7 @@ const AddProduct = ({
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Starting Stock"
+                                            placeholder="Product Name"
                                             className="border-gray-600 text-gray-200"
                                             {...field}
                                         />
@@ -168,16 +168,16 @@ const AddProduct = ({
                         />
                     </div>
                     <FormField
-                        name="description"
+                        name="units"
                         control={form.control}
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">
-                                    Product Descripton
+                                    Units
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Product Description"
+                                        placeholder="Units"
                                         className="border-gray-600 text-gray-200"
                                         {...field}
                                     />
