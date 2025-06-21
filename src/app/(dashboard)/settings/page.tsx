@@ -8,7 +8,7 @@ import { User } from '@prisma/client'
 
 const SettingsPage = async () => {
     const session = await auth()
-    const business = await getBusiness(session?.user.id as string)
+    const business = await getBusiness(session?.user.id)
     const businessLocation = business?.locations.find(
         (location) => location.id === session?.user.activeLocation
     )

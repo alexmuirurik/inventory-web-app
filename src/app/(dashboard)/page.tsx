@@ -9,13 +9,10 @@ import { getLocationById } from '@/src/actions/locationController'
 
 const Dashboard = async () => {
     const session = await auth()
-    const business = await getBusiness(session?.user?.id as string)
+    const business = await getBusiness(session?.user?.id)
     if (!business) return redirect('/settings')
-    const businessLocation = await getLocationById(
-        session?.user.activeLocation as string
-    )
-    const orderLines =
-        (await getManyOrderLines(businessLocation?.id as string)) ?? []
+    const businessLocation = await getLocationById(session?.user.activeLocation)
+    const orderLines = await getManyOrderLines(businessLocation?.id)
     return (
         <div className="content space-y-3">
             <DashboardPreviews businessLocation={businessLocation} />

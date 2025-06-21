@@ -3,8 +3,11 @@ import prisma from '@/prisma/prisma'
 import { businessSchema } from '@/prisma/schema'
 import { z } from 'zod'
 
-export const getLocationById = async (locationId: string) => {
+export const getLocationById = async (locationId: string | undefined) => {
     try {
+        if (!locationId) {
+            throw new Error('No Location Id')
+        }
         const location = await prisma.businessLocation.findFirst({
             where: {
                 id: locationId,

@@ -3,7 +3,7 @@ import SideList from './SideList'
 import { PiBankBold } from 'react-icons/pi'
 import { Business } from '@prisma/client'
 
-const Sidebar = async ({ business }: { business: Business | undefined }) => {
+const Sidebar = async ({ business }: { business: Business | undefined | null }) => {
     return (
         <aside
             id="sidebar"

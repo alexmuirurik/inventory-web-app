@@ -5,14 +5,15 @@ import { Avatar, AvatarImage } from '../ui/avatar'
 import { getLocationById } from '@/src/actions/locationController'
 import { getBusiness } from '@/src/actions/businessController'
 import SidebarMini from './sidebar-mini'
+import { Business, BusinessLocation } from '@prisma/client'
 
-const Navbar = async () => {
-    const session = await auth()
-    const activelocation = await getLocationById(
-        session?.user?.activeLocation as string
-    )
-    const business =
-        (await getBusiness(session?.user?.id as string)) ?? undefined
+const Navbar = async ({
+    business,
+    activeLocation,
+}: {
+    business?: Business | null
+    activeLocation?: BusinessLocation
+}) => {
     return (
         <div className="navbar h-16 border border-gray-300 rounded-lg p-0">
             <div className="flex items-center w-full">
@@ -25,7 +26,7 @@ const Navbar = async () => {
                         />
                     </Avatar>
                     <span className="hidden sm:block text-sm font-bold ">
-                        {activelocation?.name ?? 'Location Name'}
+                        {activeLocation?.name ?? 'Location Name'}
                     </span>
                 </div>
                 <SidebarMini />
