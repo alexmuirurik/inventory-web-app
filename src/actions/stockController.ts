@@ -23,7 +23,7 @@ export const createStock = async (data: z.infer<typeof stockSchema>) => {
     try {
         const orderLine = await createOrderLine({
             businessLocationId: data.businessLocationId,
-            date: new Date().toLocaleDateString(undefined, {
+            date: (data.date ?? new Date()).toLocaleDateString(undefined, {
                 year: 'numeric',
                 month: 'long',
                 day: '2-digit',
@@ -32,7 +32,10 @@ export const createStock = async (data: z.infer<typeof stockSchema>) => {
 
         const createStock = await prisma.supply.create({
             data: {
-                ...data,
+                productId: data.productId,
+                businessLocationId: data.businessLocationId,
+                buyingPrice: data.buyingPrice,
+                itemsCount: data.itemsCount,
                 orderLineId: orderLine.id,
             },
         })

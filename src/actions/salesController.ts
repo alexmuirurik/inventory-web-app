@@ -34,7 +34,7 @@ export const createSale = async (data: z.infer<typeof salesSchema>) => {
     try {
         const orderLine = await createOrderLine({
             businessLocationId: data.businessLocationId,
-            date: new Date().toLocaleDateString(undefined, {
+            date: (data.date ?? new Date()).toLocaleDateString(undefined, {
                 year: 'numeric',
                 month: 'long',
                 day: '2-digit',
@@ -57,8 +57,11 @@ export const createSale = async (data: z.infer<typeof salesSchema>) => {
 
         const sale = await prisma.sale.create({
             data: {
+                productId: data.productId,
+                businessLocationId: data.businessLocationId,
+                sellingPrice: data.sellingPrice,
+                itemsCount: data.itemsCount,
                 orderLineId: orderLine.id,
-                ...data,
             },
         })
         return Promise.resolve(sale)
