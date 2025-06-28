@@ -19,6 +19,9 @@ export const getProduct = async (
     productName: string
 ) => {
     try {
+        if (!businessLocationId) {
+            throw new Error('No Business Location Id')
+        }
         const product = await prisma.product.findFirst({
             where: {
                 businessLocationId: businessLocationId,
@@ -31,8 +34,11 @@ export const getProduct = async (
     }
 }
 
-export const getManyProducts = async (businessLocationId: string) => {
+export const getManyProducts = async (businessLocationId?: string) => {
     try {
+        if (!businessLocationId) {
+            throw new Error('No Business Location Id')
+        }
         const products = await prisma.product.findMany({
             where: {
                 businessLocationId: businessLocationId,
@@ -41,7 +47,7 @@ export const getManyProducts = async (businessLocationId: string) => {
                 category: true,
                 supplies: true,
                 sales: true,
-                businessLocation: true
+                businessLocation: true,
             },
         })
         return products

@@ -2,6 +2,28 @@
 import prisma from '@/prisma/prisma'
 import { OrderLine } from '@/prisma/types'
 
+export const getOrderLineById = async (orderLineId?: string) => {
+    try {
+        if (!orderLineId) {
+            throw new Error('OrderLineId is Required')
+        }
+        const orderLine = await prisma.orderLine.findUnique({
+            where: {
+                id: orderLineId,
+            },
+            include: {
+                businessLocation: true,
+                supplies: true,
+                sales: true,
+                pettyCash: true,
+            },
+        })
+        return orderLine
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
 export const getOrderLineByDate = async (
     date: Date = new Date(),
     businessLocationId: string

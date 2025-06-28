@@ -3,9 +3,9 @@ import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { getBusiness } from '@/src/actions/businessController'
 import DashboardPreviews from '@/src/components/dash/dashboardpreviews'
-import DashSalesList from '@/src/components/dash/dashsaleslist'
 import { getManyOrderLines } from '@/src/actions/orderLineController'
 import { getLocationById } from '@/src/actions/locationController'
+import OrderLineCard from '@/src/components/cards/order-line-card'
 
 const Dashboard = async () => {
     const session = await auth()
@@ -16,7 +16,7 @@ const Dashboard = async () => {
     return (
         <div className="content space-y-3">
             <DashboardPreviews businessLocation={businessLocation} />
-            <DashSalesList orderLines={orderLines} />
+            <OrderLineCard orderLines={orderLines} />
         </div>
     )
 }
