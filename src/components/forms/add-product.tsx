@@ -175,13 +175,46 @@ const AddProduct = ({
                                 <FormLabel className="text-teal-500">
                                     Units
                                 </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Units"
-                                        className="border-gray-600 text-gray-200"
-                                        {...field}
-                                    />
-                                </FormControl>
+                                <Select
+                                    onValueChange={(val) =>
+                                        form.setValue('units', val)
+                                    }
+                                >
+                                    <FormControl>
+                                        <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
+                                            <SelectValue
+                                                className="text-neutral-600"
+                                                placeholder="Select unit"
+                                            />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent className="bg-neutral-700 border-gray-500">
+                                        <SelectItem
+                                            className="text-teal-500 hover:bg-neutral-600"
+                                            value="items"
+                                        >
+                                            Items
+                                        </SelectItem>
+                                        <SelectItem
+                                            className="text-teal-500 hover:bg-neutral-600"
+                                            value="packages"
+                                        >
+                                            Packages
+                                        </SelectItem>{' '}
+                                        <SelectItem
+                                            className="text-teal-500 hover:bg-neutral-600"
+                                            value="kilograms"
+                                        >
+                                            Kilograms
+                                        </SelectItem>
+                                        <SelectItem
+                                            className="text-teal-500 hover:bg-neutral-600"
+                                            value="Litres"
+                                        >
+                                            Litres
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}

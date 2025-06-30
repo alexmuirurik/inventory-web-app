@@ -8,45 +8,37 @@ import { auth } from '@/auth'
 import PageHeader from '@/src/components/layouts/PageHeader'
 import { notFound, redirect } from 'next/navigation'
 import { SearchContextProvider } from '@/src/context/usesearch'
-import { getManyOrderLines } from '@/src/actions/orderLineController'
+import {
+    getManyOrderLines,
+    getOrderLineById,
+} from '@/src/actions/orderLineController'
 import SearchForm from '@/src/components/forms/search-form'
 import OrderLineActions from '@/src/components/forms/order-line-actions'
 import ProductSalesCard from '@/src/components/cards/product-sales-card'
+import SingleOrderLineCard from '@/src/components/cards/single-order-line-card'
 
-const SingleProductPage = async ({
+const SingleOrdelinePage = async ({
     params,
 }: {
-    params: Promise<{ product: string }>
+    params: Promise<{ orderLine: string }>
 }) => {
-    const { product: productId } = await params
+    const { orderLine: orderLineId } = await params
     const session = await auth()
     const business = await getBusiness(session?.user?.id)
     if (!business) return redirect('/settings')
     const businessLocation = business.locations.find(
         (location) => location.id === session?.user.activeLocation
     )
-    const product = (await getProductById(productId)) ?? undefined
-    if (!product) return notFound()
-    const orderLineItems = (await getManyOrderLines(businessLocation?.id)) ?? []
+    const orderLine = await getOrderLineById(orderLineId)
+    if (!orderLine) return notFound()
     const products = (await getManyProducts(businessLocation?.id)) ?? []
-    const newOrderLineItems = orderLineItems.map((orderline) => {
-        return {
-            ...orderline,
-            sales: orderline.sales.filter(
-                (sale) => sale.productId === product.id
-            ),
-            supplies: orderline.supplies.filter(
-                (supply) => supply.productId === product.id
-            ),
-        }
-    })
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
                 <PageHeader
-                    title={product.name}
-                    description={String(orderLineItems.length)}
+                    title={orderLine?.date}
+                    description={String(orderLine.supplies.length)}
                 >
                     <SearchForm />
                     <OrderLineActions
@@ -54,10 +46,13 @@ const SingleProductPage = async ({
                         products={products}
                     />
                 </PageHeader>
-                <ProductSalesCard orderLines={newOrderLineItems} />
+                <SingleOrderLineCard
+                    products={products}
+                    orderLine={orderLine}
+                />
             </SearchContextProvider>
         </div>
     )
 }
 
-export default SingleProductPage
+export default SingleOrdelinePage

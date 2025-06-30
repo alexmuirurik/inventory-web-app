@@ -7,9 +7,8 @@ import { SearchContextProvider } from '@/src/context/usesearch'
 import PageHeader from '@/src/components/layouts/PageHeader'
 import SearchForm from '@/src/components/forms/search-form'
 import OrderLineActions from '@/src/components/forms/order-line-actions'
-import OrderLineCard from '@/src/components/cards/order-line-card'
 import { getManyOrderLines } from '@/src/actions/orderLineController'
-import DashSalesList from '@/src/components/dash/dashsaleslist'
+import OrderLineCard from '@/src/components/cards/order-line-card'
 
 const OrderLinePage = async () => {
     const session = await auth()
@@ -18,9 +17,8 @@ const OrderLinePage = async () => {
     const businessLocation = business.locations.find(
         (location) => location.id === session?.user.activeLocation
     )
-    const products = (await getManyProducts(businessLocation?.id ?? '')) ?? []
-    const orderLineItems =
-        (await getManyOrderLines(businessLocation?.id as string)) ?? []
+    const products = (await getManyProducts(businessLocation?.id)) ?? []
+    const orderLineItems = (await getManyOrderLines(businessLocation?.id)) ?? []
 
     return (
         <div className="page-wrapper">
@@ -35,7 +33,7 @@ const OrderLinePage = async () => {
                         products={products}
                     />
                 </PageHeader>
-                <DashSalesList orderLines={orderLineItems} />
+                <OrderLineCard orderLines={orderLineItems} />
             </SearchContextProvider>
         </div>
     )

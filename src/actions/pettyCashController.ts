@@ -8,7 +8,7 @@ export const createPettyCash = async (data: z.infer<typeof pettySchema>) => {
     try {
         const orderLine = await createOrderLine({
             businessLocationId: data.businessLocationId,
-            date: new Date().toLocaleDateString(undefined, {
+            date: (data.date ?? new Date()).toLocaleDateString(undefined, {
                 year: 'numeric',
                 month: 'long',
                 day: '2-digit',
@@ -31,7 +31,10 @@ export const createPettyCash = async (data: z.infer<typeof pettySchema>) => {
 
         const pettyCash = await prisma.pettyCash.create({
             data: {
-                ...data,
+                businessLocationId: data.businessLocationId,
+                pettyCash: data.pettyCash,
+                miscellaneous: data.miscellaneous,
+                losses: data.losses,
                 orderLineId: orderLine.id,
             },
         })

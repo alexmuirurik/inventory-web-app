@@ -20,9 +20,9 @@ import {
     TableRow,
 } from '../ui/table'
 import { Badge } from '../ui/badge'
-import { DaySaleSupplyAndPettyCash, OrderLine } from '@/prisma/types'
+import { DaySaleSupplyAndPettyCash } from '@/prisma/types'
 
-const DashSalesList = ({
+const ProductSalesCard = ({
     orderLines,
 }: {
     orderLines: DaySaleSupplyAndPettyCash[]
@@ -82,19 +82,19 @@ const DashSalesList = ({
                                 <TableRow>
                                     <TableHead>Day</TableHead>
                                     <TableHead className="hidden sm:table-cell">
-                                        Stock
+                                        Supplies
                                     </TableHead>
                                     <TableHead className="hidden sm:table-cell">
-                                        Sale
+                                        Spent
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
-                                        Spoilt
+                                        Sold
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
-                                        Other Expenses
+                                        Income
                                     </TableHead>
                                     <TableHead className="table-cell">
-                                        Petty Cash
+                                        In Stock
                                     </TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -106,26 +106,36 @@ const DashSalesList = ({
                                         },
                                         0
                                     )
-                                    const totalSales = order.sales.reduce(
+
+                                    const totalSpent = order.supplies.reduce(
+                                        (prev, curr) => {
+                                            return (
+                                                prev +
+                                                curr.itemsCount *
+                                                    curr.buyingPrice
+                                            )
+                                        },
+                                        0
+                                    )
+
+                                    const totalSold = order.sales.reduce(
                                         (prev, curr) => {
                                             return prev + curr.itemsCount
                                         },
                                         0
                                     )
-                                    const totalPettyCash =
-                                        order.pettyCash.reduce((prev, curr) => {
-                                            return prev + curr.pettyCash
-                                        }, 0)
-                                    const totalLoses = order.pettyCash.reduce(
+
+                                    const totalSales = order.sales.reduce(
                                         (prev, curr) => {
-                                            return prev + curr.losses
+                                            return (
+                                                prev +
+                                                curr.itemsCount *
+                                                    curr.sellingPrice
+                                            )
                                         },
                                         0
                                     )
-                                    const totalMiscellaneous =
-                                        order.pettyCash.reduce((prev, curr) => {
-                                            return prev + curr.miscellaneous
-                                        }, 0)
+
                                     return (
                                         <TableRow
                                             key={order.id}
@@ -139,22 +149,23 @@ const DashSalesList = ({
                                             <TableCell className="hidden sm:table-cell">
                                                 {totalSupplies}
                                             </TableCell>
-                                            <TableCell className="hidden sm:table-cell">
-                                                <Badge
-                                                    className="text-xs"
-                                                    variant="secondary"
-                                                >
-                                                    {totalSales}
-                                                </Badge>
+                                            <TableCell className="hidden sm:table-cell text-xs gap-2">
+                                                <span className='me-1'>
+                                                    {totalSpent.toLocaleString()}
+                                                </span>
+                                                <span>Ksh</span>
                                             </TableCell>
                                             <TableCell className="hidden md:table-cell">
-                                                {totalLoses}
+                                                {totalSold}
                                             </TableCell>
-                                            <TableCell className="hidden md:table-cell">
-                                                {totalMiscellaneous}
+                                            <TableCell className="hidden md:table-cell text-xs gap-2">
+                                                <span className='me-1'>
+                                                    {totalSales.toLocaleString()}
+                                                </span>
+                                                <span>Ksh</span>
                                             </TableCell>
                                             <TableCell className="">
-                                                {totalPettyCash}
+                                                {totalSupplies - totalSold}
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -168,4 +179,4 @@ const DashSalesList = ({
     )
 }
 
-export default DashSalesList
+export default ProductSalesCard

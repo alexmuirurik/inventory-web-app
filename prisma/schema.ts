@@ -24,6 +24,7 @@ export const productSchema = z.object({
 })
 
 export const stockSchema = z.object({
+    date: z.date(),
     productId: z.string(),
     businessLocationId: z.string(),
     buyingPrice: z.coerce.number(),
@@ -31,6 +32,7 @@ export const stockSchema = z.object({
 })
 
 export const salesSchema = z.object({
+    date: z.date(),
     productId: z.string(),
     businessLocationId: z.string(),
     sellingPrice: z.coerce.number(),
@@ -38,6 +40,7 @@ export const salesSchema = z.object({
 })
 
 export const pettySchema = z.object({
+    date: z.date(),
     businessLocationId: z.string(),
     pettyCash: z.coerce.number(),
     losses: z.coerce.number(),
