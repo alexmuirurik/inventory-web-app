@@ -6,7 +6,14 @@ import { z } from 'zod'
 export const getProductById = async (productId: string) => {
     try {
         const product = await prisma.product.findUnique({
-            where: { id: productId },
+            where: { 
+                id: productId 
+            },
+            include: {
+                category: true,
+                stocks: true,
+                sales: true,
+            }
         })
         return product
     } catch (error) {
@@ -27,6 +34,11 @@ export const getProduct = async (
                 businessLocationId: businessLocationId,
                 name: productName,
             },
+            include:{
+                category: true,
+                stocks: true,
+                sales: true,
+            }
         })
         return product
     } catch (error) {
@@ -45,9 +57,8 @@ export const getManyProducts = async (businessLocationId?: string) => {
             },
             include: {
                 category: true,
-                supplies: true,
+                stocks: true,
                 sales: true,
-                businessLocation: true,
             },
         })
         return products

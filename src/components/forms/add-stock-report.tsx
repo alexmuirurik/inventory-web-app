@@ -1,32 +1,42 @@
 'use client'
+
 import {
+    Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from '../ui/form'
-import { UseFormReturn } from 'react-hook-form'
 import { Input } from '../ui/input'
 import { z } from 'zod'
 import { stockSchema } from '@/prisma/schema'
 import { AutoComplete } from '../ui/autocomplete'
 import { CompleteProduct } from '@/prisma/types'
-import { Calendar } from '../ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Button } from '../ui/button'
-import { cn } from '@/src/lib/utils'
-import { format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BusinessLocation } from '@prisma/client'
+import { useForm } from 'react-hook-form'
+import { createStock } from '@/src/actions/stockController'
+import { toast } from 'sonner'
+import CustomDialog from './customdialog'
+import { useState } from 'react'
+import { LoadingButton } from '../ui/loadingbutton'
 
 const AddStockReport = ({
-    form,
     products,
+    businessLocation,
 }: {
-    form: UseFormReturn<z.infer<typeof stockSchema>>
     products: CompleteProduct[]
+    businessLocation: BusinessLocation | undefined
 }) => {
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const form = useForm<z.infer<typeof stockSchema>>({
+        resolver: zodResolver(stockSchema),
+        defaultValues: {
+            businessLocationId: businessLocation?.id,
+        },
+    })
     const newProducts = products.map((product) => {
         return {
             label: product.name,
@@ -34,118 +44,121 @@ const AddStockReport = ({
         }
     })
 
+    const handleSubmit = async (data: z.infer<typeof stockSchema>) => {
+        setLoading(true)
+        try {
+            const stock = await createStock(data)
+            if (stock) {
+                toast.success('Stock created successfully')
+                form.reset({})
+            }
+        } catch (error) {
+            toast.error(`Error: ${error}`)
+        }finally{
+            setLoading(false)
+        }
+    }
+
     return (
-        <div className="space-y-4">
-            <div className="flex">
-                <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col w-full">
-                            <FormLabel className="text-teal-500">
-                                Date 
-                            </FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant="outline"
-                                            className="border-gray-600 text-gray-200"
-                                        >
-                                            {field.value ? (
-                                                format(field.value, 'PPP')
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-full p-0"
-                                    align="center"
-                                >
-                                    <Calendar
-                                        className="w-full"
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) =>
-                                            date > new Date() ||
-                                            date < new Date('1900-01-01')
+        <CustomDialog
+            open={open}
+            setOpen={setOpen}
+            btntitle="Add Stock"
+            description="Add Stocks For a Product"
+        >
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="space-y-4"
+                >
+                    <FormField
+                        control={form.control}
+                        name="productId"
+                        render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel className="text-teal-500">
+                                    Product Name
+                                </FormLabel>
+                                <FormControl>
+                                    <AutoComplete
+                                        options={newProducts}
+                                        emptyMessage="No results."
+                                        placeholder="Find something"
+                                        onValueChange={(option) =>
+                                            field.onChange(option.value)
                                         }
-                                        captionLayout="dropdown"
                                     />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-            <FormField
-                control={form.control}
-                name="productId"
-                render={({ field }) => (
-                    <FormItem className="w-full">
-                        <FormLabel className="text-teal-500">
-                            Product Name
-                        </FormLabel>
-                        <FormControl>
-                            <AutoComplete
-                                options={newProducts}
-                                emptyMessage="No results."
-                                placeholder="Find something"
-                                onValueChange={(option) =>
-                                    field.onChange(option.value)
-                                }
-                            />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <div className="md:flex items-center gap-2">
-                <FormField
-                    name="buyingPrice"
-                    control={form.control}
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel className="text-teal-500">
-                                Buying Price
-                            </FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Buying Price"
-                                    className="border-gray-600 text-gray-200"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    name="itemsCount"
-                    control={form.control}
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel className="text-teal-500">
-                                No. of Items
-                            </FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="No. of Items"
-                                    className="border-gray-600 text-gray-200"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-        </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="md:flex items-center gap-2">
+                        <FormField
+                            name="buyingPrice"
+                            control={form.control}
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel className="text-teal-500">
+                                        Buying Price
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Buying Price"
+                                            className="border-gray-600 text-gray-200"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            name="itemsCount"
+                            control={form.control}
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel className="text-teal-500">
+                                        No. of Items
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder={
+                                                String(
+                                                    products.find(
+                                                        (product) =>
+                                                            product.id ===
+                                                            form.watch(
+                                                                'productId'
+                                                            )
+                                                    )?.stocks[0]?.itemsCount ??
+                                                        0
+                                                ) + ' items in stock'
+                                            }
+                                            className="border-gray-600 text-gray-200"
+                                            {...field}
+                                            type="number"
+                                            min={0}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    {Object.keys(form.formState.errors).map((error) => (
+                        <p key={error} className="text-red-500">
+                          {error} : {(form.formState.errors as any)[error]?.message}
+                        </p>
+                    ))}
+                    <div className="flex justify-end">
+                        <LoadingButton loading={loading}>
+                            Add Stock
+                        </LoadingButton>
+                    </div>
+                </form>
+            </Form>
+        </CustomDialog>
     )
 }
 

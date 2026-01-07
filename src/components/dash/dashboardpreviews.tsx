@@ -12,10 +12,7 @@ const DashboardPreviews = ({
         (p, c) => p + c.sellingPrice * c.itemsCount,
         0
     )
-    const supplies = businessLocation?.supplies.reduce(
-        (p, c) => p + c.itemsCount,
-        0
-    )
+    const supplies = 0
     const sales = businessLocation?.sales.reduce((p, c) => p + c.itemsCount, 0)
     return (
         <div className="grid md:grid-cols-2 gap-2 lg:grid-cols-4">

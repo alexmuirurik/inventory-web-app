@@ -9,6 +9,7 @@ import OrderLineCard from '@/src/components/cards/order-line-card'
 
 const Dashboard = async () => {
     const session = await auth()
+    if (!session) return redirect('/login')
     const business = await getBusiness(session?.user?.id)
     if (!business) return redirect('/settings')
     const businessLocation = await getLocationById(session?.user.activeLocation)

@@ -12,10 +12,7 @@ export const getOrderLineById = async (orderLineId?: string) => {
                 id: orderLineId,
             },
             include: {
-                businessLocation: true,
-                supplies: true,
-                sales: true,
-                pettyCash: true,
+                orderLineItems: true,
             },
         })
         return orderLine
@@ -39,8 +36,7 @@ export const getOrderLineByDate = async (
                 }),
             },
             include: {
-                supplies: true,
-                sales: true,
+                orderLineItems: true,
             },
         })
         return Promise.resolve(orderLine)
@@ -61,10 +57,7 @@ export const getManyOrderLines = async (
                 businessLocationId: businessLocationId,
             },
             include: {
-                pettyCash: true,
-                sales: true,
-                supplies: true,
-                businessLocation: true,
+                orderLineItems: true,
             },
         })
         return Promise.resolve(orderLines)
@@ -85,8 +78,7 @@ export const createOrderLine = async (data: OrderLine) => {
         const createOrderLine = await prisma.orderLine.create({
             data,
             include: {
-                sales: true,
-                supplies: true,
+                orderLineItems: true,
             },
         })
         return Promise.resolve(createOrderLine)

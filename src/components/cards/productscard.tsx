@@ -5,18 +5,9 @@ import Link from 'next/link'
 
 const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
     return products.map((product, i) => {
-        const stock = product.supplies.reduce(
-            (prev, curr) => prev + curr.itemsCount,
-            0
-        )
-        const sales = product.sales.reduce(
-            (prev, curr) => prev + curr.itemsCount,
-            0
-        )
-        const revenue = product.sales.reduce(
-            (prev, curr) => prev + curr.itemsCount * curr.sellingPrice,
-            0
-        )
+        const stock = 0
+        const sales = 0
+        const revenue = 0
         return (
             <div
                 key={product.id}
@@ -36,7 +27,7 @@ const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
                     </span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                    <span className="text-sm">{product.category.name}</span>
+                    <span className="text-sm">{product.category?.name}</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm">{sales}</span>

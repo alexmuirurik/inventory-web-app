@@ -173,7 +173,7 @@ const AddProduct = ({
                         render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className="text-teal-500">
-                                    Units
+                                    Units of Measure
                                 </FormLabel>
                                 <Select
                                     onValueChange={(val) =>

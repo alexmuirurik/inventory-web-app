@@ -6,7 +6,7 @@ import { createOrderLine } from './orderLineController'
 
 export const getTodaysStock = async () => {
     try {
-        const stock = prisma.supply.findFirst({
+        const stock = prisma.stock.findMany({
             where: {
                 createdAt: {
                     gte: new Date(),
@@ -21,22 +21,12 @@ export const getTodaysStock = async () => {
 
 export const createStock = async (data: z.infer<typeof stockSchema>) => {
     try {
-        const orderLine = await createOrderLine({
-            businessLocationId: data.businessLocationId,
-            date: (data.date ?? new Date()).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-            }),
-        })
-
-        const createStock = await prisma.supply.create({
+        const createStock = await prisma.stock.create({
             data: {
                 productId: data.productId,
                 businessLocationId: data.businessLocationId,
                 buyingPrice: data.buyingPrice,
                 itemsCount: data.itemsCount,
-                orderLineId: orderLine.id,
             },
         })
         return Promise.resolve(createStock)

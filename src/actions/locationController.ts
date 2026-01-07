@@ -14,9 +14,8 @@ export const getLocationById = async (locationId: string | undefined) => {
             },
             include: {
                 sales: true,
-                supplies: true,
-                pettyCash: true,
                 products: true,
+                stocks: true,
             },
         })
         return Promise.resolve(location)
@@ -34,9 +33,8 @@ export const getLocation = async (businessId: string, name: string) => {
             },
             include: {
                 sales: true,
-                supplies: true,
-                pettyCash: true,
                 products: true,
+                stocks: true,
             },
         })
         return Promise.resolve(location)

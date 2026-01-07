@@ -6,9 +6,6 @@ import { createLocation } from './locationController'
 
 export const getBusiness = async (userId: string | undefined) => {
     try {
-        if (!userId) {
-            throw new Error('No User Id')
-        }
         const business = await prisma.business.findFirst({
             where: {
                 ownerId: userId,

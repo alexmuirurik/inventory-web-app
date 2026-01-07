@@ -1,3 +1,5 @@
+'use client'
+
 import { Command as CommandPrimitive } from 'cmdk'
 import { useState, useRef, useCallback, type KeyboardEvent } from 'react'
 import { CommandGroup, CommandInput, CommandItem, CommandList } from './command'
