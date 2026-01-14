@@ -9,7 +9,10 @@ import prisma from './prisma/prisma'
 export const config = {
     adapter: PrismaAdapter(prisma),
     providers: [GitHub, Google, Resend],
-    pages: { error: '/login' },
+    pages: {
+        error: '/login',
+    },
+    secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
