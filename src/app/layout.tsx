@@ -1,8 +1,8 @@
-import { Toaster } from "@/src/components/ui/toaster"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Nunito } from "next/font/google"
 import NextTopLoader from "nextjs-toploader"
+import { Toaster } from "../components/ui/toaster"
 
 const nunito = Nunito({ subsets: ['vietnamese'] })
 

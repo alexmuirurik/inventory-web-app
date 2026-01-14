@@ -33,7 +33,27 @@ export const findFirstSale = async (productId: string) => {
     }
 }
 
-export const getManySales = async (productId: string) => {
+export const getManySales = async (businessLocationId : string) => {
+    try {
+        const sales = await prisma.sale.findMany({
+            where: {
+                businessLocationId: businessLocationId,
+            },
+            include: {
+                saleItems: {
+                    include: {
+                        product: true
+                    }
+                }
+            },
+        })
+        return sales
+    } catch (error) {
+        console.log('Getting Sales Error: ' + error)
+    }
+}
+
+export const getProductSales = async (productId: string) => {
     try {
         const sales = await prisma.sale.findMany({
             where: {
@@ -41,9 +61,14 @@ export const getManySales = async (productId: string) => {
                     some: {
                         productId: productId,
                     },
-                }
+                },
             },
             include: {
+                saleItems: {
+                    include: {
+                        product: true,
+                    },
+                },
                 businessLocation: true,
             },
         })

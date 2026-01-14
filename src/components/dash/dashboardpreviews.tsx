@@ -1,19 +1,19 @@
-import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-react'
-import { CompleteLocation } from '@/prisma/types'
+import { CompleteLocation, CompleteOrderLine } from '@/prisma/types'
+import { Stock } from '@prisma/client'
 
 const DashboardPreviews = ({
     businessLocation,
+    totalSales,
+    orderLines,
+    stock,
 }: {
     businessLocation: CompleteLocation | null
+    totalSales: number
+    orderLines: CompleteOrderLine[]
+    stock: Stock[]
 }) => {
-    const totalRevenue = businessLocation?.sales.reduce(
-        (p, c) => p + c.sellingPrice * c.itemsCount,
-        0
-    )
-    const supplies = 0
-    const sales = businessLocation?.sales.reduce((p, c) => p + c.itemsCount, 0)
     return (
         <div className="grid md:grid-cols-2 gap-2 lg:grid-cols-4">
             <Card x-chunk="dashboard-01-chunk-0">
@@ -24,9 +24,7 @@ const DashboardPreviews = ({
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">
-                        {totalRevenue?.toFixed(2)} Ksh
-                    </div>
+                    <div className="text-2xl font-bold">{totalSales.toFixed(2)} Ksh</div>
                 </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-1">
@@ -37,7 +35,9 @@ const DashboardPreviews = ({
                     <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{supplies}</div>
+                    <div className="text-2xl font-bold">
+                        {orderLines.length}
+                    </div>
                 </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-2">
@@ -46,7 +46,7 @@ const DashboardPreviews = ({
                     <CreditCard className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{sales}</div>
+                    <div className="text-2xl font-bold">{stock.length}</div>
                 </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-3">
@@ -58,7 +58,9 @@ const DashboardPreviews = ({
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                        {supplies && sales && supplies - sales}
+                        {stock.reduce((acc, stock) => {
+                            return acc + stock.itemsCount
+                        }, 0)}
                     </div>
                 </CardContent>
             </Card>

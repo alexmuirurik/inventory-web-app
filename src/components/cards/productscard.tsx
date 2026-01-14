@@ -5,9 +5,6 @@ import Link from 'next/link'
 
 const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
     return products.map((product, i) => {
-        const stock = 0
-        const sales = 0
-        const revenue = 0
         return (
             <div
                 key={product.id}
@@ -23,17 +20,21 @@ const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm text-neutral-400">
-                        {stock - sales} {product.units}
+                        {product.stocks.at(0)?.itemsCount} {product.units}
                     </span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm">{product.category?.name}</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                    <span className="text-sm">{sales}</span>
+                    <span className="text-sm">{product.saleItems.reduce((acc, saleItem) => {
+                        return acc + saleItem.itemsCount
+                    }, 0)}</span>
                 </div>
                 <div className="px-2 w-2/12">
-                    <span className="text-sm">{revenue.toFixed(2)} Ksh</span>
+                    <span className="text-sm">{product.saleItems.reduce((acc, saleItem) => {
+                        return acc + saleItem.sellingPrice
+                    }, 0).toFixed(2)} Ksh</span>
                 </div>
             </div>
         )

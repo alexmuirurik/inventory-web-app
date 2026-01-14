@@ -10,18 +10,18 @@ import {
 } from '../ui/form'
 import { Input } from '../ui/input'
 import { z } from 'zod'
-import { salesSchema} from '@/prisma/schema'
+import { salesSchema } from '@/prisma/schema'
 import { AutoComplete } from '../ui/autocomplete'
 import { CompleteProduct } from '@/prisma/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BusinessLocation, Sale } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { createSale } from '@/src/actions/salesController'
-import { toast } from 'sonner'
 import { useState } from 'react'
 import { LoadingButton } from '../ui/loadingbutton'
 import CustomSheet from '../ui/custom-sheet'
 import { useRouter } from 'next/navigation'
+import { useToast } from '../ui/use-toast'
 
 const AddSaleReport = ({
     products,
@@ -34,6 +34,7 @@ const AddSaleReport = ({
     const [loading, setLoading] = useState(false)
     const [sales, setSales] = useState<z.infer<typeof salesSchema>[]>([])
     const router = useRouter()
+    const { toast } = useToast()
     const form = useForm<z.infer<typeof salesSchema>>({
         resolver: zodResolver(salesSchema),
     })
@@ -74,20 +75,26 @@ const AddSaleReport = ({
     const handleSubmit = async () => {
         setLoading(true)
         try {
-            const sale = await createSale({
+            await createSale({
                 businessLocationId: businessLocation?.id as string,
                 sales: sales,
             })
-            if (sale) {
-                toast.success('Sale created successfully')
-            }
-        } catch (error) {
-            toast.error(`Error: ${error}`)
-        } finally {
+            toast({
+                title: 'Success',
+                description: 'Sale created successfully',
+                variant: 'success',
+            })
             setSales([])
             form.reset({})
-            setLoading(false)
             router.refresh()
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: `${error}`,
+                variant: 'destructive',
+            })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -134,11 +141,11 @@ const AddSaleReport = ({
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel className="text-teal-500">
-                                        Buying Price
+                                        Selling Price
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Buying Price"
+                                            placeholder="Selling Price"
                                             className="text-gray-200"
                                             {...field}
                                         />

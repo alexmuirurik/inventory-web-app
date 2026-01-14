@@ -10,8 +10,8 @@ import { notFound, redirect } from 'next/navigation'
 import { SearchContextProvider } from '@/src/context/usesearch'
 import { getManyOrderLines } from '@/src/actions/orderLineController'
 import SearchForm from '@/src/components/forms/search-form'
-import OrderLineActions from '@/src/components/forms/order-line-actions'
-import ProductSalesCard from '@/src/components/cards/product-sales-card'
+import { getManySales, getProductSales } from '@/src/actions/salesController'
+import SalesCard from '@/src/components/cards/sales-card'
 
 const SingleProductPage = async ({
     params,
@@ -25,36 +25,21 @@ const SingleProductPage = async ({
     const businessLocation = business.locations.find(
         (location) => location.id === session?.user.activeLocation
     )
+    if (!businessLocation) return redirect('/settings')
     const product = (await getProductById(productId)) ?? undefined
     if (!product) return notFound()
-    const orderLineItems = (await getManyOrderLines(businessLocation?.id)) ?? []
-    const products = (await getManyProducts(businessLocation?.id)) ?? []
-    const newOrderLineItems = orderLineItems.map((orderline) => {
-        return {
-            ...orderline,
-            sales: orderline.sales.filter(
-                (sale) => sale.productId === product.id
-            ),
-            supplies: orderline.supplies.filter(
-                (supply) => supply.productId === product.id
-            ),
-        }
-    })
+    const sales = (await getProductSales(product.id)) ?? []
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
                 <PageHeader
                     title={product.name}
-                    description={String(orderLineItems.length)}
+                    description={String(sales.length)}
                 >
                     <SearchForm />
-                    <OrderLineActions
-                        businessLocation={businessLocation}
-                        products={products}
-                    />
                 </PageHeader>
-                <ProductSalesCard orderLines={newOrderLineItems} />
+                <SalesCard sales={sales} />
             </SearchContextProvider>
         </div>
     )

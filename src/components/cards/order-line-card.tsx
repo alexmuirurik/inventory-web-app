@@ -1,10 +1,10 @@
-import { DaySaleSupplyAndPettyCash } from '@/prisma/types'
+import { CompleteOrderLine } from '@/prisma/types'
 import Link from 'next/link'
 
 const OrderLineCard = ({
     orderLines,
 }: {
-    orderLines: DaySaleSupplyAndPettyCash[]
+    orderLines: CompleteOrderLine[]
 }) => {
     return orderLines.map((orderLine) => (
         <div className="space-y-1 py-4">

@@ -48,34 +48,41 @@ const AddProduct = ({
     })
 
     const handleFormSubmit = async (data: z.infer<typeof productSchema>) => {
-        let categoryId = data.categoryId
-        setLoading(true)
-        if (data.categoryId === 'Uncategorized') {
-            const category = await createCategory({
-                businessLocationId: businessLocation?.id as string,
-                name: data.categoryId,
-            })
-            categoryId = category?.id as string
-        }
+        try {
+            let categoryId = data.categoryId
+            setLoading(true)
 
-        const product = await createProduct({ ...data, categoryId: categoryId })
-        if (product) {
+            if (data.categoryId === 'Uncategorized') {
+                const category = await createCategory({
+                    businessLocationId: businessLocation?.id as string,
+                    name: data.categoryId,
+                })
+                categoryId = category?.id as string
+            }
+
+            await createProduct({
+                ...data,
+                categoryId: categoryId,
+            })
+
             toast({
                 title: 'Success',
                 description: 'Product created successfully',
                 variant: 'success',
             })
-        } else {
+
+            setOpen(false)
+            form.reset({})
+            router.refresh()
+        } catch (error) {
             toast({
                 title: 'Failed',
-                description: 'Kindly contact admin for assistance',
+                description: `${error}`,
                 variant: 'destructive',
             })
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
-        setOpen(false)
-        form.reset({})
-        return router.refresh()
     }
     return (
         <CustomDialog

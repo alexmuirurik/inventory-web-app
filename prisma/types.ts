@@ -13,7 +13,7 @@ export type CompleteLocation = Prisma.BusinessLocationGetPayload<{
     }
 }>
 
-export type DaySaleSupplyAndPettyCash = Prisma.OrderLineGetPayload<{
+export type CompleteOrderLine = Prisma.OrderLineGetPayload<{
     include: {
         orderLineItems: {
             include: {
@@ -23,9 +23,20 @@ export type DaySaleSupplyAndPettyCash = Prisma.OrderLineGetPayload<{
     }
 }>
 
+export type CompleteSale = Prisma.SaleGetPayload<{
+    include: {
+        saleItems: {
+            include: {
+                product: true
+            }
+        }
+    },
+}>
+
 export type CompleteProduct = Prisma.ProductGetPayload<{
     include: {
         category: true
         stocks: true
+        saleItems: true
     }
 }>

@@ -18,6 +18,22 @@ export const getTodaysStock = async () => {
     }
 }
 
+export const getManyStocks = async (businessLocationId: string) => {
+    try {
+        const stocks = await prisma.stock.findMany({
+            where: {
+                businessLocationId: businessLocationId,
+            },
+            include: {
+                product: true,
+            },
+        })
+        return stocks
+    } catch (error) {
+        console.log('Getting Stock Error: ' + error)
+    }
+}
+
 export const createStock = async (data: z.infer<typeof createStockSchema>) => {
     try {
         const updateLocation = await prisma.businessLocation.update({

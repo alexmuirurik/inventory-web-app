@@ -6,14 +6,13 @@ import { z } from 'zod'
 export const getProductById = async (productId: string) => {
     try {
         const product = await prisma.product.findUnique({
-            where: { 
-                id: productId 
+            where: {
+                id: productId,
             },
             include: {
                 category: true,
                 stocks: true,
-                sales: true,
-            }
+            },
         })
         return product
     } catch (error) {
@@ -26,19 +25,15 @@ export const getProduct = async (
     productName: string
 ) => {
     try {
-        if (!businessLocationId) {
-            throw new Error('No Business Location Id')
-        }
         const product = await prisma.product.findFirst({
             where: {
                 businessLocationId: businessLocationId,
                 name: productName,
             },
-            include:{
+            include: {
                 category: true,
                 stocks: true,
-                sales: true,
-            }
+            },
         })
         return product
     } catch (error) {
@@ -58,7 +53,7 @@ export const getManyProducts = async (businessLocationId?: string) => {
             include: {
                 category: true,
                 stocks: true,
-                sales: true,
+                saleItems: true,
             },
         })
         return products
@@ -85,10 +80,12 @@ export const updateProduct = async (data: z.infer<typeof productSchema>) => {
 export const createProduct = async (data: z.infer<typeof productSchema>) => {
     try {
         const product = await getProduct(data.businessLocationId, data.name)
-        if (product) return product
+        if (product) {
+            return Promise.reject('Product already exists')
+        }
         const createdproduct = await prisma.product.create({ data })
-        return createdproduct
+        return Promise.resolve(createdproduct)
     } catch (error) {
-        console.log('We faced an error creating a product ' + error)
+        return Promise.reject(error)
     }
 }

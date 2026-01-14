@@ -8,6 +8,7 @@ import PageHeader from '@/src/components/layouts/PageHeader'
 import SearchForm from '@/src/components/forms/search-form'
 import AddSaleReport from '@/src/components/forms/add-sale-report'
 import { getManySales } from '@/src/actions/salesController'
+import SalesCard from '@/src/components/cards/sales-card'
 
 const OrderLinePage = async () => {
     const session = await auth()
@@ -32,15 +33,7 @@ const OrderLinePage = async () => {
                         businessLocation={businessLocation}
                     />
                 </PageHeader>
-                <div className="l">
-                    {sales.map((sale) => (
-                        <div key={sale.id}>
-                            <h1>{sale.product.name}</h1>
-                            <p>{sale.sellingPrice}</p>
-                            <p>{sale.itemsCount}</p>
-                        </div>
-                    ))}
-                </div>
+                <SalesCard sales={sales} />
             </SearchContextProvider>
         </div>
     )
