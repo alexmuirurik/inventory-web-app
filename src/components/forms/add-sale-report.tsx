@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import {
     Form,
     FormControl,
@@ -12,15 +10,18 @@ import {
 } from '../ui/form'
 import { Input } from '../ui/input'
 import { z } from 'zod'
-import { salesSchema } from '@/prisma/schema'
-import { CompleteProduct } from '@/prisma/types'
+import { salesSchema} from '@/prisma/schema'
 import { AutoComplete } from '../ui/autocomplete'
+import { CompleteProduct } from '@/prisma/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { BusinessLocation } from '@prisma/client'
-import { toast } from 'sonner'
+import { BusinessLocation, Sale } from '@prisma/client'
+import { useForm } from 'react-hook-form'
 import { createSale } from '@/src/actions/salesController'
-import CustomDialog from './customdialog'
+import { toast } from 'sonner'
+import { useState } from 'react'
 import { LoadingButton } from '../ui/loadingbutton'
+import CustomSheet from '../ui/custom-sheet'
+import { useRouter } from 'next/navigation'
 
 const AddSaleReport = ({
     products,
@@ -31,12 +32,12 @@ const AddSaleReport = ({
 }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [sales, setSales] = useState<z.infer<typeof salesSchema>[]>([])
+    const router = useRouter()
     const form = useForm<z.infer<typeof salesSchema>>({
         resolver: zodResolver(salesSchema),
-        defaultValues: {
-            businessLocationId: businessLocation?.id,
-        },
     })
+
     const newProducts = products.map((product) => {
         return {
             label: product.name,
@@ -44,42 +45,74 @@ const AddSaleReport = ({
         }
     })
 
-    const handleSubmit = async (data: z.infer<typeof salesSchema>) => {
+    const addToSale = (sale: z.infer<typeof salesSchema>) => {
+        const exists = sales.find(
+            (inSale) => inSale.productId === sale.productId
+        )
+
+        if (exists) {
+            setSales((prev) =>
+                prev.map((s) => {
+                    if (s.productId === sale.productId) {
+                        return {
+                            ...s,
+                            itemsCount: sale.itemsCount,
+                            buyingPrice: sale.sellingPrice,
+                        }
+                    }
+
+                    return s
+                })
+            )
+        } else {
+            setSales((prev) => [...prev, sale])
+        }
+
+        form.reset({})
+    }
+
+    const handleSubmit = async () => {
+        setLoading(true)
         try {
-            setLoading(true)
-            const sale = await createSale(data)
+            const sale = await createSale({
+                businessLocationId: businessLocation?.id as string,
+                sales: sales,
+            })
             if (sale) {
                 toast.success('Sale created successfully')
-                form.reset({})
             }
         } catch (error) {
             toast.error(`Error: ${error}`)
         } finally {
+            setSales([])
+            form.reset({})
             setLoading(false)
+            router.refresh()
         }
     }
 
     return (
-        <CustomDialog
+        <CustomSheet
             open={open}
-            setOpen={setOpen}
-            btntitle="Add Sale"
+            onOpenChange={setOpen}
+            title="Add Sale"
             description="Add Sales For a Product"
+            stocks={sales}
+            products={products}
         >
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(handleSubmit)}
+                    onSubmit={form.handleSubmit(addToSale)}
                     className="space-y-4"
                 >
                     <FormField
                         control={form.control}
                         name="productId"
                         render={({ field }) => (
-                            <FormItem className="w-full">
+                            <FormItem className="w-full px-4 pt-4">
                                 <FormLabel className="text-teal-500">
                                     Product Name
                                 </FormLabel>
-
                                 <FormControl>
                                     <AutoComplete
                                         options={newProducts}
@@ -94,19 +127,19 @@ const AddSaleReport = ({
                             </FormItem>
                         )}
                     />
-                    <div className="md:flex items-center gap-2">
+                    <div className="md:flex items-center gap-2 px-4">
                         <FormField
                             name="sellingPrice"
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormLabel className="text-teal-500">
-                                        Selling Price
+                                        Buying Price
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Selling Price"
-                                            className="border-gray-600 text-gray-200"
+                                            placeholder="Buying Price"
+                                            className="text-gray-200"
                                             {...field}
                                         />
                                     </FormControl>
@@ -134,19 +167,12 @@ const AddSaleReport = ({
                                                             )
                                                     )?.stocks[0]?.itemsCount ??
                                                         0
-                                                ) + ' items in stock'
+                                                ) + ' items in sale'
                                             }
-                                            className="border-gray-600 text-gray-200"
+                                            className=" text-gray-200"
                                             {...field}
                                             type="number"
                                             min={0}
-                                            max={
-                                                products.find(
-                                                    (product) =>
-                                                        product.id ===
-                                                        form.watch('productId')
-                                                )?.stocks[0]?.itemsCount ?? 0
-                                            }
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -154,14 +180,21 @@ const AddSaleReport = ({
                             )}
                         />
                     </div>
-                    <div className="flex justify-end">
-                        <LoadingButton loading={loading}>
-                            Add Sale
+                    <div className="flex justify-end px-4">
+                        <LoadingButton>Add Sale</LoadingButton>
+                    </div>
+                    <div className="w-full border-t rounded-none p-4">
+                        <LoadingButton
+                            className="w-full"
+                            loading={loading}
+                            onClick={handleSubmit}
+                        >
+                            Finish and Submit
                         </LoadingButton>
                     </div>
                 </form>
             </Form>
-        </CustomDialog>
+        </CustomSheet>
     )
 }
 

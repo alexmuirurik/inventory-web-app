@@ -145,7 +145,6 @@ model Product {
     businessLocation   BusinessLocation @relation(fields: [businessLocationId], references: [id])
     category           Category?        @relation(fields: [categoryId], references: [id])
     stocks             Stock[]
-    sales              Sale[]
     orderLineItems     OrderLineItem[]
     saleItems          SaleItem[]
     createdAt          DateTime         @default(now())
@@ -157,17 +156,18 @@ model Stock {
     productId          String           @db.ObjectId
     businessLocationId String           @db.ObjectId
     buyingPrice        Float
+    sellingPrice       Float
     itemsCount         Float
     product            Product          @relation(fields: [productId], references: [id])
     businessLocation   BusinessLocation @relation(fields: [businessLocationId], references: [id])
     createdAt          DateTime         @default(now())
     updatedAt          DateTime         @updatedAt
+    @@unique([productId, businessLocationId])
 }
 
 model OrderLine {
     id                 String           @id @default(auto()) @map("_id") @db.ObjectId
     businessLocationId String           @db.ObjectId
-    date               String
     businessLocation   BusinessLocation @relation(fields: [businessLocationId], references: [id])
     orderLineItems     OrderLineItem[]
     createdAt          DateTime         @default(now())
@@ -178,6 +178,8 @@ model OrderLineItem {
     id          String    @id @default(auto()) @map("_id") @db.ObjectId
     orderLineId String    @db.ObjectId
     productId   String    @db.ObjectId
+    itemsCount  Float
+    buyingPrice Float
     orderLine   OrderLine @relation(fields: [orderLineId], references: [id])
     product     Product   @relation(fields: [productId], references: [id])
     createdAt   DateTime  @default(now())
@@ -186,11 +188,7 @@ model OrderLineItem {
 
 model Sale {
     id                 String           @id @default(auto()) @map("_id") @db.ObjectId
-    productId          String           @db.ObjectId
     businessLocationId String           @db.ObjectId
-    sellingPrice       Float
-    itemsCount         Float
-    product            Product          @relation(fields: [productId], references: [id])
     businessLocation   BusinessLocation @relation(fields: [businessLocationId], references: [id])
     saleItems          SaleItem[]
     createdAt          DateTime         @default(now())

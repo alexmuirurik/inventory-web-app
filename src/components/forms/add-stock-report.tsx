@@ -14,13 +14,14 @@ import { stockSchema } from '@/prisma/schema'
 import { AutoComplete } from '../ui/autocomplete'
 import { CompleteProduct } from '@/prisma/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { BusinessLocation } from '@prisma/client'
+import { BusinessLocation, Stock } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { createStock } from '@/src/actions/stockController'
 import { toast } from 'sonner'
-import CustomDialog from './customdialog'
 import { useState } from 'react'
 import { LoadingButton } from '../ui/loadingbutton'
+import CustomSheet from '../ui/custom-sheet'
+import { useRouter } from 'next/navigation'
 
 const AddStockReport = ({
     products,
@@ -31,12 +32,12 @@ const AddStockReport = ({
 }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [stocks, setStocks] = useState<z.infer<typeof stockSchema>[]>([])
+    const router = useRouter()
     const form = useForm<z.infer<typeof stockSchema>>({
         resolver: zodResolver(stockSchema),
-        defaultValues: {
-            businessLocationId: businessLocation?.id,
-        },
     })
+
     const newProducts = products.map((product) => {
         return {
             label: product.name,
@@ -44,38 +45,71 @@ const AddStockReport = ({
         }
     })
 
-    const handleSubmit = async (data: z.infer<typeof stockSchema>) => {
+    const addToStock = (stock: z.infer<typeof stockSchema>) => {
+        const exists = stocks.find(
+            (inStock) => inStock.productId === stock.productId
+        )
+
+        if (exists) {
+            setStocks((prev) =>
+                prev.map((s) => {
+                    if (s.productId === stock.productId) {
+                        return {
+                            ...s,
+                            itemsCount: stock.itemsCount,
+                            buyingPrice: stock.buyingPrice,
+                        }
+                    }
+
+                    return s
+                })
+            )
+        } else {
+            setStocks((prev) => [...prev, stock])
+        }
+
+        form.reset({})
+    }
+
+    const handleSubmit = async () => {
         setLoading(true)
         try {
-            const stock = await createStock(data)
+            const stock = await createStock({
+                businessLocationId: businessLocation?.id as string,
+                stocks: stocks,
+            })
             if (stock) {
                 toast.success('Stock created successfully')
-                form.reset({})
             }
         } catch (error) {
             toast.error(`Error: ${error}`)
-        }finally{
+        } finally {
+            setStocks([])
+            form.reset({})
             setLoading(false)
+            router.refresh()
         }
     }
 
     return (
-        <CustomDialog
+        <CustomSheet
             open={open}
-            setOpen={setOpen}
-            btntitle="Add Stock"
+            onOpenChange={setOpen}
+            title="Add Stock"
             description="Add Stocks For a Product"
+            stocks={stocks}
+            products={products}
         >
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(handleSubmit)}
+                    onSubmit={form.handleSubmit(addToStock)}
                     className="space-y-4"
                 >
                     <FormField
                         control={form.control}
                         name="productId"
                         render={({ field }) => (
-                            <FormItem className="w-full">
+                            <FormItem className="w-full px-4 pt-4">
                                 <FormLabel className="text-teal-500">
                                     Product Name
                                 </FormLabel>
@@ -93,7 +127,7 @@ const AddStockReport = ({
                             </FormItem>
                         )}
                     />
-                    <div className="md:flex items-center gap-2">
+                    <div className="md:flex items-center gap-2 px-4">
                         <FormField
                             name="buyingPrice"
                             control={form.control}
@@ -105,7 +139,7 @@ const AddStockReport = ({
                                     <FormControl>
                                         <Input
                                             placeholder="Buying Price"
-                                            className="border-gray-600 text-gray-200"
+                                            className="text-gray-200"
                                             {...field}
                                         />
                                     </FormControl>
@@ -135,7 +169,7 @@ const AddStockReport = ({
                                                         0
                                                 ) + ' items in stock'
                                             }
-                                            className="border-gray-600 text-gray-200"
+                                            className=" text-gray-200"
                                             {...field}
                                             type="number"
                                             min={0}
@@ -146,19 +180,21 @@ const AddStockReport = ({
                             )}
                         />
                     </div>
-                    {Object.keys(form.formState.errors).map((error) => (
-                        <p key={error} className="text-red-500">
-                          {error} : {(form.formState.errors as any)[error]?.message}
-                        </p>
-                    ))}
-                    <div className="flex justify-end">
-                        <LoadingButton loading={loading}>
-                            Add Stock
+                    <div className="flex justify-end px-4">
+                        <LoadingButton>Add Stock</LoadingButton>
+                    </div>
+                    <div className="w-full border-t rounded-none p-4">
+                        <LoadingButton
+                            className="w-full"
+                            loading={loading}
+                            onClick={handleSubmit}
+                        >
+                            Finish and Submit
                         </LoadingButton>
                     </div>
                 </form>
             </Form>
-        </CustomDialog>
+        </CustomSheet>
     )
 }
 

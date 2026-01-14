@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma/prisma'
-import { salesSchema } from '@/prisma/schema'
+import { createSalesSchema, salesSchema } from '@/prisma/schema'
 import { z } from 'zod'
 
 export const findSale = async (saleId: string) => {
@@ -20,7 +20,11 @@ export const findFirstSale = async (productId: string) => {
     try {
         const sale = await prisma.sale.findFirst({
             where: {
-                productId: productId,
+                saleItems: {
+                    some: {
+                        productId: productId,
+                    },
+                },
             },
         })
         return sale
@@ -33,10 +37,13 @@ export const getManySales = async (productId: string) => {
     try {
         const sales = await prisma.sale.findMany({
             where: {
-                productId: productId,
+                saleItems: {
+                    some: {
+                        productId: productId,
+                    },
+                }
             },
             include: {
-                product: true,
                 businessLocation: true,
             },
         })
@@ -46,18 +53,48 @@ export const getManySales = async (productId: string) => {
     }
 }
 
-export const createSale = async (data: z.infer<typeof salesSchema>) => {
+export const createSale = async (data: z.infer<typeof createSalesSchema>) => {
     try {
-        const sale = await prisma.sale.create({
+        const updateLocation = await prisma.businessLocation.update({
+            where: {
+                id: data.businessLocationId,
+            },
             data: {
-                productId: data.productId,
-                businessLocationId: data.businessLocationId,
-                sellingPrice: data.sellingPrice,
-                itemsCount: data.itemsCount,
+                stocks: {
+                    update: data.sales.map((sale) => {
+                        return {
+                            where: {
+                                productId_businessLocationId: {
+                                    productId: sale.productId,
+                                    businessLocationId: data.businessLocationId,
+                                },
+                            },
+                            data: {
+                                sellingPrice: sale.sellingPrice,
+                                itemsCount: {
+                                    decrement: sale.itemsCount,
+                                },
+                            },
+                        }
+                    }),
+                },
+                sales: {
+                    create: {
+                        saleItems: {
+                            create: data.sales.map((sale) => {
+                                return {
+                                    productId: sale.productId,
+                                    sellingPrice: sale.sellingPrice,
+                                    itemsCount: sale.itemsCount,
+                                }
+                            }),
+                        },
+                    },
+                },
             },
         })
 
-        return sale
+        return updateLocation
     } catch (error) {
         return Promise.reject(error)
     }

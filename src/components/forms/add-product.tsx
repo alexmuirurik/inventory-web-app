@@ -8,7 +8,7 @@ import {
     FormLabel,
     FormMessage,
 } from '../ui/form'
-import CustomDialog from './customdialog'
+import CustomDialog from '../ui/customdialog'
 import { useState } from 'react'
 import { Input } from '../ui/input'
 import { LoadingButton } from '../ui/loadingbutton'
@@ -47,20 +47,6 @@ const AddProduct = ({
         },
     })
 
-    const createNewCategory = async () => {
-        setLoading(true)
-        const category = await createCategory({
-            businessLocationId: businessLocation?.id as string,
-            name: 'Uncategorized',
-        })
-        if (category) {
-            console.log(category)
-            router.refresh()
-        }
-
-        return setLoading(false)
-    }
-
     const handleFormSubmit = async (data: z.infer<typeof productSchema>) => {
         let categoryId = data.categoryId
         setLoading(true)
@@ -87,6 +73,8 @@ const AddProduct = ({
             })
         }
         setLoading(false)
+        setOpen(false)
+        form.reset({})
         return router.refresh()
     }
     return (

@@ -6,9 +6,9 @@ import { getBusiness } from '@/src/actions/businessController'
 import { SearchContextProvider } from '@/src/context/usesearch'
 import PageHeader from '@/src/components/layouts/PageHeader'
 import SearchForm from '@/src/components/forms/search-form'
-import { getManyOrderLines } from '@/src/actions/orderLineController'
 import OrderLineCard from '@/src/components/cards/order-line-card'
 import AddStockReport from '@/src/components/forms/add-stock-report'
+import { getManyOrderLines } from '@/src/actions/orderLineController'
 
 const OrderLinePage = async () => {
     const session = await auth()
@@ -17,15 +17,16 @@ const OrderLinePage = async () => {
     const businessLocation = business.locations.find(
         (location) => location.id === session?.user.activeLocation
     )
+    if (!businessLocation) return redirect('/settings')
     const products = (await getManyProducts(businessLocation?.id)) ?? []
-    const orderLineItems = (await getManyOrderLines(businessLocation?.id)) ?? []
+    const orderLines = (await getManyOrderLines(businessLocation?.id)) ?? []
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
                 <PageHeader
                     title="Stock Report"
-                    description={String(orderLineItems.length)}
+                    description={String(0)}
                 >
                     <SearchForm />
                     <AddStockReport
@@ -33,7 +34,7 @@ const OrderLinePage = async () => {
                         businessLocation={businessLocation}
                     />
                 </PageHeader>
-                <OrderLineCard orderLines={orderLineItems} />
+                <OrderLineCard orderLines={orderLines} />
             </SearchContextProvider>
         </div>
     )

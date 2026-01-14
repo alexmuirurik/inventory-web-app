@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import CustomDialog from './customdialog'
+import CustomDialog from '../ui/customdialog'
 import {
     Form,
     FormControl,

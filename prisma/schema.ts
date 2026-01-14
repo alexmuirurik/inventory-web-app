@@ -25,16 +25,24 @@ export const productSchema = z.object({
 
 export const stockSchema = z.object({
     productId: z.string(),
-    businessLocationId: z.string(),
     buyingPrice: z.coerce.number(),
     itemsCount: z.coerce.number(),
 })
 
+export const createStockSchema = z.object({
+    businessLocationId: z.string(),
+    stocks: stockSchema.array(),
+})
+
 export const salesSchema = z.object({
     productId: z.string(),
-    businessLocationId: z.string(),
     sellingPrice: z.coerce.number(),
     itemsCount: z.coerce.number(),
+})
+
+export const createSalesSchema = z.object({
+    businessLocationId: z.string(),
+    sales: salesSchema.array(),
 })
 
 export const pettySchema = z.object({
