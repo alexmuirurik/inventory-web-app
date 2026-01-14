@@ -94,7 +94,7 @@ export const AutoComplete = ({
                     onFocus={() => setOpen(true)}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className="text-neutral-200 rounded-lg"
+                    className="rounded-lg"
                     value={inputValue}
                 />
             </div>
