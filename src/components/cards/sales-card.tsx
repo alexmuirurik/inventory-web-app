@@ -41,7 +41,7 @@ const SalesCard = ({ sales }: { sales: CompleteSale[] }) => {
                             </div>
                             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                                 <span className="text-sm">
-                                    {saleItem.sellingPrice.toFixed(2)} Ksh
+                                    {saleItem.itemsCount.toFixed(2)} {saleItem.product.units}
                                 </span>
                             </div>
                             <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">

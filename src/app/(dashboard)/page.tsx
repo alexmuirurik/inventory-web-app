@@ -20,7 +20,7 @@ const Dashboard = async () => {
     const sales = (await getManySales(businessLocation.id)) ?? []
     const totalSales = sales.reduce((acc, sale) => {
         const sellingPrice = sale.saleItems.reduce((acc, saleItem) => {
-            return acc + saleItem.sellingPrice
+            return acc + saleItem.itemsCount
         }, 0)
         return acc + sellingPrice
     }, 0)

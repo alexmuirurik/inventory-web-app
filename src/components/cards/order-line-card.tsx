@@ -1,11 +1,7 @@
 import { CompleteOrderLine } from '@/prisma/types'
 import Link from 'next/link'
 
-const OrderLineCard = ({
-    orderLines,
-}: {
-    orderLines: CompleteOrderLine[]
-}) => {
+const OrderLineCard = ({ orderLines }: { orderLines: CompleteOrderLine[] }) => {
     return orderLines.map((orderLine) => (
         <div className="space-y-1 py-4">
             <div className="bg-neutral-200 flex justify-between items-center gap-2 border p-2">
@@ -40,7 +36,7 @@ const OrderLineCard = ({
                     </div>
                     <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                         <span className="text-sm">
-                            {orderLineItem.buyingPrice.toFixed(2)} Ksh
+                            {(orderLineItem?.sellingPrice ?? 0).toFixed(2)} Ksh
                         </span>
                     </div>
                 </div>

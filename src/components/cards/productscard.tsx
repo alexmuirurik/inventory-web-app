@@ -33,7 +33,7 @@ const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
                 </div>
                 <div className="px-2 w-2/12">
                     <span className="text-sm">{product.saleItems.reduce((acc, saleItem) => {
-                        return acc + saleItem.sellingPrice
+                        return acc + saleItem.itemsCount
                     }, 0).toFixed(2)} Ksh</span>
                 </div>
             </div>
