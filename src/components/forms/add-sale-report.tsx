@@ -10,7 +10,7 @@ import {
 } from '../ui/form'
 import { Input } from '../ui/input'
 import { z } from 'zod'
-import { salesSchema } from '@/prisma/schema'
+import { salesSchema, stockSchema } from '@/prisma/schema'
 import { AutoComplete } from '../ui/autocomplete'
 import { CompleteProduct } from '@/prisma/types'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -64,7 +64,6 @@ const AddSaleReport = ({
                         return {
                             ...s,
                             itemsCount: sale.itemsCount,
-                            buyingPrice: sale.sellingPrice,
                         }
                     }
 
@@ -78,17 +77,39 @@ const AddSaleReport = ({
         form.reset({})
     }
 
+    const deleteItem = (
+        item: z.infer<typeof salesSchema> | z.infer<typeof stockSchema>
+    ) => {
+        const exists = sales.find(
+            (inSale) => inSale.productId === item.productId
+        )
+
+        if (exists) {
+            setSales((prev) =>
+                prev.filter((s) => {
+                    if (s.productId === item.productId) {
+                        return false
+                    }
+
+                    return s
+                })
+            )
+        }
+    }
+
     const handleSubmit = async () => {
-        if(sales.length === 0) return toast({
-            title: 'Error',
-            description: 'Please add sales',
-            variant: 'destructive',
-        })
+        if (sales.length === 0)
+            return toast({
+                title: 'Error',
+                description: 'Please add sales',
+                variant: 'destructive',
+            })
         setLoading(true)
         try {
             await createSale({
                 businessLocationId: businessLocation?.id as string,
                 sales: sales,
+                paymentMethod: paymentMethod,
             })
             toast({
                 title: 'Success',
@@ -112,13 +133,17 @@ const AddSaleReport = ({
     return (
         isOpen && (
             <div className="absolute bg-neutral-100 md:flex gap-2 space-y-4 md:space-y-0 h-96 w-full">
-                <AddStockCard items={sales} products={products} />
+                <AddStockCard
+                    items={sales}
+                    products={products}
+                    deleteItem={deleteItem}
+                />
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(addToSale)}
                         className="space-y-4 w-full lg:w-3/12 h-fit border"
                     >
-                        {step === 0 ? (
+                        {step === 0 || sales.length === 0 ? (
                             <div>
                                 <FormField
                                     control={form.control}
@@ -145,24 +170,6 @@ const AddSaleReport = ({
                                     )}
                                 />
                                 <div className="md:flex items-center gap-2 px-4">
-                                    <FormField
-                                        name="sellingPrice"
-                                        control={form.control}
-                                        render={({ field }) => (
-                                            <FormItem className="w-full">
-                                                <FormLabel className="text-teal-500">
-                                                    Selling Price
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="Selling Price"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
                                     <FormField
                                         name="itemsCount"
                                         control={form.control}
@@ -229,7 +236,7 @@ const AddSaleReport = ({
                                     <div
                                         className={`${
                                             paymentMethod === 'mobile'
-                                                ? 'border-teal-500'
+                                                ? 'bg-teal-400 border-teal-500'
                                                 : 'border-neutral-500'
                                         } flex justify-center items-center w-1/2 border p-3 cursor-pointer`}
                                         onClick={() =>
@@ -241,7 +248,7 @@ const AddSaleReport = ({
                                     <div
                                         className={`${
                                             paymentMethod === 'cash'
-                                                ? 'border-teal-500'
+                                                ? 'bg-teal-400 border-teal-500'
                                                 : 'border-neutral-500'
                                         } flex justify-center items-center w-1/2 border p-3 cursor-pointer`}
                                         onClick={() => setPaymentMethod('cash')}

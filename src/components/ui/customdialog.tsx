@@ -36,7 +36,7 @@ const CustomDialog = ({
                     <span className="text-nowrap">{btntitle}</span>
                 </LoadingButton>
             </DialogTrigger>
-            <DialogContent className="bg-neutral-700 border-gray-500">
+            <DialogContent className="bg-neutral-100 border-gray-500">
                 <DialogHeader className="flex justify-center items-center">
                     <DialogTitle className="text-teal-600 font-bold">
                         {btntitle}

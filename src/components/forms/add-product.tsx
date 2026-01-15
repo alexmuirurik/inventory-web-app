@@ -108,7 +108,7 @@ const AddProduct = ({
                                     <FormControl>
                                         <Input
                                             placeholder="Product Name"
-                                            className="border-gray-600 text-gray-200"
+                                            className="border-gray-600"
                                             {...field}
                                         />
                                     </FormControl>
@@ -130,14 +130,14 @@ const AddProduct = ({
                                         }
                                     >
                                         <FormControl>
-                                            <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
+                                            <SelectTrigger className="border-gray-600 placeholder:text-gray-600">
                                                 <SelectValue
                                                     className="text-neutral-600"
                                                     placeholder="Select category"
                                                 />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent className="bg-neutral-700 border-gray-500">
+                                        <SelectContent className=" border-gray-500">
                                             {categories.length === 0 && (
                                                 <SelectItem
                                                     className="text-teal-500 hover:bg-neutral-600"
@@ -176,14 +176,14 @@ const AddProduct = ({
                                     }
                                 >
                                     <FormControl>
-                                        <SelectTrigger className="border-gray-600 text-gray-200 placeholder:text-gray-600">
+                                        <SelectTrigger className="border-gray-600 placeholder:text-gray-600">
                                             <SelectValue
                                                 className="text-neutral-600"
                                                 placeholder="Select unit"
                                             />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className="bg-neutral-700 border-gray-500">
+                                    <SelectContent className="border-gray-500">
                                         <SelectItem
                                             className="text-teal-500 hover:bg-neutral-600"
                                             value="items"

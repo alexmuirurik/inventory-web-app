@@ -48,7 +48,7 @@ export const createStock = async (data: z.infer<typeof createStockSchema>) => {
                                 return {
                                     productId: stock.productId,
                                     itemsCount: stock.itemsCount,
-                                    buyingPrice: stock.buyingPrice,
+                                    sellingPrice: stock.sellingPrice,
                                 }
                             }),
                         },
@@ -65,15 +65,15 @@ export const createStock = async (data: z.infer<typeof createStockSchema>) => {
                             },
                             create: {
                                 productId: stock.productId,
-                                buyingPrice: stock.buyingPrice,
+                                sellingPrice: stock.sellingPrice,
                                 itemsCount: stock.itemsCount,
-                                sellingPrice: 0,
+                                buyingPrice: 0,
                             },
                             update: {
                                 itemsCount: {
                                     increment: stock.itemsCount,
                                 },
-                                buyingPrice: stock.buyingPrice
+                                sellingPrice: stock.sellingPrice
                             }
                         }
                     }),

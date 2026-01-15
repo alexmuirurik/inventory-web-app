@@ -95,7 +95,6 @@ export const createSale = async (data: z.infer<typeof createSalesSchema>) => {
                                 },
                             },
                             data: {
-                                sellingPrice: sale.sellingPrice,
                                 itemsCount: {
                                     decrement: sale.itemsCount,
                                 },
@@ -109,7 +108,6 @@ export const createSale = async (data: z.infer<typeof createSalesSchema>) => {
                             create: data.sales.map((sale) => {
                                 return {
                                     productId: sale.productId,
-                                    sellingPrice: sale.sellingPrice,
                                     itemsCount: sale.itemsCount,
                                 }
                             }),
