@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+export const signinschema = z.object({
+    email: z.string(),
+    otp: z.string().optional(),
+})
+
 export const businessSchema = z.object({
     name: z.string(),
     mobile: z.string(),
