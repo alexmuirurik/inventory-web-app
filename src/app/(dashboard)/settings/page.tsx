@@ -15,24 +15,15 @@ const SettingsPage = async () => {
 
     return (
         <div className="page-wrapper">
-            <PageHeader
-                title="Settings"
-                description={business?.name as 'Create a business '}
-            >
-                <Input />
-                <LoadingButton className="bg-teal-600">
-                    <span className="text-nowrap">Make Payment</span>
-                </LoadingButton>
-            </PageHeader>
-            <div className="flex gap-2 border">
-                <div className="space-y-4 w-9/12 p-4">
+            <div className="md:flex space-y-4 md:space-y-0 gap-2">
+                <div className="md:w-9/12 p-4 border">
                     <AddBusinessInformation
                         user={session?.user as User}
                         business={business}
                         location={businessLocation}
                     />
                 </div>
-                <div className="border-s w-3/12 space-y-4 p-6">
+                <div className="border md:w-3/12 space-y-4 p-6">
                     <h2 className="text-2xl text-center font-bold">
                         How It Works
                     </h2>
