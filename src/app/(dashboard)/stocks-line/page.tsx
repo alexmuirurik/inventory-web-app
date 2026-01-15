@@ -18,14 +18,17 @@ const OrderLinePage = async () => {
         (location) => location.id === session?.user.activeLocation
     )
     if (!businessLocation) return redirect('/settings')
-    const products = (await getManyProducts(businessLocation?.id)) ?? []
-    const orderLines = (await getManyOrderLines(businessLocation?.id)) ?? []
+    const products = (await getManyProducts(businessLocation.id)) ?? []
+    const orderLines = (await getManyOrderLines(businessLocation.id)) ?? []
 
     return (
         <div className="page-wrapper">
             <SearchContextProvider>
                 <LineProvider>
-                    <PageHeader title="Stock Report" description={String(0)}>
+                    <PageHeader
+                        title="Stock Report"
+                        description={String(orderLines.length)}
+                    >
                         <SearchForm />
                         <OpenLine title="Add Stocks" />
                     </PageHeader>

@@ -1,3 +1,5 @@
+
+
 'use server'
 
 import prisma from "@/prisma/prisma"
@@ -11,10 +13,17 @@ export const getManyOrderLines = async (businessLocationId: string) => {
             include: {
                 orderLineItems: {
                     include: {
-                        product: true
+                        product: {
+                            include: {
+                                stocks: true   
+                            }
+                        }
                     }
                 }
             },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return Promise.resolve(orderLines)
     } catch (error) {

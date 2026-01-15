@@ -1,58 +1,143 @@
+'use client'
+
 import { CompleteSale } from '@/prisma/types'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 const SalesCard = ({ sales }: { sales: CompleteSale[] }) => {
-    return (
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
+    const sale = sales.find((sale) => sale.id === id)
+    return sale ? (
+        <div className="space-y-1">
+            <div className="bg-neutral-200 flex justify-between items-center gap-2 border p-2">
+                <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer border-e border-neutral-300 rounded-none">
+                    <Link
+                        href="/sales-line"
+                        className="text-sm text-teal-500 font-bold"
+                    >
+                        {'<- Back'}
+                    </Link>
+                </div>
+                <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                    <span className="text-sm text-neutral-400">
+                        Selling Price
+                    </span>
+                </div>
+                <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                    <span className="text-sm">Items Sold</span>
+                </div>
+                <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                    <span className="text-sm text-neutral-500">
+                        Total Revenue
+                    </span>
+                </div>
+            </div>
+            {sale.saleItems.map((saleItem, i) => {
+                return (
+                    <div
+                        key={saleItem.id}
+                        className="flex justify-between items-center gap-2 border p-2"
+                    >
+                        <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer border-e border-neutral-300 rounded-none">
+                            <span className="text-xs text-neutral-500 font-bold">
+                                {saleItem.product.name}
+                            </span>
+                        </div>
+                        <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                            <span className="text-sm text-neutral-400">
+                                {(
+                                    saleItem.product.stocks[0].sellingPrice ?? 0
+                                ).toFixed(2)}{' '}
+                                {' Ksh'}
+                            </span>
+                        </div>
+                        <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                            <span className="text-sm">
+                                {saleItem.itemsCount} {saleItem.product.units}
+                            </span>
+                        </div>
+                        <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                            <span className="text-sm text-neutral-500">
+                                {(
+                                    saleItem.itemsCount *
+                                    (saleItem.product.stocks[0].sellingPrice ??
+                                        0)
+                                ).toFixed(2)}
+                                {' Ksh'}
+                            </span>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
+    ) : (
         <div className="space-y-1 py-4 w-full">
             <div className="bg-neutral-200 flex justify-between items-center gap-2 border p-2">
                 <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer border-e border-neutral-300 rounded-none">
-                    Product
+                    <span className="text-sm font-bold">Date</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm text-neutral-400">Items</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                    <span className="text-sm">Selling Price</span>
+                    <span className="text-sm">Products</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                    <span className="text-sm">Sold On</span>
+                    <span className="text-sm text-neutral-500">
+                        Total Revenue
+                    </span>
                 </div>
             </div>
             {sales.map((sale) => (
-                <div className="space-y-1 w-full">
-                    {sale.saleItems.map((saleItem) => (
-                        <div
-                            key={saleItem.id}
-                            className="flex justify-between items-center gap-2 border p-2"
+                <div
+                    key={sale.id}
+                    className="flex justify-between items-center gap-2 border p-2"
+                >
+                    <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer border-e border-neutral-300 rounded-none">
+                        <Link
+                            href={`/sales-line?id=${sale.id}`}
+                            className="text-xs text-neutral-500 font-bold"
                         >
-                            <div className="flex items-center gap-2 w-1/4 overflow-clip cursor-pointer border-e border-neutral-300 rounded-none">
-                                <Link
-                                    href={`/products/${saleItem.product.id}`}
-                                    className="text-sm text-neutral-600 font-bold"
-                                >
-                                    {saleItem.product.name}
-                                </Link>
-                            </div>
-                            <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                                <span className="text-sm text-neutral-400">
-                                    {saleItem.itemsCount}{' '}
-                                    {saleItem.product.units}
-                                </span>
-                            </div>
-                            <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                                <span className="text-sm">
-                                    {saleItem.itemsCount.toFixed(2)} {saleItem.product.units}
-                                </span>
-                            </div>
-                            <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                                <span className='text-xs'>
-                                    {sale.createdAt.toLocaleString(undefined, {
-                                        dateStyle: 'medium',
-                                    })}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
+                            {sale.createdAt.toLocaleString(undefined, {
+                                day: 'numeric',
+                                month: 'short',
+                            })}
+                            {', '}
+                            {sale.createdAt.toLocaleString(undefined, {
+                                timeStyle: 'short',
+                                timeZone: 'Africa/Nairobi',
+                            })}
+                        </Link>
+                    </div>
+                    <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                        <span className="text-sm text-neutral-400">
+                            {sale.saleItems.reduce((acc, saleItem) => {
+                                return acc + saleItem.itemsCount
+                            }, 0)}
+                            {' Items'}
+                        </span>
+                    </div>
+                    <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                        <span className="text-sm">
+                            {sale.saleItems.length} {' Products'}
+                        </span>
+                    </div>
+                    <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
+                        <span className="text-sm text-neutral-500">
+                            {sale.saleItems
+                                .reduce((acc, item) => {
+                                    return (
+                                        item.itemsCount *
+                                            (item.product.stocks[0]
+                                                ?.sellingPrice ?? 0) +
+                                        acc
+                                    )
+                                }, 0)
+                                .toFixed(2)}
+                            {' Ksh'}
+                        </span>
+                    </div>
                 </div>
             ))}
         </div>

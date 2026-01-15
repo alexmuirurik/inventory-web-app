@@ -42,10 +42,17 @@ export const getManySales = async (businessLocationId : string) => {
             include: {
                 saleItems: {
                     include: {
-                        product: true
+                        product: {
+                            include: {
+                                stocks: true,
+                            }
+                        }
                     }
                 }
             },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return sales
     } catch (error) {
@@ -66,7 +73,11 @@ export const getProductSales = async (productId: string) => {
             include: {
                 saleItems: {
                     include: {
-                        product: true,
+                        product: {
+                            include: {
+                                stocks: true,
+                            }
+                        }
                     },
                 },
                 businessLocation: true,

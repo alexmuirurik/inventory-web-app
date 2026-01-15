@@ -55,6 +55,9 @@ export const getManyProducts = async (businessLocationId?: string) => {
                 stocks: true,
                 saleItems: true,
             },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return products
     } catch (error) {

@@ -17,7 +17,11 @@ export type CompleteOrderLine = Prisma.OrderLineGetPayload<{
     include: {
         orderLineItems: {
             include: {
-                product: true
+                product: {
+                    include: {
+                        stocks: true
+                    }
+                }
             }
         }
     }
@@ -27,7 +31,11 @@ export type CompleteSale = Prisma.SaleGetPayload<{
     include: {
         saleItems: {
             include: {
-                product: true
+                product: {
+                    include: {
+                        stocks: true
+                    }
+                }
             }
         }
     },

@@ -18,14 +18,20 @@ const Dashboard = async () => {
     const businessLocation = await getLocationById(session?.user.activeLocation)
     if (!businessLocation) return redirect('/settings')
     const sales = (await getManySales(businessLocation.id)) ?? []
+    const stock = (await getManyStocks(businessLocation.id)) ?? []
+    const orderLines = (await getManyOrderLines(businessLocation.id)) ?? []
+
     const totalSales = sales.reduce((acc, sale) => {
         const sellingPrice = sale.saleItems.reduce((acc, saleItem) => {
-            return acc + saleItem.itemsCount
+            return (
+                acc +
+                (saleItem.product.stocks[0].sellingPrice ?? 0) *
+                    saleItem.itemsCount
+            )
         }, 0)
         return acc + sellingPrice
     }, 0)
-    const stock = (await getManyStocks(businessLocation.id)) ?? []
-    const orderLines = (await getManyOrderLines(businessLocation.id)) ?? []
+
     return (
         <div className="content space-y-3">
             <DashboardPreviews
@@ -35,7 +41,7 @@ const Dashboard = async () => {
                 stock={stock}
             />
             <div className="pt-4">
-                <span className='font-bold'>Sales</span>
+                <span className="font-bold">Sales</span>
                 <SalesCard sales={sales} />
             </div>
         </div>

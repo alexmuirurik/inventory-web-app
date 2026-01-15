@@ -46,7 +46,12 @@ export const getLocation = async (businessId: string, name: string) => {
 export const getManyLocations = async (businessId: string) => {
     try {
         const locations = await prisma.businessLocation.findMany({
-            where: { businessId: businessId },
+            where: { 
+                businessId: businessId 
+            },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return locations
     } catch (error) {

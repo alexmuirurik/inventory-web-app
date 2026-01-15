@@ -27,6 +27,9 @@ export const getManyStocks = async (businessLocationId: string) => {
             include: {
                 product: true,
             },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return stocks
     } catch (error) {

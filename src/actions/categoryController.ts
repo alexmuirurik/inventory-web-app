@@ -20,7 +20,12 @@ export const getCategory = async (businessLocationId: string, name: string) => {
 export const getManyCategories = async (businessLocationId: string) => {
     try {
         const categories = await prisma.category.findMany({
-            where: { businessLocationId: businessLocationId },
+            where: { 
+                businessLocationId: businessLocationId 
+            },
+            orderBy: {
+                createdAt: 'desc',
+            }
         })
         return categories
     } catch (error) {

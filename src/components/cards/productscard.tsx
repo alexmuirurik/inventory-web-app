@@ -20,21 +20,33 @@ const ProductsCard = ({ products }: { products: CompleteProduct[] }) => {
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm text-neutral-400">
-                        {product.stocks.at(0)?.itemsCount} {product.units}
+                        {product.stocks.at(0)?.itemsCount ?? 0} {product.units}
                     </span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
                     <span className="text-sm">{product.category?.name}</span>
                 </div>
                 <div className="px-2 w-2/12 border-e border-neutral-300 rounded-none ">
-                    <span className="text-sm">{product.saleItems.reduce((acc, saleItem) => {
-                        return acc + saleItem.itemsCount
-                    }, 0)}</span>
+                    <span className="text-sm text-neutral-500">
+                        {product.saleItems.reduce((acc, saleItem) => {
+                            return acc + saleItem.itemsCount
+                        }, 0)}{' '}
+                        {product.units}
+                    </span>
                 </div>
                 <div className="px-2 w-2/12">
-                    <span className="text-sm">{product.saleItems.reduce((acc, saleItem) => {
-                        return acc + saleItem.itemsCount
-                    }, 0).toFixed(2)} Ksh</span>
+                    <span className="text-sm">
+                        {product.saleItems
+                            .reduce((acc, saleItem) => {
+                                return (
+                                    acc +
+                                    saleItem.itemsCount *
+                                        (product.stocks[0].sellingPrice ?? 0)
+                                )
+                            }, 0)
+                            .toFixed(2)}{' '}
+                        Ksh
+                    </span>
                 </div>
             </div>
         )
